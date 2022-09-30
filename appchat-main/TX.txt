@@ -1,0 +1,224 @@
+import React, { Component } from "react";
+import SearchIcon from "@mui/icons-material/Search";
+import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
+import GroupAddIcon from '@mui/icons-material/GroupAdd';
+import Tooltip from "@mui/material/Tooltip";
+import Avatar from "@mui/material/Avatar";
+
+class MyChat extends Component {
+  render() {
+    let latestMessage1 = "Hello";
+    let latestMessage2 = "Helloooo";
+    let latestMessage3 = "Hiiiiiiiiiiiiii";
+    return (
+      <div className="mychat-cont">
+        <div className="search-c">
+          <div className="search-cont">
+            <SearchIcon />
+            <input
+              type="text"
+              placeholder="Tìm kiếm"
+            />
+          </div>
+          <Tooltip
+            placement="bottom-end"
+            title="Thêm bạn">
+            <PersonAddAlt1Icon />
+          </Tooltip>
+          <Tooltip
+            placement="bottom-end"
+            title="Tạo nhóm chat">
+            <GroupAddIcon />
+          </Tooltip>
+        </div>
+        <div className="recent-chat">
+          <p className="Recent"></p>
+          <div className="recent-user">
+            <div className="user">
+              <div className="history-cont">
+                <div>{<Avatar>TN</Avatar>}</div>
+                <div>
+                  <p className="name">Nguyễn Thái Nguyên</p>
+                  <p className="chat">
+                    {latestMessage2
+                      ? latestMessage2.length > 8
+                        ? latestMessage2.substring(0, 30) + " . . ."
+                        : latestMessage2
+                      : ""}
+                  </p>
+                </div>
+                <p className="time">
+                  12:03
+                </p>
+              </div>
+            </div>
+            <div className="user">
+              <div className="history-cont">
+                <div>{<Avatar>TN</Avatar>}</div>
+                <div>
+                  <p className="name">Nguyễn Thái Nguyên</p>
+                  <p className="chat">
+                    {latestMessage3
+                      ? latestMessage3.length > 8
+                        ? latestMessage3.substring(0, 30) + " . . ."
+                        : latestMessage3
+                      : ""}
+                  </p>
+                </div>
+                <p className="time">
+                  12:03
+                </p>
+              </div>
+            </div>
+            <div className="user">
+              <div className="history-cont">
+                <div>{<Avatar>TN</Avatar>}</div>
+                <div>
+                  <p className="name">Nguyễn Thái Nguyên</p>
+                  <p className="chat">
+                    {latestMessage1
+                      ? latestMessage1.length > 8
+                        ? latestMessage1.substring(0, 30) + " . . ."
+                        : latestMessage1
+                      : ""}
+                  </p>
+                </div>
+                <p className="time">
+                  12:03
+                </p>
+              </div>
+            </div>
+            <div className="user">
+              <div className="history-cont">
+                <div>{<Avatar>TN</Avatar>}</div>
+                <div>
+                  <p className="name">Nguyễn Thái Nguyên</p>
+                  <p className="chat">
+                    {latestMessage1
+                      ? latestMessage1.length > 8
+                        ? latestMessage1.substring(0, 30) + " . . ."
+                        : latestMessage1
+                      : ""}
+                  </p>
+                </div>
+                <p className="time">
+                  12:03
+                </p>
+              </div>
+            </div>
+            <div className="user">
+              <div className="history-cont">
+                <div>{<Avatar>TN</Avatar>}</div>
+                <div>
+                  <p className="name">Nguyễn Thái Nguyên</p>
+                  <p className="chat">
+                    {latestMessage1
+                      ? latestMessage1.length > 8
+                        ? latestMessage1.substring(0, 30) + " . . ."
+                        : latestMessage1
+                      : ""}
+                  </p>
+                </div>
+                <p className="time">
+                  12:03
+                </p>
+              </div>
+            </div>
+            <div className="user">
+              <div className="history-cont">
+                <div>{<Avatar>TN</Avatar>}</div>
+                <div>
+                  <p className="name">Nguyễn Thái Nguyên</p>
+                  <p className="chat">
+                    {latestMessage1
+                      ? latestMessage1.length > 8
+                        ? latestMessage1.substring(0, 30) + " . . ."
+                        : latestMessage1
+                      : ""}
+                  </p>
+                </div>
+                <p className="time">
+                  12:03
+                </p>
+              </div>
+            </div>
+            <div className="user">
+              <div className="history-cont">
+                <div>{<Avatar>TN</Avatar>}</div>
+                <div>
+                  <p className="name">Nguyễn Thái Nguyên</p>
+                  <p className="chat">
+                    {latestMessage1
+                      ? latestMessage1.length > 8
+                        ? latestMessage1.substring(0, 30) + " . . ."
+                        : latestMessage1
+                      : ""}
+                  </p>
+                </div>
+                <p className="time">
+                  12:03
+                </p>
+              </div>
+            </div>
+            <div className="user">
+              <div className="history-cont">
+                <div>{<Avatar>TN</Avatar>}</div>
+                <div>
+                  <p className="name">Nguyễn Thái Nguyên</p>
+                  <p className="chat">
+                    {latestMessage1
+                      ? latestMessage1.length > 8
+                        ? latestMessage1.substring(0, 30) + " . . ."
+                        : latestMessage1
+                      : ""}
+                  </p>
+                </div>
+                <p className="time">
+                  12:03
+                </p>
+              </div>
+            </div>
+            <div className="user">
+              <div className="history-cont">
+                <div>{<Avatar>TN</Avatar>}</div>
+                <div>
+                  <p className="name">Nguyễn Thái Nguyên</p>
+                  <p className="chat">
+                    {latestMessage1
+                      ? latestMessage1.length > 8
+                        ? latestMessage1.substring(0, 30) + " . . ."
+                        : latestMessage1
+                      : ""}
+                  </p>
+                </div>
+                <p className="time">
+                  12:03
+                </p>
+              </div>
+            </div>
+            <div className="user">
+              <div className="history-cont">
+                <div>{<Avatar>TN</Avatar>}</div>
+                <div>
+                  <p className="name">Nguyễn Thái Nguyên</p>
+                  <p className="chat">
+                    {latestMessage1
+                      ? latestMessage1.length > 8
+                        ? latestMessage1.substring(0, 30) + " . . ."
+                        : latestMessage1
+                      : ""}
+                  </p>
+                </div>
+                <p className="time">
+                  12:03
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    );
+  }
+}
+export default MyChat;
