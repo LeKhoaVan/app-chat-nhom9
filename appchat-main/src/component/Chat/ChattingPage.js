@@ -8,8 +8,8 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import InputEmoji from "react-input-emoji";
 import Tooltip from "@mui/material/Tooltip";
 import SendIcon from '@mui/icons-material/Send';
-import Message from '../component_detal/message/Message';
-import "../component_detal/message/message.css";
+import Message from '../../component_detal/message/Message';
+import "../../component_detal/message/message.css";
 import axios from "axios";
 
 

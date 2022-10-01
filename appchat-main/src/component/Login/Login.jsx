@@ -1,10 +1,14 @@
 import { Component, useEffect, useState } from "react";
 import "./Login.css"
-import "./active"
+
+
 
 export default function Login() {
+   
     return ( 
+       
         <div className='container'>
+          
             <div className='modal'>
                 <div className='tabs__title'>
                     <div className='tabs__title-item active login'>Đăng nhập</div>
@@ -46,6 +50,6 @@ export default function Login() {
                 </div>
             </div>
         </div>
-       
+      
     );
 }

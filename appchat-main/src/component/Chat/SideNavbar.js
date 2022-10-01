@@ -10,7 +10,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle'
 import styled from "@emotion/styled";
 import Tooltip, { tooltipClasses } from "@mui/material/Tooltip";
 import React,{ Component } from "react";
-import avatar from '../assets/avatar.jpg'; 
+import avatar from '../../assets/avatar.jpg'; 
 import { width } from "@mui/system";
 
 class SideNavbar extends Component{

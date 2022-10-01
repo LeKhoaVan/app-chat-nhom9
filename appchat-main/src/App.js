@@ -1,17 +1,19 @@
 import React from 'react';
 import './App.css';
-import SideNavbar from './component/SideNavbar';
-import MyChat from './component/MyChat';
-import ChattingPage from './component/ChattingPage';
+import DefaultLayout from './component/Chat'
 import Login from './component/Login/Login';
+
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 function App() {
   return (
-    <div>
-      <Login/>
-      {/* <SideNavbar/>
-      <MyChat/>
-      <ChattingPage/> */}
-    </div>
+    <BrowserRouter>
+      <div>
+        <Routes>
+        <Route path='/login' element= {<Login />} />
+        <Route path='/' element= {<DefaultLayout />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
