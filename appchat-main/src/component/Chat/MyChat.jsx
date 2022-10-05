@@ -97,9 +97,15 @@ export default function MyChat() {
     }
   };
 
+  function AutoScroll(){
+    var element = document.querySelector(".live-chat");
+
+    element.scrollTop = element.scrollHeight ;
+  }
 
 
   return (
+    <>
     <div>
       <div className="mychat-cont">
         <div className="search-c">
@@ -165,7 +171,7 @@ export default function MyChat() {
                     </div>
                 </div>
             </div>
-            <div className="live-chat">  
+            <div onLoad={AutoScroll} className="live-chat">  
                 <div>
                   {messages.map((m) => (
                      <Message message={m} own ={m.sender === user._id}/>
@@ -190,6 +196,7 @@ export default function MyChat() {
           }  
         </div>
     </div>
+    </>
   );
 }
 
