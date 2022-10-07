@@ -36,13 +36,15 @@ body{
   min-width: 270px;
   background-color: #f5f7fb;
   box-sizing: border-box;
-  padding: 10px;
+  padding-left: 10px;
 }
 .search-c{
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
+  padding: 20px;
+  padding-left:0 ;
 }
 .search-cont {
   display: flex;
@@ -50,6 +52,7 @@ body{
   background-color: #e6ebf5;
   width: 70%;
   border-radius: 5px;
+  padding-left: 10px;
 }
 .search-cont input {
   outline: none;
@@ -60,18 +63,15 @@ body{
   font-size: 17px;
 }
 .search-c svg {
-  margin: 0 12px 0 12px;
   cursor: pointer;
   font-size: 20px;
 }
 
 .recent-chat {
   width: 100%;
-  margin: auto;
+  margin: auto; 
 }
-.Recent {
-  border-bottom: 1px solid #bababf;
-}
+
 .recent-user {
   overflow-y: scroll;
   box-sizing: border-box;

@@ -96,9 +96,6 @@ export default function MyChat() {
       console.log(err);
     }
   };
-
-
-
   return (
     <div>
       <div className="mychat-cont">
@@ -115,7 +112,6 @@ export default function MyChat() {
           </Tooltip>
         </div>
         <div className="recent-chat">
-          <p className="Recent"></p>
           <div className="recent-user">
 
             {conversations.map((c) => (
@@ -123,8 +119,6 @@ export default function MyChat() {
                 <Conversation conversation={c} />
               </div>
             ))}
-
-
           </div>
         </div>
 
