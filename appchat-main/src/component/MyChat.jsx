@@ -1,4 +1,4 @@
-import { Component, useEffect, useState } from "react";
+import { Component, useEffect, useRef, useState } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
@@ -14,17 +14,13 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import InputEmoji from "react-input-emoji";
 import SendIcon from '@mui/icons-material/Send';
 import axios from "axios";
+import {io} from "socket.io-client";
 
 
 
 
 
 export default function MyChat() {
-  const [conversations, setConversation] = useState([]);
-  const [currentChat, setCurrentChat] = useState(null);
-  const [messages, setMessages] = useState(null);
-  const [myFriend, setMyFriend] = useState([]);
-  const [newMessage, setNewMessages] = useState("");
   const user = {
     _id: "6332c906d0b824a970f4ff52",
     username: "kely",
@@ -35,19 +31,50 @@ export default function MyChat() {
     ]
   };
 
-  // const receiverId = currentChat.members.find(
-  //   (member) => member !== user._id
-  // );
-  // console.log(receiverId);
+
+
+  const [conversations, setConversation] = useState([]);
+  const [currentChat, setCurrentChat] = useState(null);
+  const [messages, setMessages] = useState(null);
+  const [myFriend, setMyFriend] = useState([]);
+  const [newMessage, setNewMessages] = useState("");
+  const [arrivalMessage, setArrivalMessage] = useState(null);
+  const socket = useRef([]); // cần thay đổi khi có có chức năng đăng nhập
+  const scrollRef = useRef();
+  
+ 
+  
+  useEffect(() => {
+    socket.current = io("ws://localhost:8900");
+    socket.current.on("getMessage", (data) => {
+      setArrivalMessage({
+        sender: data.senderId,
+        text: data.text,
+        createdAt: Date.now(),
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    arrivalMessage &&
+      currentChat?.members.includes(arrivalMessage.sender) &&
+      setMessages((prev) => [...prev, arrivalMessage]);
+  }, [arrivalMessage, currentChat]);
+
+  useEffect(() => {
+    socket.current.emit("addUser", user._id);
+    socket.current.on("getUsers", (users) => {
+      // console.log(users);
+    });
+  }, [user]);
+
 
   useEffect(() => {
     const getMyFriend = async () => {
       try { 
         const res = await axios.get("http://localhost:8800/api/conversations/findById/"+currentChat?._id);
-        const friendId = res.data.find((m) => m !== "6332c906d0b824a970f4ff52");
-        console.log(friendId)
+        const friendId = res.data.find((m) => m !== user._id);
         const friend = await axios.get("http://localhost:8800/api/users?userId="+friendId);  
-        console.log(friend);
         setMyFriend(friend.data);
       } catch (err) {
         console.log(err); 
@@ -61,12 +88,17 @@ export default function MyChat() {
       try {
         const res = await axios.get("http://localhost:8800/api/messages/" + currentChat?._id);
         setMessages(res.data);
+        setNewMessages("");
       } catch (err) {
         console.log(err);
       }
     };
     getMessages();
   }, [currentChat]);
+
+  useEffect(() =>{
+    scrollRef.current?.scrollIntoView({behavior: "smooth"});
+  },[messages])
 
  
   useEffect(() => {
@@ -88,14 +120,26 @@ export default function MyChat() {
       text: newMessage,
       conversationId: currentChat._id,
     };
+
+    const receiverId = currentChat.members.find(
+      (member) => member !== user._id
+    );
+
+    socket.current.emit("sendMessage", {
+      senderId: user._id,
+      receiverId,
+      text: newMessage,
+    });
+
     try {
-      const res = await axios.post("http://localhost:8800/api/messages", message);
+      const res = await axios.post("http://localhost:8800/api/messages/", message);
       setMessages([...messages, res.data]);
       setNewMessages("");
     } catch (err) {
       console.log(err);
     }
   };
+
 
 
 
@@ -120,7 +164,7 @@ export default function MyChat() {
 
             {conversations.map((c) => (
               <div onClick={() => setCurrentChat(c)}>
-                <Conversation conversation={c} />
+                <Conversation conversation={c} currentUser={user} />
               </div>
             ))}
 
@@ -168,7 +212,9 @@ export default function MyChat() {
             <div className="live-chat">  
                 <div>
                   {messages.map((m) => (
-                     <Message message={m} own ={m.sender === user._id}/>
+                    <div ref={scrollRef}>
+                      <Message message={m} own ={m.sender === user._id}/>
+                    </div>
                   ))} 
                 </div>   
             </div>

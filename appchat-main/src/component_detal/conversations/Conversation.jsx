@@ -5,7 +5,7 @@ import "./conversation.css"
 export default function Conversation({ conversation, currentUser }) {
   const [user, setUser] = useState([]);
   useEffect(() => {
-    const friendId = conversation.members.find((m) => m !== "6332c906d0b824a970f4ff52");
+    const friendId = conversation.members.find((m) => m !== currentUser._id);
     const getUser = async () => {
       try {
         const res = await axios("http://localhost:8800/api/users?userId="+friendId);  

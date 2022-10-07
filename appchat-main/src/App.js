@@ -1,15 +1,19 @@
 import React from 'react';
 import './App.css';
-import SideNavbar from './component/SideNavbar';
-import MyChat from './component/MyChat';
-import ChattingPage from './component/ChattingPage';
+import Message  from './component/MyChat';
+import Message2 from './component/MyChatAo';
+
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 function App() {
   return (
-    <div>
-      <SideNavbar/>
-      <MyChat/>
-      <ChattingPage/>
-    </div>
+    <BrowserRouter>
+      <div>
+        <Routes>
+        <Route path='/message' element= {<Message/>} />
+        <Route path='/message2' element= {<Message2/>} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
