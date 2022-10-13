@@ -1,4 +1,7 @@
-import { Component, useEffect, useState } from "react";
+import { Component, useEffect, useState , useContext} from "react";
+import { useNavigate  } from 'react-router-dom'
+import {AuthContext}    from "../../contexts/AuthContext"
+import Spinner from 'react-bootstrap/Spinner'
 import "./Login.css"
 
 function OnclickTitle(){
@@ -41,7 +44,9 @@ function OneClick(){
 
 
 export default function Login() {
-   
+
+    
+
     return ( 
        <>
        
@@ -56,13 +61,20 @@ export default function Login() {
                 
                 <div className='tabs__content'>
                     <div className='tabs__content-item active login'>
-                        <form className='form'>
+                        <form className='form' onSubmit={login} >
                             <div className='form-control'>
-                                <input placeholder="Email" className='form-input'/>
+                                <input placeholder="Email" className='form-input' name="email"
+                                    value={email}
+                                    onChange={onChangeLoginForm}
+                                />
+
                                 <i className='icon'></i>
                             </div>
                             <div className='form-control'>
-                                <input placeholder="Mật khẩu" className='form-input'/>
+                                <input placeholder="Mật khẩu" className='form-input' name="password"
+                                     value={password}
+                                     onChange={onChangeLoginForm}
+                                />
                                 <i className='icon'></i>
                             </div>
                             <input type="submit" value="Đăng nhập" className='button' />

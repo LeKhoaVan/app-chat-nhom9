@@ -1,25 +1,34 @@
 import React from 'react';
 import './App.css';
 import DefaultLayout from './component/Chat'
-import Login from './component/Login/Login';
+import Auth from './component/Auth';
+import Landing from './component/Landing';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import PrivateRoute from './PrivateRoute';
 import {useState} from 'react'
+import AuthContextProvider from './contexts/AuthContext'
+import LoginForm from './component/Auth/Login'
+import RegisterForm from './component/Auth/Register'
+import ProtectedRoute from './routing/ProtectedRoute'
 
 function App() {
-  const [ checkLogin, setCheckLogin ] = useState(false)
   return (
-    <BrowserRouter>
-      <div>
+    <AuthContextProvider>
+      <BrowserRouter>
         <Routes>
-          <Route path='/login' element= {<Login />} />
-          <Route element= {<PrivateRoute isLogged={checkLogin} />} >
-            <Route path='/' element= {<DefaultLayout />} />
-            <Route path='*' />
-          </Route>
+          <Route path='/' element= {<Landing />} />
+          <Route
+							path='/login'
+							element={ <Auth/>}
+						/> 
+          <Route path='/chat' element= {
+            <ProtectedRoute>
+              <DefaultLayout />
+            </ProtectedRoute>
+          
+          } />
         </Routes>
-      </div>
-    </BrowserRouter>
+      </BrowserRouter>
+    </AuthContextProvider>
   );
 }
 
