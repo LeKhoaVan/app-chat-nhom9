@@ -6,16 +6,25 @@ import Tooltip from "@mui/material/Tooltip";
 import Conversation from '../../component_detal/conversations/Conversation';
 import Message from '../../component_detal/message/Message';
 import "../../component_detal/message/message.css";
-import { Button } from "@mui/material";
+import { Alert, Button, IconButton } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import CallIcon from '@mui/icons-material/Call';
 import VideoCallIcon from '@mui/icons-material/VideoCall';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import InputEmoji from "react-input-emoji";
+import InputEmoji, { $$typeof } from "react-input-emoji";
 import SendIcon from '@mui/icons-material/Send';
+import ImageIcon from '@mui/icons-material/Image';
+import AttachFileIcon from '@mui/icons-material/AttachFile';
+import EditIcon from '@mui/icons-material/Edit';
 import axios from "axios";
-
-
+import ChattingPage from "./ChattingPage";
+import Edit from "@mui/icons-material/Edit";
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import avatar from '../../assets/avatar.jpg'; 
+import ChatOutlinedIcon from "@mui/icons-material/ChatOutlined";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 
 export default function MyChat() {
 
@@ -102,11 +111,47 @@ export default function MyChat() {
 
     element.scrollTop = element.scrollHeight ;
   }
+  function Demo(){
+    const max_width_vh = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+    const chattingpage = document.querySelector(".chattingpage");
+    const cssObj = window.getComputedStyle(chattingpage,null);
+    const width_chatpage = cssObj.getPropertyValue("width");
+    const moreInfo = document.querySelector(".morInfo-con");
+    const width_more = moreInfo.style.display;
+    if(Number(width_chatpage.slice(0,width_chatpage.length-2)).toFixed(0)<=Number(max_width_vh*0.73).toFixed(0)){
+      document.querySelector(".chattingpage").style.width='50%';
+      document.querySelector(".morInfo-con").style.display='flex';
+    }
+    else{
+      document.querySelector(".chattingpage").style.width='73%';
+      document.querySelector(".morInfo-con").style.display='none';
+    }
+    console.log(Number(width_chatpage.slice(0,width_chatpage.length-2)).toFixed(0),Number(max_width_vh*0.73).toFixed(0));
+  }
 
 
   return (
-    <>
-    <div>
+    <div className="fullSc">
+      {/* <div className="side-nav">
+        <div>
+          <Avatar  
+            className="avatar"
+            alt="avatar" 
+            src={avatar}
+            sx={{width:46,height:46}}/>
+        </div>
+        <div className="icon">
+          <Tooltip placement="bottom-end" title="Chats">
+            <ChatOutlinedIcon />
+              </Tooltip>
+            <Tooltip placement="bottom-end" title="Contacts">
+              <PermContactCalendarIcon />
+            </Tooltip>
+            <Tooltip placement="bottom-end" title="Settings">
+              <SettingsOutlinedIcon />
+            </Tooltip>
+        </div>
+      </div> */}
       <div className="mychat-cont">
         <div className="search-c">
           <div className="search-cont">
@@ -129,13 +174,34 @@ export default function MyChat() {
                 <Conversation conversation={c} />
               </div>
             ))}
+            {conversations.map((c) => (
+              <div onClick={() => setCurrentChat(c)}>
+                <Conversation conversation={c} />
+              </div>
+            ))}
+            {conversations.map((c) => (
+              <div onClick={() => setCurrentChat(c)}>
+                <Conversation conversation={c} />
+              </div>
+            ))}
+            {conversations.map((c) => (
+              <div onClick={() => setCurrentChat(c)}>
+                <Conversation conversation={c} />
+              </div>
+            ))}
+            {conversations.map((c) => (
+              <div onClick={() => setCurrentChat(c)}>
+                <Conversation conversation={c} />
+              </div>
+            ))}
+
 
 
           </div>
         </div>
 
       </div>
-      <div className="chattingpage">
+      <div className="chattingpage" id="chattingpage">
           {
                     currentChat  ?
                 <>    
@@ -152,22 +218,31 @@ export default function MyChat() {
                         <Tooltip
                             title="Tìm kiếm tin nhắn"
                             placement="bottom-end">
-                            <SearchIcon />
+                            <IconButton>
+                              <SearchIcon />
+                            </IconButton>
                         </Tooltip>
                         <Tooltip
                             title="Cuộc gọi thoại"
                             placement="bottom-end">
-                            <CallIcon />
+                            <IconButton>
+                              <CallIcon />
+                            </IconButton>
                         </Tooltip>
                         <Tooltip
                             title="Cuộc gọi video"
                             placement="bottom-end">
-                            <VideoCallIcon />
+                            <IconButton>
+                              <VideoCallIcon />
+                            </IconButton>
                         </Tooltip>
                         <Tooltip
                             title="Thông tin"
                             placement="bottom-end">
-                            <MoreHorizIcon />
+                            <IconButton
+                              onClick={Demo}>
+                              <MoreHorizIcon/>
+                            </IconButton>
                         </Tooltip>
                     </div>
                 </div>
@@ -179,25 +254,112 @@ export default function MyChat() {
                   ))} 
                 </div>   
             </div>
-
             <div className="sender-cont">
                 <div className="send-message">
-
-                <InputEmoji  onChange ={(e) => setNewMessages(e)} 
-                    value={newMessage}
-                     placeholder="Nhập tin nhắn"/>
-
+                  <InputEmoji  onChange ={(e) => setNewMessages(e)} 
+                      value={newMessage}
+                      placeholder="Nhập tin nhắn"/>
+                  <Tooltip
+                  title="Gửi hình ảnh"
+                  placement="bottom-end">
+                  <ImageIcon />
+                </Tooltip>
+                <Tooltip
+                  title="Đính kèm file"
+                  placement="bottom-end">
+                  <AttachFileIcon/>
+                  </Tooltip>
                 </div>
-
-                <Button  variant="contained"  className="sendbutton" endIcon={<SendIcon/>}
-                          onClick={sendSubmit}>
-                </Button>
+                  <Tooltip
+                    title="Gửi tin nhắn"
+                    placement="bottom-end">
+                    <span
+                      className="sendbutton"
+                      onClick={sendSubmit}>
+                      <SendIcon/>
+                    </span>
+                  </Tooltip>
             </div>
             </> : <span className="noChat">Chưa có tin nhắn</span>
           }  
         </div>
+        <div className="morInfo-con">
+          <div className="namechat">
+            <p className="text_namechat">Thông tin hội thoại</p>
+          </div>
+          <div className="mainInfo">
+            <div className="infomation_con">
+              <Avatar
+                sx={{width:70,height:70}}>
+                TN</Avatar>
+              <div className="name_con">
+                <p className="text_name">Nguyễn Thái Nguyên</p>
+                <Tooltip 
+                  title="Chỉnh sửa"
+                  placement="bottom-end">
+                  <IconButton>
+                    <Edit/>
+                  </IconButton>
+                </Tooltip>
+              </div>
+              <div className="edit_button">
+                <IconButton>
+                  <GroupAddIcon />
+                </IconButton>
+                <p className="title_edit_button">Tạo nhóm trò chuyện</p>
+              </div>
+            </div>
+            <div className="image_video_con">
+              <div className="iv_title">
+                <p>Ảnh/Video</p>
+                <ArrowDropDownIcon/>
+              </div>
+              <div className="iv_main">
+                <p className="not_value">Chưa có ảnh/video được chia sẻ trong hội thoại này</p>
+                <span className="button_iv">
+                  Xem tất cả
+                </span>
+              </div>
+            </div>
+            <div className="file_con">
+              <div className="iv_title">
+                <p>File</p>
+                <ArrowDropDownIcon/>
+              </div>
+              <div className="iv_main">
+              <p className="not_value">Chưa có tài liệu được chia sẻ trong hội thoại này</p>
+                <span className="button_iv">
+                  Xem tất cả
+                </span>
+              </div>
+            </div>
+            <div className="link_con">
+              <div className="iv_title">
+                <p>Link</p>
+                <ArrowDropDownIcon/>
+              </div>
+              <div className="iv_main">
+              <p className="not_value">Chưa có link được chia sẻ trong hội thoại này</p>
+                <span className="button_iv">
+                  Xem tất cả
+                </span>
+              </div>
+            </div>
+            <div className="security_con">
+              <div className="iv_title">
+                <p>Thiết lập bảo mật</p>
+                <ArrowDropDownIcon/>
+              </div>
+              <div className="iv_main">
+                <span className="removeall">
+                  <DeleteOutlineIcon/>
+                  <p>Xóa lịch sử trò chuyện</p>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
     </div>
-    </>
   );
 }
 

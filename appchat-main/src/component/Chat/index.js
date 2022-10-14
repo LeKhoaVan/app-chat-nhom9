@@ -5,7 +5,7 @@ function DefaultLayout() {
     return ( 
         <div>
             <SideNavbar/>
-            <ChattingPage/>
+            {/* <ChattingPage/> */}
             <MyChat/>
         </div>
     );
