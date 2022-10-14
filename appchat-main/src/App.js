@@ -9,6 +9,7 @@ import AuthContextProvider from './contexts/AuthContext'
 import LoginForm from './component/Auth/Login'
 import RegisterForm from './component/Auth/Register'
 import ProtectedRoute from './routing/ProtectedRoute'
+import Mes from './component/Chat/MyChatAo'
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path='/' element= {<Landing />} />
+          
           <Route
 							path='/login'
 							element={ <Auth/>}
@@ -23,6 +25,12 @@ function App() {
           <Route path='/chat' element= {
             <ProtectedRoute>
               <DefaultLayout />
+            </ProtectedRoute>
+          
+          } />
+          <Route path='/chat2' element= {
+            <ProtectedRoute>
+              <Mes />
             </ProtectedRoute>
           
           } />

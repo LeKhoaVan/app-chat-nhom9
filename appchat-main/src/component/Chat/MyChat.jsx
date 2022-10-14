@@ -1,4 +1,4 @@
-import { Component, useEffect, useState , useContext } from "react";
+import { Component, useEffect, useState, useRef, useContext } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
@@ -25,35 +25,56 @@ import avatar from '../../assets/avatar.jpg';
 import ChatOutlinedIcon from "@mui/icons-material/ChatOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
+import {io} from "socket.io-client";
+import {AuthContext} from "../../contexts/AuthContext";
+
+
 
 export default function MyChat() {
-
+  const {authState:{user:{avt, _id, }}} = useContext(AuthContext)
 
   const [conversations, setConversation] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState(null);
   const [myFriend, setMyFriend] = useState([]);
   const [newMessage, setNewMessages] = useState("");
-  const user = {
-    _id: "6332c906d0b824a970f4ff52",
-    username: "kely",
-    password: "12345",
-    email: "lekhoavan@gmail",
-    following: [
-      "6332d32ed0b824a970f4ff53"
-    ]
-  };
+  const [arrivalMessage, setArrivalMessages] = useState(null);
+  const socket = useRef();
+
+  
 
   // const receiverId = currentChat.members.find(
   //   (member) => member !== user._id
   // );
   // console.log(receiverId);
+  useEffect(() =>{
+    socket.current = io("ws://localhost:8900");
+    socket.current.on("getMessage", (data) =>{
+      setArrivalMessages({
+        sender: data.senderId,
+        text: data.text,
+        createdAt: Date.now(),
+      })
+    });
+  },[]);
+
+  useEffect(() =>{
+    arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) && 
+    setMessages((prev)=>[...prev, arrivalMessage])
+  },[arrivalMessage, currentChat])
+
+  useEffect(() => {
+    socket.current.emit("addUser", _id);
+    socket.current.on("getUsers", (users) => {
+      // console.log(users)
+    })
+  },[_id]);
 
   useEffect(() => {
     const getMyFriend = async () => {
       try { 
         const res = await axios.get("http://localhost:8800/api/conversations/findById/"+currentChat?._id);
-        const friendId = res.data.find((m) => m !== "6332c906d0b824a970f4ff52");
+        const friendId = res.data.find((m) => m !== _id);
         console.log(friendId)
         const friend = await axios.get("http://localhost:8800/api/users?userId="+friendId);  
         console.log(friend);
@@ -63,7 +84,7 @@ export default function MyChat() {
       }
     };
     getMyFriend();
-  },[user._id,currentChat]);
+  },[_id,currentChat]);
 
   useEffect(() => {
     const getMessages = async () => {
@@ -81,22 +102,34 @@ export default function MyChat() {
   useEffect(() => {
     const getConversations = async () => {
       try {
-        const res = await axios.get("http://localhost:8800/api/conversations/" + user._id);
+        const res = await axios.get("http://localhost:8800/api/conversations/" + _id);
         setConversation(res.data);
       } catch (err) {
         console.log(err);
       }
     };
     getConversations();
-  }, [user._id]);
+  }, [_id]);
 
   const sendSubmit = async (e) => {
     e.preventDefault();
     const message = {
-      sender: user._id,
+      sender: _id,
       text: newMessage,
       conversationId: currentChat._id,
     };
+
+    const receiverId = currentChat.members.find(
+      (member) => member !== _id
+    );
+
+    socket.current.emit("sendMessage", {
+      senderId: _id,
+      receiverId,
+      text: newMessage,
+    });
+
+
     try {
       const res = await axios.post("http://localhost:8800/api/messages", message);
       setMessages([...messages, res.data]);
@@ -169,34 +202,12 @@ export default function MyChat() {
           <p className="Recent"></p>
           <div className="recent-user">
 
-            {conversations.map((c) => (
+          {conversations.map((c) => (
               <div onClick={() => setCurrentChat(c)}>
-                <Conversation conversation={c} />
+                <Conversation conversation={c} currentUser={_id} />
               </div>
             ))}
-            {conversations.map((c) => (
-              <div onClick={() => setCurrentChat(c)}>
-                <Conversation conversation={c} />
-              </div>
-            ))}
-            {conversations.map((c) => (
-              <div onClick={() => setCurrentChat(c)}>
-                <Conversation conversation={c} />
-              </div>
-            ))}
-            {conversations.map((c) => (
-              <div onClick={() => setCurrentChat(c)}>
-                <Conversation conversation={c} />
-              </div>
-            ))}
-            {conversations.map((c) => (
-              <div onClick={() => setCurrentChat(c)}>
-                <Conversation conversation={c} />
-              </div>
-            ))}
-
-
-
+            
           </div>
         </div>
 
@@ -250,7 +261,7 @@ export default function MyChat() {
             <div onLoad={AutoScroll} className="live-chat">  
                 <div>
                   {messages.map((m) => (
-                     <Message message={m} own ={m.sender === user._id}/>
+                     <Message message={m} own ={m.sender === _id}/>
                   ))} 
                 </div>   
             </div>

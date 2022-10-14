@@ -11,4 +11,4 @@ function DefaultLayout() {
     );
 }
 
-export default DefaultLayout;
+export default DefaultLayout; 
