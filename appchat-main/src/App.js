@@ -9,7 +9,6 @@ import AuthContextProvider from './contexts/AuthContext'
 import LoginForm from './component/Auth/Login'
 import RegisterForm from './component/Auth/Register'
 import ProtectedRoute from './routing/ProtectedRoute'
-import Mes from './component/Chat/MyChatAo'
 
 function App() {
   return (
@@ -28,12 +27,12 @@ function App() {
             </ProtectedRoute>
           
           } />
-          <Route path='/chat2' element= {
+          {/* <Route path='/chat2' element= {
             <ProtectedRoute>
               <Mes />
             </ProtectedRoute>
           
-          } />
+          } /> */}
         </Routes>
       </BrowserRouter>
     </AuthContextProvider>
