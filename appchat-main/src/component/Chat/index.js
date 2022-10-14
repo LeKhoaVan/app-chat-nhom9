@@ -4,8 +4,8 @@ import SideNavbar from './SideNavbar';
 function DefaultLayout() {
     return ( 
         <div>
-            <SideNavbar/>
-            <ChattingPage/>
+            {/* <SideNavbar/> */}
+            {/* <ChattingPage/> */}
             <MyChat/>
         </div>
     );
