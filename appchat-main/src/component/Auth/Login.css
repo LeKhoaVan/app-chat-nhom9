@@ -85,7 +85,7 @@
     border-bottom: 1px solid rgb(204, 204, 204);
     font-size: 15px;
     padding-left: 30px;
-    color: #ccc;
+    color: rgb(31, 5, 5);
 }
 .tabs__content .form .form-input:focus{
     border-bottom: 1px solid rgb(117, 243, 237);

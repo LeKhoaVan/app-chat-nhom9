@@ -114,7 +114,7 @@ export default function Login() {
                                 <i className='icon'></i>
                             </div>
                             <div className='form-control'>
-                                <input placeholder="Mật khẩu" className='form-input' name="password"
+                                <input placeholder="Mật khẩu" type="password" className='form-input' name="password"
                                      value={password}
                                      onChange={onChangeLoginForm}
                                 />
