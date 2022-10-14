@@ -3,7 +3,7 @@ import { useNavigate  } from 'react-router-dom'
 import {AuthContext}    from "../../contexts/AuthContext"
 import Spinner from 'react-bootstrap/Spinner'
 import "./Login.css"
-import AlertMessage from '../AlertMessage/index'
+import AlertMessage from '../AlertMessage'
 
 function OnclickTitle(){
     const $ = document.querySelector.bind(document);
@@ -46,18 +46,7 @@ function OneClick(){
 
 export default function Login() {
 
-    // Check Token login
-    
-
-    // if(authLoading){
-
-    // }else if(isAuthenticated){
-    //     return <Navigate to={'/chat'}/> 
-    // }
-
-
    
-
     //Login
     const {loginUser} = useContext(AuthContext)
 
@@ -77,7 +66,7 @@ export default function Login() {
 
         try {
             const loginData = await loginUser(loginForm)
-            if (loginData.success) {
+            if (!loginData.success) {
                 setAlert({ type: 'danger', message: loginData.message })
                 setTimeout(() => setAlert(null), 5000)
             }
@@ -88,12 +77,57 @@ export default function Login() {
 
 
 
+    //register
+    const {registerUser} = useContext(AuthContext)
+
+    const [registerForm , setRegisterForm] = useState({
+        emailRe:'',
+        passwordRe:'',
+        cfpassword:'',
+        username:'',
+        birthday:'',
+        gender:''
+
+    })
+    const {emailRe  ,passwordRe ,cfpassword , username , birthday , gender} = registerForm
+
+    const [alertRe, setAlertRe] = useState(null)
+
+    const onChangeRegisterForm = event =>
+        setRegisterForm({ ...registerForm, [event.target.name]: event.target.value })
+
+    const register = async event => {
+        event.preventDefault()
+
+        if(passwordRe === cfpassword){
+            try {
+                const registerData = await registerUser(registerForm)
+                if (!registerData.success) {
+                    setAlertRe({ type: 'danger', message: registerData.message })
+                    setTimeout(() => setAlertRe(null), 5000)
+                }else{
+                    setAlertRe({ type: 'danger', message: "Thành công đăng ký tài khoản" })
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        else{
+            setAlertRe({ type: 'danger', message: "Mật khẩu không khớp" })
+            setTimeout(() => setAlertRe(null), 5000)
+        }
+
+        
+    }
+
+
+
     return ( 
        <>
        
         <div className='container'>
             <div className='modal'>
-            <AlertMessage info={alert} />
+                
                 <div className='tabs__title'>
                     <div ref={OneClick} onClick={OnclickTitle} className='tabs__title-item active login'>Đăng nhập</div>
                     <div onClick={OnclickTitle} className='tabs__title-item register'>Đăng ký</div>
@@ -120,36 +154,55 @@ export default function Login() {
                                 />
                                 <i className='icon'></i>
                             </div>
+                            <div className="err">
+                                <AlertMessage info={alert} />
+                            </div>
                             <input type="submit" value="Đăng nhập" className='button' />
                         </form>
                     
                     </div>
                     <div className='tabs__content-item register'>
-                        <form className="form">
+                        <form className="form" onSubmit={register}>
                             <div className='form-control'>
-                                <input placeholder="Email" className='form-input' name="email"/>
+                                <input placeholder="Email" className='form-input' name="emailRe"
+                                value={emailRe}
+                                onChange={onChangeRegisterForm}
+                                />
                                 <i className='icon'></i>
                             </div>
                             <div className='form-control'>
-                                <input placeholder="Mật khẩu" className='form-input' name="password"/>
+                                <input placeholder="Mật khẩu" className='form-input' name="passwordRe"
+                                value={passwordRe} 
+                                onChange={onChangeRegisterForm}/>
                                 <i className='icon'></i>
                             </div>
                             <div className='form-control'>
-                                <input placeholder="Nhập lại mật khẩu" className='form-input' name="cfpassword"/>
+                                <input placeholder="Nhập lại mật khẩu" className='form-input' name="cfpassword"
+                                value={cfpassword} 
+                                onChange={onChangeRegisterForm}/>
                                 <i className='icon'></i>
                             </div>
                             <div className='form-control'>
-                                <input placeholder="Username" className='form-input' name="username"/>
+                                <input placeholder="Username" className='form-input' name="username"
+                                value={username} 
+                                onChange={onChangeRegisterForm}/>
                                 <i className='icon'></i>
                             </div>
                             <div className='form-control'>
-                                <input type="date" className='form-input' name="birthday"/>
+                                <input type="date" className='form-input' name="birthday"
+                                value={birthday} 
+                                onChange={onChangeRegisterForm}/>
                                 <i className='icon'></i>
                             </div>
                             <div className='form-control'>
                                 Giới tính:
-                                <input type="radio" value="Nam" name="gender" /> Nam
-                                <input type="radio" value="Nữ" name="gender" /> Nữ
+                                <input type="radio" value="Nam" name="gender" 
+                                onChange={onChangeRegisterForm} /> Nam
+                                <input type="radio" value="Nữ" name="gender" 
+                                onChange={onChangeRegisterForm} /> Nữ
+                            </div>
+                            <div className="err">
+                                <AlertMessage info={alertRe} />
                             </div>
                             <input type="submit" value="Đăng ký" className='button'/>
                         </form>

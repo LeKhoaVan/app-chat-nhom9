@@ -10,6 +10,9 @@
     height: 100vh;
 }
 
+.err{
+    color: red;
+}
 .modal {
     width: 400px;
     height: 400px;

@@ -20,6 +20,14 @@ const UserSchema = new mongoose.Schema(
       required: true,
       min: 6,
     },
+    birthday: {
+      type: Date,
+      required: true,
+    },
+    gender: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );
