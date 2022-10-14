@@ -27,12 +27,7 @@ function App() {
             </ProtectedRoute>
           
           } />
-          {/* <Route path='/chat2' element= {
-            <ProtectedRoute>
-              <Mes />
-            </ProtectedRoute>
-          
-          } /> */}
+        
         </Routes>
       </BrowserRouter>
     </AuthContextProvider>
