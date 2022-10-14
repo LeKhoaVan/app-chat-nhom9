@@ -1,4 +1,4 @@
-import { Component, useEffect, useState } from "react";
+import { Component, useEffect, useState , useContext } from "react";
 import SearchIcon from "@mui/icons-material/Search";
 import PersonAddAlt1Icon from '@mui/icons-material/PersonAddAlt1';
 import GroupAddIcon from '@mui/icons-material/GroupAdd';
@@ -17,9 +17,9 @@ import axios from "axios";
 
 
 
-
-
 export default function MyChat() {
+
+
   const [conversations, setConversation] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState(null);
@@ -143,7 +143,8 @@ export default function MyChat() {
                 <div className="user-header">
                     <Avatar>TN</Avatar>
                     <p className="user-name">{
-                        myFriend.username
+                        myFriend.username 
+                        
                     }</p>
                 </div>
                 <div>

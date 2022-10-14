@@ -13,15 +13,21 @@ import React,{ Component } from "react";
 import avatar from '../../assets/avatar.jpg'; 
 import { width } from "@mui/system";
 
-class SideNavbar extends Component{
-    render(){
+import { useContext } from 'react'
+import {AuthContext} from "../../contexts/AuthContext"
+
+
+export default function SideNavbar(){
+  
+const {authState:{user:{avt}}} = useContext(AuthContext)
+
         return(
         <div className="side-nav">
           <div>
            <Avatar  
               className="avatar"
               alt="avatar" 
-              src={avatar}
+              src={avt}
               sx={{width:46,height:46}}/>
           </div>
           <div className="icon">
@@ -37,6 +43,4 @@ class SideNavbar extends Component{
           </div>
         </div>
         );
-    }
 }
-export default SideNavbar;

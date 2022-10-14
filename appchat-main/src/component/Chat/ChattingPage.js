@@ -15,7 +15,6 @@ import axios from "axios";
 
 export default function ChattingPage() {
 
-
     // return (
     //     <div className="chattingpage">
     //         {
