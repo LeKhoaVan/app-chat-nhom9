@@ -20,7 +20,7 @@ router.get('/', verifyToken, async (req, res) => {
 
 router.post('/register', async (req, res) => {
 
-    const {  email  ,password } = req.body
+    const {  email  ,password ,cfpassword , username ,  } = req.body
 
 
     if(  !email || !password) 

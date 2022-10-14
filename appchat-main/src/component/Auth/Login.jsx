@@ -127,16 +127,29 @@ export default function Login() {
                     <div className='tabs__content-item register'>
                         <form className="form">
                             <div className='form-control'>
-                                <input placeholder="Email" className='form-input'/>
+                                <input placeholder="Email" className='form-input' name="email"/>
                                 <i className='icon'></i>
                             </div>
                             <div className='form-control'>
-                                <input placeholder="Mật khẩu" className='form-input'/>
+                                <input placeholder="Mật khẩu" className='form-input' name="password"/>
                                 <i className='icon'></i>
                             </div>
                             <div className='form-control'>
-                                <input placeholder="Nhập lại mật khẩu" className='form-input'/>
+                                <input placeholder="Nhập lại mật khẩu" className='form-input' name="cfpassword"/>
                                 <i className='icon'></i>
+                            </div>
+                            <div className='form-control'>
+                                <input placeholder="Username" className='form-input' name="username"/>
+                                <i className='icon'></i>
+                            </div>
+                            <div className='form-control'>
+                                <input type="date" className='form-input' name="birthday"/>
+                                <i className='icon'></i>
+                            </div>
+                            <div className='form-control'>
+                                Giới tính:
+                                <input type="radio" value="Nam" name="gender" /> Nam
+                                <input type="radio" value="Nữ" name="gender" /> Nữ
                             </div>
                             <input type="submit" value="Đăng ký" className='button'/>
                         </form>

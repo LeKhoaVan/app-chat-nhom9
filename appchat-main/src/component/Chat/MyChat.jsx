@@ -108,7 +108,6 @@ export default function MyChat() {
 
   function AutoScroll(){
     var element = document.querySelector(".live-chat");
-
     element.scrollTop = element.scrollHeight ;
   }
   function Demo(){
