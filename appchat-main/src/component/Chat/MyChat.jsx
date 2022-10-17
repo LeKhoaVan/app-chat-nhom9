@@ -91,6 +91,7 @@ export default function MyChat() {
       try {
         const res = await axios.get("http://localhost:8800/api/messages/" + currentChat?._id);
         setMessages(res.data);
+        console.log(currentChat.members[2])
       } catch (err) {
         console.log(err);
       }
@@ -119,13 +120,20 @@ export default function MyChat() {
       conversationId: currentChat._id,
     };
 
-    const receiverId = currentChat.members.find(
-      (member) => member !== _id
-    );
+    // const receiverId = currentChat.members.find(
+    //   (member) => member !== _id
+    // );
+    const receiverIds = [];
+    
+    for (let index = 0; index < currentChat.members.length; index++) {
+      if (currentChat.members[index] !== _id) {
+        receiverIds.push(currentChat.members[index]);
+      }
+    }
 
     socket.current.emit("sendMessage", {
       senderId: _id,
-      receiverId,
+      receiverIds,
       text: newMessage,
     });
 
@@ -138,6 +146,9 @@ export default function MyChat() {
       console.log(err);
     }
   };
+
+
+  
 
   function AutoScroll(){
     var element = document.querySelector(".live-chat");
@@ -373,5 +384,3 @@ export default function MyChat() {
     </div>
   );
 }
-
-

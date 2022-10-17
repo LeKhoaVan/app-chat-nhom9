@@ -24,7 +24,6 @@ const getUser = function(userId) {
 io.on("connection", (socket) => {
   //when ceonnect
   console.log("a user connected.");
-
   //take userId and socketId from user
   socket.on("addUser", (userId) => {
     addUser(userId, socket.id);
@@ -32,19 +31,25 @@ io.on("connection", (socket) => {
   });
 
   //send and get message
-  socket.on("sendMessage", function({ senderId, receiverId, text }) {
-    
-    const user43 = getUser(receiverId); // gán cho 1 giá trị như vậy sẽ bị lỗi, nên dùng cả hàm || trừ khi có đăng nhập 
-    //console.log(user)
-    if(user43 == undefined){
-      console.log("user offline");
-    }
-    else {
-      io.to(getUser(receiverId).socketId).emit("getMessage", {
-        senderId,
-        text,
+  socket.on("sendMessage", function({ senderId, receiverIds, text }) {
+
+      // const ds = []
+      
+      // receiverIds.forEach(function(receiverId){
+      //   ds.push(getUser(receiverId).socketId)
+      // })
+      // ds.push(receiverId)
+      receiverIds.forEach(function(room){
+        if( getUser(room) == undefined){
+          console.log("user offline");
+        }
+        else {
+          io.to(getUser(room).socketId).emit("getMessage", {
+            senderId,
+            text,
+          });
+        }
       });
-    }
     
   });
 
