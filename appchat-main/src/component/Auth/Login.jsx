@@ -42,11 +42,15 @@ function OnclickTitle(){
 
 
 }
-function OneClick(){
+function OneClickLogin(){
     const login = document.querySelector(".tabs__title-item.login");
     login.click()
 }
 
+function OneClickRegister(){
+    const register = document.querySelector(".tabs__title-item.register");
+    register.click()
+}
 
 
 export default function Login() {
@@ -141,7 +145,7 @@ export default function Login() {
                 </div>
             
                 <div className='tabs__title'>
-                    <div ref={OneClick} onClick={OnclickTitle} className='tabs__title-item active login'>Đăng nhập</div>
+                    <div ref={OneClickLogin} onClick={OnclickTitle} className='tabs__title-item active login'>Đăng nhập</div>
                     <div onClick={OnclickTitle} className='tabs__title-item register'>Đăng ký</div>
                     <div className='line'></div>
                     
@@ -170,6 +174,7 @@ export default function Login() {
                                 <AlertMessage info={alert} />
                             </div>
                             <input type="submit" value="Đăng nhập" className='button' />
+                            <p className="form-link" onClick={OneClickRegister}>Đăng ký tài khoản ngay!</p>
                         </form>
                     
                     </div>
@@ -217,6 +222,7 @@ export default function Login() {
                                 <AlertMessage info={alertRe} />
                             </div>
                             <input type="submit" value="Đăng ký" className='button'/>
+                            <p className="form-link" onClick={OneClickLogin}>Đăng nhập ngay!</p>
                         </form>
                     </div>
                 </div>

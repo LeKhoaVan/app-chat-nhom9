@@ -59,7 +59,7 @@
 .modal {
     background: var(--login-form);
     width: 400px;
-    height: 550px;
+    height: 570px;
     padding: 30px 45px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     border-radius: 5px;
@@ -174,7 +174,7 @@
 
 .tabs__content .form .button{
     width: 100%;
-    background-color: var(--login-line);
+    background-color: var(--login-button);
     border: none;
     outline: none;
     height: 40px;
@@ -184,11 +184,18 @@
     font-size: 16px;
     border-radius: 5px;
     color: #fff;
-    font-weight: 700;
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 600;
     transition: 0.2s;
+    letter-spacing: 1px;
 }
 .tabs__content .form .button:hover{
     background-color: var(--login-button-hover);
+}
+.form-link{
+    margin-top: 15px;
+    text-align: center;
+    color: var(--login-line);
+    text-decoration: underline;
+    cursor: pointer;
 }
