@@ -39,6 +39,7 @@ export default function MyChat() {
   const [myFriend, setMyFriend] = useState([]);
   const [newMessage, setNewMessages] = useState("");
   const [arrivalMessage, setArrivalMessages] = useState(null);
+  const [senderMessage, setSendMessage] = useState([]);
   const socket = useRef();
 
   
@@ -146,6 +147,7 @@ export default function MyChat() {
       console.log(err);
     }
   };
+
 
 
   
@@ -272,7 +274,7 @@ export default function MyChat() {
             <div onLoad={AutoScroll} className="live-chat">  
                 <div>
                   {messages.map((m) => (
-                     <Message message={m} own ={m.sender === _id}/>
+                     <Message message={m} own ={m.sender === _id}  />
                   ))} 
                 </div>   
             </div>

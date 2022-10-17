@@ -9,8 +9,8 @@ export default function Message({ message, own }) {
   useEffect(() => {
     const getUser = async () => {
       try {
-        const res = await axios("http://localhost:8800/api/users?userId="+message.sender);  
-        setUser(res.data);
+        const res = await axios("http://localhost:8800/api/users/name?userId="+message.sender);  
+        setUser(res.data.username);
       } catch (err) {
         console.log(err); 
       }
@@ -27,7 +27,7 @@ export default function Message({ message, own }) {
           alt=""
         />
         <div className="messageText">
-          <span className="owner">{user.username}</span>
+          <span className="owner">{user}</span>
           <p>{message.text}</p>
         </div>
       </div>

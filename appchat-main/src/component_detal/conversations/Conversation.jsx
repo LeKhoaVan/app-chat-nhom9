@@ -23,7 +23,7 @@ export default function Conversation({ conversation, currentUser}) {
   return (
     <div className='conversation'>
       <img className='conversationImg' src='https://khunganhonline.com/images/frame/frame_icon/frame-hinh-giot-nuoc-4005aed94ca66b9f.jpg' alt='avarta' />
-       <span className='conversationName'>{user?.username}</span>
+       <span className='conversationName'>{conversation.name? conversation.name : user.username  }</span>
       <span className='time'>09:00</span>
     </div>
   )
