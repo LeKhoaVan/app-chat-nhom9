@@ -46,11 +46,12 @@ const AuthContextProvider = ({ children }) => {
 	const registerUser = async userForm => {
 		try {
 			const response = await axios.post(`${apiUrl}/register`, userForm)
-			if (response.data.success)
-				localStorage.setItem(
-					LOCAL_STORAGE_TOKEN_NAME,
-					response.data.accessToken
-				)
+
+			// if (response.data.success)
+			// 	localStorage.setItem(
+			// 		LOCAL_STORAGE_TOKEN_NAME,
+			// 		response.data.accessToken
+			// 	)
 
 
 			return response.data

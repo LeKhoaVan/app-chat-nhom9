@@ -1,3 +1,14 @@
+:root{
+  --background-login:linear-gradient(#141e30, #243b55) ;
+  --login-form:#091c2a;
+  --login-line:#c23564;
+  --login-button-hover:#8f2448;
+  --login-form-input-bg:transparent;
+  --login-form-input:#fff;
+  
+}
+
+
 body{
   margin: 0px;
   box-sizing: border-box;
