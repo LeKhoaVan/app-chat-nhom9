@@ -1,0 +1,118 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+.container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.modal {
+    width: 400px;
+    height: 400px;
+    padding: 30px 45px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+}
+.tabs__title{
+    display: flex;
+    position: relative;
+}
+.tabs__title .line{
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 6px;
+    border-radius: 15px;
+    background-color: #0091ff;
+    transition: all 0.2s ease;
+}
+.tabs__title-item{
+    width: 50%;
+    padding: 16px 20px 11px 20px;
+    font-size: 20px;
+    text-align: center;
+    color: #0091ff;
+    background-color: #fff;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom: 5px solid transparent;
+    opacity: 0.6;
+    cursor: pointer;
+    transition: all 0.5s ease;    
+}
+.tabs__title-item:hover{
+    opacity: 1;
+    background-color: rgba(56, 71, 202, 0.05);
+    border-color: rgba(56, 71, 202, 0.05);
+}
+.tabs__title-item.active{
+    opacity: 1;
+}
+
+.tabs__content{
+    padding-top: 20px;
+}
+
+.tabs__content-item{
+    color: #333;
+    display: none;
+}
+.tabs__content-item.active {
+    display: block;
+}
+
+.tabs__content .form{
+    width: 100%;
+}
+
+.form-control {
+    position: relative;
+    width: 100%;
+}
+
+
+.tabs__content .form .form-input{
+    width: 100%;
+    padding: 5px;
+    border: none;
+    outline: none;
+    margin-bottom: 15px;
+    border-bottom: 1px solid rgb(204, 204, 204);
+    font-size: 15px;
+    padding-left: 30px;
+    color: rgb(31, 5, 5);
+}
+.tabs__content .form .form-input:focus{
+    border-bottom: 1px solid rgb(117, 243, 237);
+}
+.form-control .icon {
+    position: absolute;
+    top:0;
+    left: 0;
+    transform: translate(50%,50%);
+    color: rgba(0, 0, 0, 0.719);
+    font-size: 15px;
+}
+
+.tabs__content .form .button{
+    width: 100%;
+    background-color: rgb(0, 132, 255);
+    border: none;
+    outline: none;
+    height: 40px;
+    line-height: 40px;
+    padding: 0 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    color: #fff;
+    font-weight: 500;
+    transition: 0.2s;
+}
+.tabs__content .form .button:hover{
+    background-color: rgb(0, 106, 206);
+}
