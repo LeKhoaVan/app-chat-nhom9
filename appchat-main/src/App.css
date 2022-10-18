@@ -1,3 +1,15 @@
+:root{
+  --background-login:linear-gradient(#141e30, #243b55) ;
+  --login-form:#091c2a;
+  --login-line:#c23564;
+  --login-button-hover:#e93974;
+  --login-button:#c72158;
+  --login-form-input-bg:transparent;
+  --login-form-input:#fff;
+  
+}
+
+
 body{
   margin: 0px;
   box-sizing: border-box;
@@ -233,7 +245,7 @@ body{
   color: #858585;
 }
 /* MoreInfo */
-.morInfo-con{
+.morInfo_con{
   width: 23%;
   height: 100vh;
   display: none;

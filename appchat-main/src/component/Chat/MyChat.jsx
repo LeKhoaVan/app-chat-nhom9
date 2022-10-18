@@ -42,6 +42,21 @@ export default function MyChat() {
   const [senderMessage, setSendMessage] = useState([]);
   const socket = useRef();
 
+
+  function Demo(){
+    const morInfo = document.querySelector(".morInfo_con");
+    const cssObj = window.getComputedStyle(morInfo,null);
+    const width_morInfo = cssObj.getPropertyValue("display");
+    if(width_morInfo==="none"){
+      document.querySelector(".chattingpage").style.width='50%';
+      document.querySelector(".morInfo_con").style.display='flex';
+    }
+    else{
+      document.querySelector(".chattingpage").style.width='73%';
+      document.querySelector(".morInfo_con").style.display='none';
+    }
+  }
+
   
 
   // const receiverId = currentChat.members.find(
@@ -154,28 +169,9 @@ export default function MyChat() {
 
   function AutoScroll(){
     var element = document.querySelector(".live-chat");
-
     element.scrollTop = element.scrollHeight ;
   }
-  function Demo(){
-    const max_width_vh = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
-    const chattingpage = document.querySelector(".chattingpage");
-    const cssObj = window.getComputedStyle(chattingpage,null);
-    const width_chatpage = cssObj.getPropertyValue("width");
-    const moreInfo = document.querySelector(".morInfo-con");
-    const width_more = moreInfo.style.display;
-    if(Number(width_chatpage.slice(0,width_chatpage.length-2)).toFixed(0)<=Number(max_width_vh*0.73).toFixed(0)){
-      document.querySelector(".chattingpage").style.width='50%';
-      document.querySelector(".morInfo-con").style.display='flex';
-    }
-    else{
-      document.querySelector(".chattingpage").style.width='73%';
-      document.querySelector(".morInfo-con").style.display='none';
-    }
-    console.log(Number(width_chatpage.slice(0,width_chatpage.length-2)).toFixed(0),Number(max_width_vh*0.73).toFixed(0));
-  }
-
-
+  
   return (
     <div className="fullSc">
       {/* <div className="side-nav">
@@ -307,7 +303,7 @@ export default function MyChat() {
             </> : <span className="noChat">Chưa có tin nhắn</span>
           }  
         </div>
-        <div className="morInfo-con">
+        <div className="morInfo_con">
           <div className="namechat">
             <p className="text_namechat">Thông tin hội thoại</p>
           </div>

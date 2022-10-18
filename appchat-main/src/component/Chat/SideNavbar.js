@@ -19,7 +19,12 @@ import {AuthContext} from "../../contexts/AuthContext"
 
 export default function SideNavbar(){
   
-const {authState:{user:{avt}}} = useContext(AuthContext)
+  const {
+    authState:{user:{avt,username}},
+    logoutUser
+  } = useContext(AuthContext)
+
+  const logout = () => logoutUser()
 
         return(
         <div className="side-nav">
@@ -29,6 +34,10 @@ const {authState:{user:{avt}}} = useContext(AuthContext)
               alt="avatar" 
               src={avt}
               sx={{width:46,height:46}}/>
+          </div>
+          <div>
+            {username}
+            <button onClick={logout}>Logout</button>
           </div>
           <div className="icon">
             <Tooltip placement="bottom-end" title="Chats">
