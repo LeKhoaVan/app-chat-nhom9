@@ -24,6 +24,12 @@
     max-width: 300px;
 }
 
+.messageText .owner{
+    font-weight: bold;
+    font-size: 12px;
+    color: rgb(230, 233, 50);
+}
+
 .messageBottom{
     font-size: 12px;
     margin-bottom: 10px;  
@@ -36,6 +42,11 @@
 .message.own .messageText{
     background-color: rgb(245, 241, 241);
     color: black;
+}
+
+.message.own .messageText .owner{
+    display: none;
+    overflow: hidden;
 }
 
 .noChat{
