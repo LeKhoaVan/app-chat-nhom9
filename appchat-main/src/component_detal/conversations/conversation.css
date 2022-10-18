@@ -1,10 +1,13 @@
 .conversation {
-  display: flex;
-  align-items: center;
-  padding: 20px;
-  cursor: pointer;
+  display:flex;
+  flex-direction: row;
   justify-content: space-between;
+  align-items: center;
+  padding:20px;
+  cursor: pointer;
+  margin-top: 10px;
   border-radius: 10px;
+
 }
 
 .conversation:hover {
@@ -16,16 +19,15 @@
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
-  margin-right: 10px;
 }
 
 .conversationName {
   font-weight: 500;
   margin-right: auto;
+  margin-left: 10px;
 }
 
 .time {
-
 }
 
 @media screen and (max-width: 768px) {

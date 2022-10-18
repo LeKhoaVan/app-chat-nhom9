@@ -1,15 +1,35 @@
 import React from 'react';
 import './App.css';
-import SideNavbar from './component/SideNavbar';
-import MyChat from './component/MyChat';
-import ChattingPage from './component/ChattingPage';
+import DefaultLayout from './component/Chat'
+import Auth from './component/Auth';
+import Landing from './component/Landing';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import {useState} from 'react'
+import AuthContextProvider from './contexts/AuthContext'
+import LoginForm from './component/Auth/Login'
+import ProtectedRoute from './routing/ProtectedRoute'
+
 function App() {
   return (
-    <div>
-      <SideNavbar/>
-      <MyChat/>
-      <ChattingPage/>
-    </div>
+    <AuthContextProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path='/' element= {<Landing />} />
+          
+          <Route
+							path='/login'
+							element={ <Auth/>}
+						/> 
+          <Route path='/chat' element= {
+            <ProtectedRoute>
+              <DefaultLayout />
+            </ProtectedRoute>
+          
+          } />
+        
+        </Routes>
+      </BrowserRouter>
+    </AuthContextProvider>
   );
 }
 
