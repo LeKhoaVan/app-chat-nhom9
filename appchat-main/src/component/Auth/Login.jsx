@@ -3,7 +3,11 @@ import { useNavigate  } from 'react-router-dom'
 import {AuthContext}    from "../../contexts/AuthContext"
 import Spinner from 'react-bootstrap/Spinner'
 import "./Login.css"
-import AlertMessage from '../AlertMessage/index'
+import AlertMessage from '../AlertMessage'
+import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
+import LockIcon from '@mui/icons-material/Lock';
+import PersonIcon from '@mui/icons-material/Person';
+import CakeIcon from '@mui/icons-material/Cake';
 
 function OnclickTitle(){
     const $ = document.querySelector.bind(document);
@@ -38,26 +42,20 @@ function OnclickTitle(){
 
 
 }
-function OneClick(){
+function OneClickLogin(){
     const login = document.querySelector(".tabs__title-item.login");
     login.click()
+}
+
+function OneClickRegister(){
+    const register = document.querySelector(".tabs__title-item.register");
+    register.click()
 }
 
 
 export default function Login() {
 
-    // Check Token login
-    
-
-    // if(authLoading){
-
-    // }else if(isAuthenticated){
-    //     return <Navigate to={'/chat'}/> 
-    // }
-
-
    
-
     //Login
     const {loginUser} = useContext(AuthContext)
 
@@ -77,7 +75,7 @@ export default function Login() {
 
         try {
             const loginData = await loginUser(loginForm)
-            if (loginData.success) {
+            if (!loginData.success) {
                 setAlert({ type: 'danger', message: loginData.message })
                 setTimeout(() => setAlert(null), 5000)
             }
@@ -88,14 +86,66 @@ export default function Login() {
 
 
 
+    //register
+    const {registerUser} = useContext(AuthContext)
+
+    const [registerForm , setRegisterForm] = useState({
+        emailRe:'',
+        passwordRe:'',
+        cfpassword:'',
+        username:'',
+        birthday:'',
+        gender:''
+
+    })
+    const {emailRe  ,passwordRe ,cfpassword , username , birthday , gender} = registerForm
+
+    const [alertRe, setAlertRe] = useState(null)
+
+    const onChangeRegisterForm = event =>
+        setRegisterForm({ ...registerForm, [event.target.name]: event.target.value })
+
+    const register = async event => {
+        event.preventDefault()
+
+        if(passwordRe === cfpassword){
+            try {
+                const registerData = await registerUser(registerForm)
+                if (!registerData.success) {
+                    setAlertRe({ type: 'danger', message: registerData.message })
+                    setTimeout(() => setAlertRe(null), 5000)
+                }else{
+                    setAlertRe({ type: 'danger', message: "Thành công đăng ký tài khoản" })
+                    setTimeout(() => setAlertRe(null), 10000)
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }
+        else{
+            setAlertRe({ type: 'danger', message: "Mật khẩu không khớp" })
+            setTimeout(() => setAlertRe(null), 5000)
+        }
+
+        
+    }
+
+
+
     return ( 
        <>
        
         <div className='container'>
+            
             <div className='modal'>
-            <AlertMessage info={alert} />
+                <div className='text-effect'>
+                    <div className="header-name" >
+                        CYNO CHAT
+                    </div>
+                </div>
+            
                 <div className='tabs__title'>
-                    <div ref={OneClick} onClick={OnclickTitle} className='tabs__title-item active login'>Đăng nhập</div>
+                    <div ref={OneClickLogin} onClick={OnclickTitle} className='tabs__title-item active login'>Đăng nhập</div>
                     <div onClick={OnclickTitle} className='tabs__title-item register'>Đăng ký</div>
                     <div className='line'></div>
                     
@@ -106,39 +156,73 @@ export default function Login() {
                         <form className='form' onSubmit={login} >
                            
                             <div className='form-control'>
-                                <input placeholder="Email" className='form-input' name="email"
+                                <input placeholder="Email" className='form-input' type="email" name="email"
                                     value={email}
                                     onChange={onChangeLoginForm}
                                 />
 
-                                <i className='icon'></i>
+                                <i className='icon'><AlternateEmailIcon sx={{ fontSize: 16 }}/></i>
                             </div>
                             <div className='form-control'>
                                 <input placeholder="Mật khẩu" type="password" className='form-input' name="password"
                                      value={password}
                                      onChange={onChangeLoginForm}
                                 />
-                                <i className='icon'></i>
+                                <i className='icon'><LockIcon sx={{ fontSize: 16 }}/></i>
+                            </div>
+                            <div className="err">
+                                <AlertMessage info={alert} />
                             </div>
                             <input type="submit" value="Đăng nhập" className='button' />
+                            <p className="form-link" onClick={OneClickRegister}>Đăng ký tài khoản ngay!</p>
                         </form>
                     
                     </div>
                     <div className='tabs__content-item register'>
-                        <form className="form">
+                        <form className="form" onSubmit={register}>
                             <div className='form-control'>
-                                <input placeholder="Email" className='form-input'/>
-                                <i className='icon'></i>
+                                <input placeholder="Email" className='form-input' type="email" name="emailRe"
+                                value={emailRe}
+                                onChange={onChangeRegisterForm}
+                                />
+                                <i className='icon'><AlternateEmailIcon sx={{ fontSize: 16 }}/></i>
                             </div>
                             <div className='form-control'>
-                                <input placeholder="Mật khẩu" className='form-input'/>
-                                <i className='icon'></i>
+                                <input placeholder="Mật khẩu" className='form-input' type="password" name="passwordRe"
+                                value={passwordRe} 
+                                onChange={onChangeRegisterForm}/>
+                                <i className='icon'><LockIcon sx={{ fontSize: 16 }}/></i>
                             </div>
                             <div className='form-control'>
-                                <input placeholder="Nhập lại mật khẩu" className='form-input'/>
-                                <i className='icon'></i>
+                                <input placeholder="Nhập lại mật khẩu" className='form-input' type="password" name="cfpassword"
+                                value={cfpassword} 
+                                onChange={onChangeRegisterForm}/>
+                                <i className='icon'><LockIcon sx={{ fontSize: 16 }}/></i>
+                            </div>
+                            <div className='form-control'>
+                                <input placeholder="User name" className='form-input' type="text" name="username"
+                                value={username}
+                                onChange={onChangeRegisterForm}/> 
+                                <i className='icon'><PersonIcon sx={{ fontSize: 16 }}/></i>
+                            </div>
+                            <div className='form-control'>
+                                <input type="date"  className='form-input date' name="birthday"
+                                value={birthday} 
+                                onChange={onChangeRegisterForm}/>
+                                <i className='icon'><CakeIcon sx={{ fontSize: 16 }}/></i>
+                            </div>
+                            <div className='form-control radio'>
+                                Giới tính:
+                                <input type="radio" value="Nam" name="gender" 
+                                onChange={onChangeRegisterForm} /> Nam
+                                <input type="radio" value="Nữ" name="gender" 
+                                onChange={onChangeRegisterForm} /> Nữ
+                            </div>
+                            <div className="err">
+                                <AlertMessage info={alertRe} />
                             </div>
                             <input type="submit" value="Đăng ký" className='button'/>
+                            <p className="form-link" onClick={OneClickLogin}>Đăng nhập ngay!</p>
                         </form>
                     </div>
                 </div>

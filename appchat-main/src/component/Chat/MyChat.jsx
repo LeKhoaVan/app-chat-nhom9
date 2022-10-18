@@ -39,7 +39,23 @@ export default function MyChat() {
   const [myFriend, setMyFriend] = useState([]);
   const [newMessage, setNewMessages] = useState("");
   const [arrivalMessage, setArrivalMessages] = useState(null);
+  const [senderMessage, setSendMessage] = useState([]);
   const socket = useRef();
+
+
+  function Demo(){
+    const morInfo = document.querySelector(".morInfo_con");
+    const cssObj = window.getComputedStyle(morInfo,null);
+    const width_morInfo = cssObj.getPropertyValue("display");
+    if(width_morInfo==="none"){
+      document.querySelector(".chattingpage").style.width='50%';
+      document.querySelector(".morInfo_con").style.display='flex';
+    }
+    else{
+      document.querySelector(".chattingpage").style.width='73%';
+      document.querySelector(".morInfo_con").style.display='none';
+    }
+  }
 
   
 
@@ -91,6 +107,7 @@ export default function MyChat() {
       try {
         const res = await axios.get("http://localhost:8800/api/messages/" + currentChat?._id);
         setMessages(res.data);
+        console.log(currentChat.members[2])
       } catch (err) {
         console.log(err);
       }
@@ -119,13 +136,20 @@ export default function MyChat() {
       conversationId: currentChat._id,
     };
 
-    const receiverId = currentChat.members.find(
-      (member) => member !== _id
-    );
+    // const receiverId = currentChat.members.find(
+    //   (member) => member !== _id
+    // );
+    const receiverIds = [];
+    
+    for (let index = 0; index < currentChat.members.length; index++) {
+      if (currentChat.members[index] !== _id) {
+        receiverIds.push(currentChat.members[index]);
+      }
+    }
 
     socket.current.emit("sendMessage", {
       senderId: _id,
-      receiverId,
+      receiverIds,
       text: newMessage,
     });
 
@@ -139,30 +163,15 @@ export default function MyChat() {
     }
   };
 
+
+
+  
+
   function AutoScroll(){
     var element = document.querySelector(".live-chat");
-
     element.scrollTop = element.scrollHeight ;
   }
-  function Demo(){
-    const max_width_vh = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
-    const chattingpage = document.querySelector(".chattingpage");
-    const cssObj = window.getComputedStyle(chattingpage,null);
-    const width_chatpage = cssObj.getPropertyValue("width");
-    const moreInfo = document.querySelector(".morInfo-con");
-    const width_more = moreInfo.style.display;
-    if(Number(width_chatpage.slice(0,width_chatpage.length-2)).toFixed(0)<=Number(max_width_vh*0.73).toFixed(0)){
-      document.querySelector(".chattingpage").style.width='50%';
-      document.querySelector(".morInfo-con").style.display='flex';
-    }
-    else{
-      document.querySelector(".chattingpage").style.width='73%';
-      document.querySelector(".morInfo-con").style.display='none';
-    }
-    console.log(Number(width_chatpage.slice(0,width_chatpage.length-2)).toFixed(0),Number(max_width_vh*0.73).toFixed(0));
-  }
-
-
+  
   return (
     <div className="fullSc">
       {/* <div className="side-nav">
@@ -261,7 +270,7 @@ export default function MyChat() {
             <div onLoad={AutoScroll} className="live-chat">  
                 <div>
                   {messages.map((m) => (
-                     <Message message={m} own ={m.sender === _id}/>
+                     <Message message={m} own ={m.sender === _id}  />
                   ))} 
                 </div>   
             </div>
@@ -294,7 +303,7 @@ export default function MyChat() {
             </> : <span className="noChat">Chưa có tin nhắn</span>
           }  
         </div>
-        <div className="morInfo-con">
+        <div className="morInfo_con">
           <div className="namechat">
             <p className="text_namechat">Thông tin hội thoại</p>
           </div>
@@ -373,5 +382,3 @@ export default function MyChat() {
     </div>
   );
 }
-
-
