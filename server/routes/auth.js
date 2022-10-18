@@ -20,22 +20,30 @@ router.get('/', verifyToken, async (req, res) => {
 
 router.post('/register', async (req, res) => {
 
-    const {  email  ,password } = req.body
+    const {   emailRe  ,
+			passwordRe  ,
+		 username , birthday , gender } = req.body
+	const email = emailRe
+	const password = passwordRe
 
-
-    if(  !email || !password) 
+    if(  !email || !password ||  !username || !birthday  || !gender ) 
         return res
             .status(400)
-            .json({ success: false, message: 'Chưa nhập email or password' })
+            .json({ success: false, message: 'Chưa nhập đủ dữ liệu' })
 
     try{
         const user = await User.findOne({ email })
-        
         if(user){
             return res.status(400).json({ success: false, message: 'Email đã tồn tại' });
         }
+		const userName = await User.findOne({ username })
+        if(userName){
+			return res.status(400).json({ success: false, message: 'Username đã tồn tại' });
+        }
+		
+		
         const hashedPassword = await argon2.hash(password);
-        const newUser = new User({ email, password: hashedPassword })
+        const newUser = new User({ email, password: hashedPassword ,username,birthday,gender})
         await newUser.save();
 
         const accessToken = jwt.sign({ userId: newUser._id},process.env.ACCESS_TOKEN_SECRET_KEY)
