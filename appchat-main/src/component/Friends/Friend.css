@@ -1,14 +1,15 @@
 .fr{
+    float: left;
     width:500px;
     border:1px solid gray;
     border-radius:5px;
     position:relative;
     height:175px;
-    float: left;
     background-color: #fff;
     box-sizing: border-box;
     margin-top: 20px;
     margin-left: 20px;
+    padding: auto;
 }
 .fr p{
     font-family:sans-serif;
@@ -23,7 +24,7 @@
 .fr-top{
     background-color:#efefef;
     height:30px;
-    width:500px;
+    width:100%;
     border-radius:5px 5px 0 0;
     position:absolute;
     top:-1px;
@@ -89,15 +90,13 @@
     box-sizing: border-box;
     padding: 10px;
     padding-right: 0;
-    display: flex;
+    display: block;
     flex-direction: row;
     justify-content: space-between;
     padding-bottom: 10px;
     align-items: center;
   }
-  #h3DSKB{
-    margin-right: 820px;
-  }
+
   .friendlist{
     display:flex;
     flex-direction: row;
@@ -144,7 +143,9 @@
   }
   .goLeftPlease1{
     margin-right: 110px;
+    padding: auto;
   }
   .goLeftPlease2{
+    padding: auto;
     margin-right: 125px;
   }
