@@ -1,6 +1,7 @@
 import React from 'react';
 import './App.css';
 import DefaultLayout from './component/Chat'
+import FriendLayout from './component/Friends';
 import Auth from './component/Auth';
 import Landing from './component/Landing';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -23,6 +24,12 @@ function App() {
           <Route path='/chat' element= {
             <ProtectedRoute>
               <DefaultLayout />
+            </ProtectedRoute>
+          
+          } />
+          <Route path='/friend' element= {
+            <ProtectedRoute>
+              <FriendLayout />
             </ProtectedRoute>
           
           } />
