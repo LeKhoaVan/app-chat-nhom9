@@ -10,7 +10,7 @@ const Auth = () => {
 	const {
 		authState: { authLoading, isAuthenticated }
 	} = useContext(AuthContext)
-    
+    console.log(authLoading)
     if (authLoading)
 		body = (
 			<div className="on-loader">
