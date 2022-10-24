@@ -29,7 +29,7 @@ import {io} from "socket.io-client";
 import {AuthContext} from "../../contexts/AuthContext";
 
 import Popup from "./Popup";
-import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 export default function MyChat() {
   const {authState:{user:{avt, _id, }}} = useContext(AuthContext)
