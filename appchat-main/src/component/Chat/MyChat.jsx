@@ -28,6 +28,7 @@ import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import {io} from "socket.io-client";
 import {AuthContext} from "../../contexts/AuthContext";
 
+import Popup from "./Popup";
 
 
 export default function MyChat() {
@@ -42,6 +43,7 @@ export default function MyChat() {
   const [senderMessage, setSendMessage] = useState([]);
   const socket = useRef();
 
+  const [openPopup, setOpenPopup] = useState(false);
 
   function Demo(){
     const morInfo = document.querySelector(".morInfo_con");
@@ -204,7 +206,8 @@ export default function MyChat() {
           <PersonAddAlt1Icon />
           </Tooltip>
           <Tooltip  placement="bottom-end" title="Tạo nhóm chat">
-            <GroupAddIcon />
+          <IconButton onClick={() => { setOpenPopup(true);  }}><GroupAddIcon /></IconButton>
+
           </Tooltip>
         </div>
         <div className="recent-chat">
@@ -379,6 +382,46 @@ export default function MyChat() {
             </div>
           </div>
         </div>
+
+
+        <Popup
+                title="Tạo nhóm"
+                openPopup={openPopup}
+                setOpenPopup={setOpenPopup}
+            >
+            <form>
+  <div class="form-group">
+    <label for="exampleFormControlInput1">Nhập tên nhóm</label>
+    <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Nhập tên nhóm"></input><br></br>
+  </div>
+  
+  <div class="input-group">
+  <input type="search" class="form-control rounded" placeholder="Tìm kiếm"  aria-describedby="search-addon" />
+  <button type="button" class="btn btn-outline-primary">Tìm</button>
+</div>
+
+<div><p>____________________________________________________________________________</p></div>
+<div class="form-check">
+  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"></input>
+  <label class="form-check-label" for="flexRadioDefault1">
+    Nguyễn Hoàng Quân
+  </label>
+</div>
+<div class="form-check">
+  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked></input>
+  <label class="form-check-label" for="flexRadioDefault2">
+    Nguyễn Hoàng Quan
+  </label>
+</div>
+
+
+
+<br></br>
+<button type="button" class="btn btn-primary">Tạo nhóm</button>
+<button type="button" class="btn btn-secondary">Huỷ</button>
+  
+</form>
+        </Popup>
     </div>
   );
 }
