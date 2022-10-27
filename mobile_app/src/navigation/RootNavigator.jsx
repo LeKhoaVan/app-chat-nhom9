@@ -2,6 +2,7 @@ import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import LoginScreen from '../screens/LoginScreen.js';
+import RegisterScreen from '../screens/RegisterScreen.js';
 import MessagesScreen from '../screens/MessagesScreen.js';
 import ChattingScreen from '../screens/ChattingScreen';
 import MeScreen from '../screens/MeScreen.js';
@@ -23,6 +24,20 @@ const RootNavigator = () => {
 			})}
 		>
 			<Stack.Screen name="LoginScreen" component={LoginScreen} />
+			<Stack.Screen 
+				name="RegisterScreen" 
+				component={RegisterScreen} 
+				options={()=>({
+					headerShown:true,
+					headerStyle:{
+						backgroundColor:'#056282',
+					},
+					title:'Đăng ký',
+					headerTintColor:'#fff',
+					headerTitleStyle:{
+						fontSize:17,
+					}
+				})}/>
 			<Stack.Screen name="HomeNavigator" component={HomeNavigator} />
 			<Stack.Screen name="ChattingScreen" component={ChattingScreen}/>
 			<Stack.Screen 

@@ -1,4 +1,4 @@
-import { ActivityIndicator, Image, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Image, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Ionicons from 'react-native-vector-icons/Ionicons';
@@ -42,7 +42,7 @@ export default function Login({navigation}) {
               navigation.navigate('HomeNavigator')
             }}>
             {loading ?(
-              <ActivityIndicator  size={22}/>
+              <ActivityIndicator  size={28}/>
             ):(
             
               <Text style={styles.textLogin}>Đăng nhập</Text>
@@ -58,7 +58,8 @@ export default function Login({navigation}) {
           </TouchableOpacity>
             <View style={styles.btnBottom}>
             <TouchableOpacity
-              style={styles.btnRegister}>
+              style={styles.btnRegister}
+              onPress={()=> {navigation.navigate('RegisterScreen')}}>
               <Text style={styles.textRegister}>Đăng ký</Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -79,8 +80,8 @@ const styles = StyleSheet.create({
     width:'100%',
   },  
   logo:{
-    width:200,
-    height:200,
+    width:180,
+    height:180,
     borderRadius:100,
   },
   inputEmail:{
@@ -106,7 +107,8 @@ const styles = StyleSheet.create({
     width:'90%',
     backgroundColor:'#056282',
     alignItems:'center',
-    padding:10,
+    justifyContent:'center',
+    height:45,
     borderRadius:20,
     marginTop:5,
   },
@@ -121,7 +123,7 @@ const styles = StyleSheet.create({
     width:'90%',
     borderRadius:20,
     borderColor:'#D0D4D3',
-    padding:5,
+    height:45,
     justifyContent:'center',
     alignItems:'center',
     marginVertical:10,
@@ -137,7 +139,7 @@ const styles = StyleSheet.create({
   btnBottom:{
     flexDirection:'row',
     width:'90%',
-    marginBottom:40,
+    marginBottom:50,
     paddingHorizontal:40,
     justifyContent:'space-between',
   },
