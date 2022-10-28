@@ -55,4 +55,47 @@ router.get("/find/:firstUserId/:secondUserId", async (req, res) => {
   }
 });
 
+
+
+//db.conversations.updateOne({"_id":ObjectId("6332d3704789cb1ac02c14d6")},{$push:{"authorization":"dangkhoa"}})
+router.put('/:conId', async (req, res) => {
+
+  try{
+    await Conversation.updateOne({},{
+      $push:{"authorization": req.params.UserId}
+    })
+    res.status(200).json({message: 'true'})
+  }
+  catch(err){
+    res.status(500).json({message: 'false'});
+  }
+
+	//const { title, description, url, status } = req.body
+
+	
+	// try {
+	// 	let updatedPost = {
+	// 		title,
+	// 		description: description || '',
+	// 		url: (url.startsWith('https://') ? url : `https://${url}`) || '',
+	// 		status: status || 'TO LEARN'
+	// 	}
+
+	// 	const postUpdateCondition = { _id: req.params.id, user: req.userId }
+
+	// 	updatedPost = await Post.findOneAndUpdate(
+	// 		postUpdateCondition,
+	// 		updatedPost,
+	// 		{ new: true }
+	// 	)
+
+		
+	// } catch (error) {
+	// 	console.log(error)
+	// 	res.status(500).json({ success: false, message: 'Internal server error' })
+	// }
+
+})
+
+
 module.exports = router;

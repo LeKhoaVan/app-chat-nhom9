@@ -39,6 +39,8 @@ export default function MyChat() {
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState(null);
   const [myFriend, setMyFriend] = useState([]);
+  const [userCons, setUserCons] = useState([]);
+  const [userAuth, setUserAuth] = useState("");
   const [newMessage, setNewMessages] = useState("");
   const [arrivalMessage, setArrivalMessages] = useState(null);
   const [senderMessage, setSendMessage] = useState([]);
@@ -167,8 +169,26 @@ export default function MyChat() {
     }
   };
 
+  useEffect(() => {
+    const getUserCon = async () => {
+      let list = [];
+      for (let index = 0; index < currentChat?.members.length; index++) {
+        try {
+          const res = await axios.get("http://localhost:8800/api/users?userId="+ currentChat?.members[index]); 
+          list.push(res.data)
+        } catch (err) {
+          console.log(err);
+        }
+        
+      }
+      console.log(list);
+      setUserCons(list);
+    };
+    getUserCon();
+    console.log(currentChat)
+  },[currentChat]);
 
-
+  
   
 
   function AutoScroll(){
@@ -332,6 +352,71 @@ export default function MyChat() {
                   <GroupAddIcon />
                 </IconButton>
                 <p className="title_edit_button">Tạo nhóm trò chuyện</p>
+              </div>
+            </div>
+            <div className="user_con">
+              <div className="iv_title">
+                <p>Thành viên</p>
+                <ArrowDropDownIcon/>
+              </div>
+              <div className="iv_main">
+                <ul className="list-user">
+                  {userCons.map( (user)=>(
+                    <li>
+                            <div className="avt"><img src={user.avt ? user.avt : "data:image/jpeg;base64,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"} /></div>
+                          
+                          
+                          <div className="text">
+                            <p className="">{user.username}</p>
+                            <p className="auth">
+                            {currentChat.authorization.map( (auth)=>(
+                              auth===user._id ? "Quản trị viên" : ""
+                            ))}
+             
+                            </p>
+                          </div>
+                              
+                          {currentChat.authorization.map( (auth)=>(
+                              auth != _id || user._id == _id ?  
+                               <div></div> : 
+                            <div className="more">
+                              <MoreHorizIcon/>
+                              <div className="more-option">
+                    
+                              {currentChat.authorization.map( (auth1)=>( 
+                                auth1 === user._id ?
+                                 <div className="item">Gỡ quyền quản trị viên</div> 
+                                 :
+                                 <div></div>
+                              ))}
+
+                            {
+                              
+                              
+                              currentChat.authorization.some( (auth1)=>( 
+                                auth1 === user._id
+                              )) ? <div></div> : <div className="item">Chỉ định quản trị viên</div>
+                             
+                            } 
+      
+                                <div className="item">Xóa khỏi nhóm</div>
+                               
+                             </div>
+                           </div>
+                           
+                          ))}
+                          
+                           
+                      
+                          
+                      
+                    </li>
+
+                  ))}
+
+
+            
+                </ul>
               </div>
             </div>
             <div className="image_video_con">

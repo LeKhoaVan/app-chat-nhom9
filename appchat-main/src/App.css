@@ -398,7 +398,7 @@ body{
   padding: 20px;
   margin-bottom: 10px;
 }
-.image_video_con, .file_con, .link_con, .security_con{
+.image_video_con,.user_con, .file_con, .link_con, .security_con{
   width: 100%;
   height: auto;
   background-color: #fff;
@@ -409,6 +409,13 @@ body{
   padding: 20px;
   margin-bottom: 10px;
 }
+.user_con{
+  padding: 20px 0 20px 0;
+}
+.user_con .iv_title{
+  padding: 0 20px 5px 20px;
+}
+
 .iv_title{
   width: 100%;
   display: flex;
@@ -423,6 +430,69 @@ body{
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.list-user{
+  width: 100%;
+  height: 180px;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.list-user li{
+  height: 60px;
+  width: 100%;
+
+  border-radius: 5px;
+  padding: 0 20px 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.list-user li:hover{
+  background-color: rgba(0, 0, 0, 0.144);
+}
+.list-user .text .auth{
+  font-size: 13px;
+}
+.list-user .avt{
+  height: 46px;
+  width: 46px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 10px;
+}
+.list-user .more{
+  cursor: pointer;
+  position: relative;
+}
+.list-user .more:hover .more-option{
+  display:block;
+}
+.list-user .more .more-option{
+  display: none;
+  background-color: #fff;
+  width: 150px;
+  position: absolute;
+  top: 20px;
+  right: 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.205);
+  border-radius: 5%;
+  overflow: hidden;
+
+}
+.list-user .more .more-option .item{
+  font-size: 13px;
+  width: 100%;
+  padding: 5px;
+}
+.list-user .more .more-option .item:hover{
+  background-color: rgba(0, 0, 0, 0.178);
+}
+.list-user img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .not_value{
   text-align: center;
