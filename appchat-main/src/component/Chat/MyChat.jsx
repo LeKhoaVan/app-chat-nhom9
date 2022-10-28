@@ -174,11 +174,12 @@ export default function MyChat() {
   
   const onClickDeleteMgs = (id) => {
     setDeleteMessages(id);
-    const mgsdelete = messages.filter(
-      (message) => message._id !== id
-    );
-    setMessages(mgsdelete);
-
+    // const mgsdelete = messages.filter(
+    //   (message) => message._id !== id
+    // );
+    // messages.find((message) => message._id !== id).text = "tin nhắn đã được bạn xóa";
+    // setMessages(messages);
+   
     const receiverIds = [];
     
     for (let index = 0; index < currentChat.members.length; index++) {
@@ -188,12 +189,14 @@ export default function MyChat() {
     }
 
     socket.current.emit("deleteMessage", {
-      messagesCurrent: mgsdelete,
+      messagesCurrent: messages,
       messageId: id,
       senderId: _id,
       receiverIds,
-      text: "tin nhắn đã được xóa",
+      text: "tin nhắn đã được thu hồi",
     });
+
+    
   }
 
   
@@ -201,23 +204,18 @@ export default function MyChat() {
     
     socket.current.on("delMgs", (data) =>{
       console.log(data.messageId)
-      // try {
-      //   const res = axios.get("http://localhost:8800/api/messages/" + currentChat?._id);
-      //   alert(res.data);
-
-      // } catch (err) {
-      //   console.log(err);
-      // }
+      
       setMessages(data.messagesCurrent)
       
-      setArrivalMessages({
-        sender: data.senderId,
-        text: data.text,
-        createdAt: Date.now(),
-      })
+      //nhận vào và đưa vào Mess
+      // setArrivalMessages({
+      //   sender: data.senderId,
+      //   text: data.text,
+      //   createdAt: Date.now(),
+      // })
       
     });
-  },[currentChat]);  
+  },[]);  
   
 
   function AutoScroll(){

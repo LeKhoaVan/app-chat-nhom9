@@ -30,6 +30,7 @@ export default function Message({ message, own, onClickDelete }) {
        
         const res = await axios.delete("http://localhost:8800/api/messages",{ data: { id: message._id }, headers: { } } );
         console.log(res.data);
+        message.text = "tin nhắn đã được thu hồi"
         onClickDelete(message._id);
       } catch (err) {
         console.log(err);
@@ -50,11 +51,11 @@ export default function Message({ message, own, onClickDelete }) {
                 <div class="dropdown-content-own">
                   <li>
                     <span className="sendbutton" onClick={handleDeleteMessage}>
-                      xóa
+                     thu hồi
                     </span> 
 
                     <span className="sendbutton" >
-                      thu hồi
+                      xóa phía mình
                     </span> 
                     <span className="sendbutton" >
                       ghim
