@@ -42,6 +42,7 @@ export default function MyChat() {
   const [newMessage, setNewMessages] = useState("");
   const [arrivalMessage, setArrivalMessages] = useState(null);
   const [senderMessage, setSendMessage] = useState([]);
+  const [deleteMessage, setDeleteMessages] = useState(null);
   const socket = useRef();
 
   const [openPopup, setOpenPopup] = useState(false);
@@ -70,13 +71,16 @@ export default function MyChat() {
   useEffect(() =>{
     socket.current = io("ws://localhost:8900");
     socket.current.on("getMessage", (data) =>{
+      console.log(data.text)
       setArrivalMessages({
         sender: data.senderId,
         text: data.text,
         createdAt: Date.now(),
       })
-    });
+    });  
   },[]);
+
+  
 
   useEffect(() =>{
     arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) && 
@@ -111,7 +115,7 @@ export default function MyChat() {
       try {
         const res = await axios.get("http://localhost:8800/api/messages/" + currentChat?._id);
         setMessages(res.data);
-        console.log(currentChat.members[2])
+
       } catch (err) {
         console.log(err);
       }
@@ -167,8 +171,53 @@ export default function MyChat() {
     }
   };
 
+  
+  const onClickDeleteMgs = (id) => {
+    setDeleteMessages(id);
+    const mgsdelete = messages.filter(
+      (message) => message._id !== id
+    );
+    setMessages(mgsdelete);
 
+    const receiverIds = [];
+    
+    for (let index = 0; index < currentChat.members.length; index++) {
+      if (currentChat.members[index] !== _id) {
+        receiverIds.push(currentChat.members[index]);
+      }
+    }
 
+    socket.current.emit("deleteMessage", {
+      messagesCurrent: mgsdelete,
+      messageId: id,
+      senderId: _id,
+      receiverIds,
+      text: "tin nhắn đã được xóa",
+    });
+  }
+
+  
+  useEffect(() =>{
+    
+    socket.current.on("delMgs", (data) =>{
+      console.log(data.messageId)
+      // try {
+      //   const res = axios.get("http://localhost:8800/api/messages/" + currentChat?._id);
+      //   alert(res.data);
+
+      // } catch (err) {
+      //   console.log(err);
+      // }
+      setMessages(data.messagesCurrent)
+      
+      setArrivalMessages({
+        sender: data.senderId,
+        text: data.text,
+        createdAt: Date.now(),
+      })
+      
+    });
+  },[currentChat]);  
   
 
   function AutoScroll(){
@@ -273,11 +322,13 @@ export default function MyChat() {
                 </div>
             </div>
             <div onLoad={AutoScroll} className="live-chat">  
+
                 <div>
                   {messages.map((m) => (
-                     <Message message={m} own ={m.sender === _id}  />
+                     <Message message={m} own ={m.sender === _id} onClickDelete = {onClickDeleteMgs} />
                   ))} 
-                </div>   
+                </div>
+
             </div>
             <div className="sender-cont">
                 <div className="send-message">

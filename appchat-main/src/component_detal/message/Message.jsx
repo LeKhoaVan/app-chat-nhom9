@@ -1,11 +1,16 @@
 import "./message.css";
 import moment from "moment";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { Component, useEffect, useState, useRef, useContext} from "react";
 
 
-export default function Message({ message, own }) {
+export default function Message({ message, own, onClickDelete }) {
+
+  
   const [user, setUser] = useState([]);
+  const [messageDelete, setMessageDelete] = useState(null);
+
+
   useEffect(() => {
     const getUser = async () => {
       try {
@@ -18,20 +23,89 @@ export default function Message({ message, own }) {
     getUser();
   }, [message]);
 
-  return (
-    <div className={own ? "message own" : "message"}>
-      <div className="messageTop">
-        <img
-          className="messageImg"
-          src="https://images.pexels.com/photos/3686769/pexels-photo-3686769.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
-          alt=""
-        />
-        <div className="messageText">
-          <span className="owner">{user}</span>
-          <p>{message.text}</p>
-        </div>
+
+
+ const handleDeleteMessage = async () => {
+    try {
+       
+        const res = await axios.delete("http://localhost:8800/api/messages",{ data: { id: message._id }, headers: { } } );
+        console.log(res.data);
+        onClickDelete(message._id);
+      } catch (err) {
+        console.log(err);
+      };
+  };
+
+  
+  
+
+  if(own){
+    return (
+      <ul class="dropdown-own">
+      <div className={own ? "message own" : "message"}>
+        
+          <div className="messageTop">
+              <div className="messageText">
+                <p>{message.text}</p>
+                <div class="dropdown-content-own">
+                  <li>
+                    <span className="sendbutton" onClick={handleDeleteMessage}>
+                      xóa
+                    </span> 
+
+                    <span className="sendbutton" >
+                      thu hồi
+                    </span> 
+                    <span className="sendbutton" >
+                      ghim
+                    </span> 
+                  </li>
+                </div>
+              </div>
+              <img
+                className="messageImg"
+                src="https://images.pexels.com/photos/3686769/pexels-photo-3686769.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+                alt=""
+              />
+            
+          </div>
+          <div className="messageBottom">{moment(message.createdAt).format("LT")}</div>
+        
       </div>
-      <div className="messageBottom">{moment(message.createdAt).format("LT")}</div>
-    </div>
-  );
+      </ul>
+    );
+  }
+  else{
+    return (
+      <div className={own ? "message own" : "message"}>
+        <ul class="dropdown">
+          <div className="messageTop">
+            <img
+                className="messageImg"
+                src="https://images.pexels.com/photos/3686769/pexels-photo-3686769.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+                alt=""
+              />
+              <div className="messageText">
+              <span className="owner">{user}</span>
+              
+              <p>{message.text}</p>
+                <div class="dropdown-content">
+                <li>
+                    <span className="sendbutton">
+                      xóa bên mình
+                    </span> 
+                    <span className="sendbutton" >
+                      ghim
+                    </span> 
+                </li>
+              </div>
+            
+            </div>
+            
+          </div>
+          <div className="messageBottom">{moment(message.createdAt).format("LT")}</div>
+        </ul>
+      </div>
+    );
+  }
 }

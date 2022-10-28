@@ -56,3 +56,55 @@
     font-size : 50px;
     color: darkgrey;
 }
+.dropdown{
+    position: relative;
+ }
+
+ .dropdown-content{
+    left: 100px;
+    
+    width: 200px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    border-radius: 20%;
+    display: none;
+    position: absolute;
+    background-color: #ffffff;
+    z-index: 1;
+    list-style: none;
+    margin: 5px;
+ }
+
+ .dropdown:hover .dropdown-content{
+    display: block;
+    float: left;
+    color: #1877f2;
+ }
+
+
+
+.dropdown-own{
+    position: relative;
+ }
+
+.dropdown-content-own{
+    right: 80px;
+    width: 200px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    border-radius: 20%;
+    display: none;
+    position: absolute;
+    background-color: #ffffff;
+    z-index: 1;
+    list-style: none;
+ }
+
+.dropdown-own:hover .dropdown-content-own{
+    display: block;
+    float: left;
+    color: #1877f2;
+ }
+ 

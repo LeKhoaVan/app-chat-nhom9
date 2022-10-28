@@ -29,4 +29,16 @@ router.get("/:conversationId", async (req, res) => {
   }
 });
 
+router.delete("/", async (req, res) => {
+    //req.body.id
+    try {
+      await Message.findByIdAndDelete(req.body.id);
+      res.status(200).json("delete message successfull");
+    } catch (err) {
+      return res.status(500).json(err);
+    }
+  
+});
+
+
 module.exports = router;

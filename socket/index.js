@@ -1,6 +1,6 @@
 const io = require("socket.io")(8900, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "http://localhost:8080",
   },
 });
 
@@ -51,6 +51,27 @@ io.on("connection", (socket) => {
         }
       });
     
+  });
+
+
+
+  //delete message
+  socket.on("deleteMessage", function({messagesCurrent, messageId, senderId, receiverIds, text }) {
+
+    receiverIds.forEach(function(room){
+      if( getUser(room) == undefined){
+        console.log("user offline");
+      }
+      else {
+        io.to(getUser(room).socketId).emit("delMgs", {
+          messagesCurrent,
+          messageId,
+          senderId,
+          text,
+        });
+      }
+    });
+  
   });
 
   //when disconnect
