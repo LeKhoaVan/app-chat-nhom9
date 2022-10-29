@@ -4,7 +4,7 @@ import axios from "axios";
 import { Component, useEffect, useState, useRef, useContext} from "react";
 
 
-export default function Message({ message, own, onClickDelete }) {
+export default function Message({ message, own, onClickDelete, userId, onClickDeleteMgsUser  }) {
 
   
   const [user, setUser] = useState([]);
@@ -37,6 +37,36 @@ export default function Message({ message, own, onClickDelete }) {
       };
   };
 
+  const handleDeleteMgsUser = async () =>{
+    try {
+      const data = {
+        id: message._id,
+        delUser : userId
+      };
+
+      const res = await axios.put("http://localhost:8800/api/messages/del",data );
+      console.log(res.data);
+      onClickDeleteMgsUser(message._id);
+    } catch (err) {
+      console.log(err);
+    };
+  };
+
+  const handleDeleteMgsFri = async() => {
+    try {
+      const data = {
+        id: message._id,
+        delUser : userId
+      };
+
+      const res = await axios.put("http://localhost:8800/api/messages/del",data );
+      console.log(res.data);
+      onClickDeleteMgsUser(message._id);
+    } catch (err) {
+      console.log(err);
+    };
+  };
+
   
   
 
@@ -54,7 +84,7 @@ export default function Message({ message, own, onClickDelete }) {
                      thu hồi
                     </span> 
 
-                    <span className="sendbutton" >
+                    <span className="sendbutton" onClick={handleDeleteMgsUser} >
                       xóa phía mình
                     </span> 
                     <span className="sendbutton" >
@@ -92,7 +122,7 @@ export default function Message({ message, own, onClickDelete }) {
               <p>{message.text}</p>
                 <div class="dropdown-content">
                 <li>
-                    <span className="sendbutton">
+                    <span className="sendbutton" onClick={handleDeleteMgsFri}>
                       xóa bên mình
                     </span> 
                     <span className="sendbutton" >

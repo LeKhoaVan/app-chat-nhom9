@@ -42,7 +42,8 @@ export default function MyChat() {
   const [newMessage, setNewMessages] = useState("");
   const [arrivalMessage, setArrivalMessages] = useState(null);
   const [senderMessage, setSendMessage] = useState([]);
-  const [deleteMessage, setDeleteMessages] = useState(null);
+  const [recallMessage, setRecallMessages] = useState(null);
+
   const socket = useRef();
 
   const [openPopup, setOpenPopup] = useState(false);
@@ -75,6 +76,7 @@ export default function MyChat() {
       setArrivalMessages({
         sender: data.senderId,
         text: data.text,
+        delUser: data.delUser,
         createdAt: Date.now(),
       })
     });  
@@ -112,10 +114,16 @@ export default function MyChat() {
 
   useEffect(() => {
     const getMessages = async () => {
+      let messageList =[];
       try {
-        const res = await axios.get("http://localhost:8800/api/messages/" + currentChat?._id);
-        setMessages(res.data);
+        const res = await axios.get("http://localhost:8800/api/messages/" + currentChat?._id); 
 
+        for(let i =0; i< res.data.length;i++) {
+          if(res.data[i].delUser[0] !== _id){
+            messageList.push(res.data[i]);
+          }
+        }
+        setMessages(messageList);
       } catch (err) {
         console.log(err);
       }
@@ -142,6 +150,7 @@ export default function MyChat() {
       sender: _id,
       text: newMessage,
       conversationId: currentChat._id,
+      delUser:""
     };
 
     // const receiverId = currentChat.members.find(
@@ -159,6 +168,7 @@ export default function MyChat() {
       senderId: _id,
       receiverIds,
       text: newMessage,
+      delUser:""
     });
 
 
@@ -173,7 +183,7 @@ export default function MyChat() {
 
   
   const onClickDeleteMgs = (id) => {
-    setDeleteMessages(id);
+    setRecallMessages(id);
     // const mgsdelete = messages.filter(
     //   (message) => message._id !== id
     // );
@@ -196,9 +206,14 @@ export default function MyChat() {
       text: "tin nhắn đã được thu hồi",
     });
 
-    
   }
 
+  const onClickDeleteMgsMy = (id) => {
+    const mgsdelete = messages.filter(
+      (message) => message._id !== id
+    );
+    setMessages(mgsdelete);
+  }
   
   useEffect(() =>{
     
@@ -323,7 +338,8 @@ export default function MyChat() {
 
                 <div>
                   {messages.map((m) => (
-                     <Message message={m} own ={m.sender === _id} onClickDelete = {onClickDeleteMgs} />
+                     <Message message={m} own ={m.sender === _id} onClickDelete = {onClickDeleteMgs} 
+                        userId={_id} onClickDeleteMgsUser={onClickDeleteMgsMy}/>
                   ))} 
                 </div>
 
