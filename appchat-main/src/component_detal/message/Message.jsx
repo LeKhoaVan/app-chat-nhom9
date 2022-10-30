@@ -4,7 +4,7 @@ import axios from "axios";
 import { Component, useEffect, useState, useRef, useContext} from "react";
 
 
-export default function Message({ message, own, onClickDelete, userId, onClickDeleteMgsUser, onClickDeleteMgsFri  }) {
+export default function Message({ message, own, onClickDelete, userId, onClickDeleteMgsUser, onClickDeleteMgsFri, avatar  }) {
 
   
   const [user, setUser] = useState([]);
@@ -15,7 +15,7 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
     const getUser = async () => {
       try {
         const res = await axios("http://localhost:8800/api/users/name?userId="+message.sender);  
-        setUser(res.data.username);
+        setUser(res.data);
       } catch (err) {
         console.log(err); 
       }
@@ -96,7 +96,7 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
               </div>
               <img
                 className="messageImg"
-                src="https://images.pexels.com/photos/3686769/pexels-photo-3686769.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+                src={avatar}
                 alt=""
               />
             
@@ -114,11 +114,11 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
           <div className="messageTop">
             <img
                 className="messageImg"
-                src="https://images.pexels.com/photos/3686769/pexels-photo-3686769.jpeg?auto=compress&cs=tinysrgb&dpr=2&w=500"
+                src={user.avt}
                 alt=""
               />
               <div className="messageText">
-              <span className="owner">{user}</span>
+              <span className="owner">{user.username}</span>
               
               <p>{message.text}</p>
                 <div class="dropdown-content">

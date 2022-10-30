@@ -478,7 +478,7 @@ const handleSubmit = async (e) => {
                   {messages.map((m) => (
                      <Message message={m} own ={m.sender === _id} onClickDelete = {onClickDeleteMgs} 
                         userId={_id} onClickDeleteMgsUser={onClickDeleteMgsMy}
-                          onClickDeleteMgsFri = {onClickDeleteMgsOfFri}/>
+                          onClickDeleteMgsFri = {onClickDeleteMgsOfFri} avatar={avt}/>
                   ))} 
                 </div>
 
