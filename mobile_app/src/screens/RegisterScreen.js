@@ -40,6 +40,12 @@ export default function RegisterScreen() {
     const [gender,setGender] = useState('');
     const [isRegisterSuccess,setIsRegisterSuccess] = useState(false);
 
+    // const ref_inputEmail = useRef();
+    // const ref_inputPassword = useRef();
+    // const ref_inputcfPassword = useRef();
+    // const ref_inputUsername = useRef();
+    // const ref_inputBirthday = useRef();
+    // const ref_btnRegister = useRef();
     
 
     function onPressRadioButton(radioButtonsArray) {
