@@ -1,6 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import React, { useContext } from 'react';
-import { ActivityIndicator, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import { AuthContext } from '../contexts/AuthContext';
 import AuthNavigator from './AuthNavigator';
 import RootNavigator from './RootNavigator';
@@ -12,6 +12,7 @@ export default function AppNavigator() {
   if (isLoading){
     return(
         <View style={{flex:1,justifyContent:'center',alignItems:'center'}}>
+            <Text>Đang tải..</Text>
             <ActivityIndicator size={'large'}/>
         </View>
     );

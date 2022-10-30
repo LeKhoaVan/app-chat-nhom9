@@ -2,39 +2,51 @@ import { Button, Image, KeyboardAvoidingView, PermissionsAndroid, Platform,
     StyleSheet, Text, TextInput, TouchableOpacity, View, Alert, Linking, Modal, 
     TouchableWithoutFeedback,
     Keyboard,
-    ScrollView} from 'react-native'
-import React, { useState } from 'react'
+    ScrollView,
+    ActivityIndicator} from 'react-native'
+import React, { useContext, useState } from 'react'
 import RadioGroup from 'react-native-radio-buttons-group';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import * as ImagePicker from 'expo-image-picker';
+import { AuthContext } from '../contexts/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const radioButtonsData = [{
-    id: '1',
-    label: 'Nam',
-    value: 'Nam'
-}, {
-    id: '2',
-    label: 'Nữ',
-    value: 'Nữ'
-}]
 export default function RegisterScreen() {
+    const radioButtonsData = [{
+        id: '1',
+        label: 'Nam',
+        value: 'Nam',
+        selected:false,
+    }, {
+        id: '2',
+        label: 'Nữ',
+        value: 'Nữ',
+        selected:false,
+    }]
+
     const [show,setShow] = useState(false)
     const [visible,setVisible] = useState(true)
     const [avatarSource,setAvatarSource] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
     const [radioButtons, setRadioButtons] = useState(radioButtonsData)
-    const [alert, setAlert] = useState('dd')
+    const [alert, setAlert] = useState('');
+    const {register,loadUser_Register,setUserToken} = useContext(AuthContext)
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('');
     const [cfpassword,SetCfpassword] = useState('');
     const [username,setUsername] = useState('');
     const [birthday,setBirthday] = useState('');
     const [gender,setGender] = useState('');
+    const [isRegisterSuccess,setIsRegisterSuccess] = useState(false);
 
+    
 
     function onPressRadioButton(radioButtonsArray) {
         setRadioButtons(radioButtonsArray);
+        const result =radioButtons.filter((obj)=>{return obj.selected===true});
+        const gender_Result = result[0];
+        setGender(gender_Result.value)
     }
     const [textdate,setTextDate] = useState("Chọn ngày sinh")
 
@@ -44,6 +56,7 @@ export default function RegisterScreen() {
         let tempDate = new Date(date);
         let fDate =tempDate.getDate()+"/"+(tempDate.getMonth()*1+1)+"/"+tempDate.getFullYear();
         setTextDate(fDate);
+        setBirthday(tempDate);
         setDatePickerVisibility(false);
     };
     
@@ -131,27 +144,35 @@ export default function RegisterScreen() {
           
         }
     }
-    const register = async () => {
+    const register_onpress = async () => {
         if(password === cfpassword){
             try {
-                const registerData = await registerUser(registerForm)
+                const registerData = await register({emailRe:email,passwordRe:password,cfpassword:cfpassword,username:username,birthday:birthday,gender:gender})
+                console.log(registerData);
                 if (!registerData.success) {
-                    setAlert({ type: 'danger', message: registerData.message })
+                    setAlert(registerData.message )
                     setTimeout(() => setAlert(null), 5000)
                 }else{
-                    setAlert({ type: 'danger', message: "Thành công đăng ký tài khoản" })
-                    setTimeout(() => setAlert(null), 10000)
+                    
+                    setAlert( "Thành công đăng ký tài khoản" )
+                    setIsRegisterSuccess(true);
+                    setTimeout(()=>{
+                        setUserToken(registerData.accessToken);
+                        AsyncStorage.setItem('userToken',registerData.accessToken);
+                        loadUser_Register() ;
+                        setAlert(null)
+                        setIsRegisterSuccess(false)
+
+                    },2000)
                 }
             } catch (error) {
                 console.log(error)
             }
         }
         else{
-            setAlert({ type: 'danger', message: "Mật khẩu không khớp" })
-            setTimeout(() => setAlertRe(null), 5000)
-        }
-
-        
+            setAlert("Mật khẩu không khớp")
+            setTimeout(() => setAlert(null), 5000)
+        }    
     }
 
   return (
@@ -162,7 +183,6 @@ export default function RegisterScreen() {
                 <View style={{width:'100%',alignItems:'center',}}>
                     <Image 
                         style={styles.avatar}
-                        // source={require('../image/avatar.png')}
                         source ={{uri:image}}
                     />
                     <TouchableOpacity 
@@ -208,14 +228,16 @@ export default function RegisterScreen() {
                         <Ionicons name='mail-outline' size={25} color={'#056282'} style={styles.icon}/>
                         <TextInput
                             style={styles.input}
-                            placeholder='Email'/>
+                            placeholder='Email'
+                            onChangeText={(value)=>setEmail(value)}/>
                     </View>
                     <View style={styles.input_cont}>
                         <Ionicons name='lock-closed-outline' size={25} color={'#056282'} style={styles.icon}/>
                         <TextInput
                             style={styles.input_pass}
                             placeholder='Mật khẩu'
-                            secureTextEntry={visible}/>
+                            secureTextEntry={visible}
+                            onChangeText={(value)=>setPassword(value)}/>
                         <TouchableOpacity
                             style={{width:'10%'}}
                             onPress={()=>{
@@ -233,7 +255,8 @@ export default function RegisterScreen() {
                         <TextInput
                             style={styles.input_pass}
                             placeholder='Nhập lại mật khẩu'
-                            secureTextEntry={visible}/>
+                            secureTextEntry={visible}
+                            onChangeText={(value)=>SetCfpassword(value)}/>
                         <TouchableOpacity
                             style={{width:'10%'}}
                             onPress={()=>{
@@ -250,7 +273,8 @@ export default function RegisterScreen() {
                         <Ionicons name='person-outline' size={25}  color={'#056282'} style={styles.icon}/>
                         <TextInput
                             style={styles.input}
-                            placeholder='User name'/>
+                            placeholder='User name'
+                            onChangeText={(value)=>setUsername(value)}/>
                     </View>
                     <TouchableOpacity
                         style={styles.input_cont}
@@ -272,10 +296,24 @@ export default function RegisterScreen() {
                             onPress={onPressRadioButton}
                         />
                     </View>
-                    <Text style={{color:'#F15151',fontSize:16, marginTop:20,}}>{alert}</Text>
+                    <Text style={{color:'#F15151',fontSize:16, marginTop:10,}}>{alert}</Text>
                     <TouchableOpacity 
-                        style={styles.btnRegister}>
-                        <Text style={{fontSize:16,color:'#fff'}}>Đăng ký</Text>
+                        style={styles.btnRegister}
+                        onPress={()=>{
+                            console.log(email,password,cfpassword,username,birthday,gender);
+                            register_onpress();
+                        }}>
+                        {isRegisterSuccess ?(
+                            <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
+                                <Text style={{fontSize:16,color:'#fff'}}>Đăng nhập..</Text>
+                                <ActivityIndicator  size={'large'}/>
+                            </View>
+                        ):(
+                        
+                            <Text style={{fontSize:16,color:'#fff'}}>Đăng ký</Text>
+                        )}
+                        
+                        
                     </TouchableOpacity>
                 </View>
             </TouchableWithoutFeedback>
@@ -291,7 +329,7 @@ const styles = StyleSheet.create({
         justifyContent:'center',
     },
     avatar:{
-        marginTop:40,
+        marginTop:20,
         width:150,
         height:150,
         borderRadius:100,
@@ -338,7 +376,7 @@ const styles = StyleSheet.create({
         height:50,
         borderRadius:20,
         marginTop:10,
-        marginBottom:40,
+        marginBottom:20,
     },
     icon:{
         marginRight:10,
