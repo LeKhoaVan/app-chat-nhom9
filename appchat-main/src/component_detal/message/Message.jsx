@@ -79,7 +79,7 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
           <div className="messageTop">
               <div className="messageText">
                 <p>{message.text}</p>
-                <div class="dropdown-content-own">
+                <div class="dropdown-content own">
                   <li>
                     <span className="sendbutton" onClick={handleDeleteMessage}>
                      thu hồi
@@ -124,7 +124,7 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
                 <div class="dropdown-content">
                 <li>
                     <span className="sendbutton" onClick={handleDeleteMgsFri}>
-                      xóa bên mình
+                      xóa phía mình
                     </span> 
                     <span className="sendbutton" >
                       ghim
