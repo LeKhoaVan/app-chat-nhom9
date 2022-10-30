@@ -40,9 +40,15 @@ export default function MyChat() {
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState(null);
   const [myFriend, setMyFriend] = useState([]);
+  const [userCons, setUserCons] = useState([]);
+  const [authorize, setAuthorize] = useState([]);
+  const [userAuth, setUserAuth] = useState("");
   const [newMessage, setNewMessages] = useState("");
   const [arrivalMessage, setArrivalMessages] = useState(null);
   const [senderMessage, setSendMessage] = useState([]);
+  const [recallMessage, setRecallMessages] = useState(null);
+  const [deleteMessage, setDeleteMessages] = useState([]);
+
   const socket = useRef();
 
 
@@ -63,7 +69,42 @@ export default function MyChat() {
     }
   }
 
-  
+   function SetAuth(conId, userId){
+
+    const article = { conId,userId };
+    const con = axios.put('http://localhost:8800/api/conversations/setAuthorize', article)
+    con.then(value => {
+      setAuthorize(value.data)
+    })
+    // const res = axios.get("http://localhost:8800/api/conversations/" + _id);
+    // setConversation(res.data);
+  }
+
+  function RemoveAuth(conId, userId){
+    const article = { conId,userId };
+    const con = axios.put('http://localhost:8800/api/conversations/removeAuthorize', article)
+    con.then(value => {
+      setAuthorize(value.data)
+    })
+  }
+
+   function RemoveUserCon(conId, userId){
+   
+    const article = { conId,userId };
+    const con = axios.put('http://localhost:8800/api/conversations/removeMember', article)
+
+    con.then(async value => {
+      let list = [];
+      for (let index = 0; index < value.data.length; index++) {
+          const res = await axios.get("http://localhost:8800/api/users?userId="+ value.data[index]); 
+          list.push(res.data)  
+      }
+      setUserCons(list);
+    })
+    
+    
+   
+  }
 
   // const receiverId = currentChat.members.find(
   //   (member) => member !== user._id
@@ -71,18 +112,24 @@ export default function MyChat() {
   // console.log(receiverId);
   useEffect(() =>{
     socket.current = io("ws://localhost:8900");
-    socket.current.on("getMessage", (data) =>{
+    socket.current.on("getMessage",(data) =>{
       setArrivalMessages({
         sender: data.senderId,
         text: data.text,
+        delUser: data.delUser,
+        conversationId: data.conversationId,
         createdAt: Date.now(),
       })
-    });
-  },[]);
+    });  
+  },[currentChat]);
+
+  
 
   useEffect(() =>{
-    arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) && 
+    arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) &&
+    currentChat?._id === arrivalMessage.conversationId && 
     setMessages((prev)=>[...prev, arrivalMessage])
+    console.log(arrivalMessage)
   },[arrivalMessage, currentChat])
 
   useEffect(() => {
@@ -110,10 +157,27 @@ export default function MyChat() {
 
   useEffect(() => {
     const getMessages = async () => {
+      let messageList =[];
       try {
-        const res = await axios.get("http://localhost:8800/api/messages/" + currentChat?._id);
-        setMessages(res.data);
-        console.log(currentChat.members[2])
+        const res = await axios.get("http://localhost:8800/api/messages/" + currentChat?._id); 
+
+        for(let i =0; i< res.data.length;i++) {
+          if(res.data[i].delUser[0] !== _id) {
+            if(res.data[i].reCall === true){
+              res.data[i].text = "tin nhắn đã được thu hồi"
+              messageList.push(res.data[i]);
+            }
+            else{
+              messageList.push(res.data[i]);
+            }
+          }
+          
+        }
+
+        for(let i =0; i< res.data.length;i++) {
+          
+        }
+        setMessages(messageList);
       } catch (err) {
         console.log(err);
       }
@@ -140,6 +204,8 @@ export default function MyChat() {
       sender: _id,
       text: newMessage,
       conversationId: currentChat._id,
+      reCall: false,
+      delUser:""
     };
 
     // const receiverId = currentChat.members.find(
@@ -157,6 +223,8 @@ export default function MyChat() {
       senderId: _id,
       receiverIds,
       text: newMessage,
+      conversationId: currentChat._id,
+      delUser:""
     });
 
 
@@ -173,6 +241,62 @@ export default function MyChat() {
   // const [nameGroup, setNameGroup] = useState(null);
   // const [newMembers, setnewMembers] = useState("");
   // const [newNameGroup, setnewNameGroup] = useState("");
+  
+  const onClickDeleteMgs = (id) => {
+    setRecallMessages(id);
+    // const mgsdelete = messages.filter(
+    //   (message) => message._id !== id
+    // );
+    // messages.find((message) => message._id !== id).text = "tin nhắn đã được bạn xóa";
+    // setMessages(messages);
+   
+    const receiverIds = [];
+    
+    for (let index = 0; index < currentChat.members.length; index++) {
+      if (currentChat.members[index] !== _id) {
+        receiverIds.push(currentChat.members[index]);
+      }
+    }
+
+    //gửi tin nhắn thu hồi
+    socket.current.emit("deleteMessage", {
+      messagesCurrent: messages,
+      messageId: id,
+      senderId: _id,
+      receiverIds,
+      text: "tin nhắn đã được thu hồi",
+    });
+
+  }
+
+  //nhận tin nhắn thu hồi
+  useEffect(() =>{
+    
+    socket.current.on("delMgs", (data) =>{
+      console.log(data.messageId)
+      
+      setMessages(data.messagesCurrent)
+      
+      //nhận vào và đưa vào Mess
+      // setArrivalMessages({
+      //   sender: data.senderId,
+      //   text: data.text,
+      //   createdAt: Date.now(),
+      // })
+      
+    });
+  },[]);  
+  
+
+  //xóa tin nhắn phía tôi (tin nhắn của tôi)
+  const onClickDeleteMgsMy = (id) => {
+    
+    const mgsdelete = messages.filter(
+      (message) => message._id !== id
+    );
+
+    setMessages(mgsdelete);
+  }
 
   // const createNewConvGroup = async (e) =>{
   //   e.preventDefault();
@@ -210,6 +334,35 @@ const createNewConvGroup = async event =>{
   }
 
 }
+  
+   //xóa tin nhắn phía tôi (tin nhắn của bạn)
+   const onClickDeleteMgsOfFri =  async (id) => {
+    const mgsList = messages.filter(
+      (mes) => mes.delUser !== id
+    )
+    setMessages(mgsList)
+    
+  }
+
+  useEffect(() => {
+    const getUserCon = async () => {
+      let list = [];
+      for (let index = 0; index < currentChat?.members.length; index++) {
+        try {
+          const res = await axios.get("http://localhost:8800/api/users?userId="+ currentChat?.members[index]); 
+          list.push(res.data)
+        } catch (err) {
+          console.log(err);
+        }
+        
+      }
+      setUserCons(list);
+    };
+    getUserCon();
+  },[currentChat]);
+
+  
+  
 
   function AutoScroll(){
     var element = document.querySelector(".live-chat");
@@ -257,7 +410,10 @@ const createNewConvGroup = async event =>{
           <div className="recent-user">
 
           {conversations.map((c) => (
-              <div onClick={() => setCurrentChat(c)}>
+              <div onClick={() => {
+                setCurrentChat(c)
+                setAuthorize(c.authorization)
+              }}>
                 <Conversation conversation={c} currentUser={_id} />
               </div>
             ))}
@@ -272,9 +428,10 @@ const createNewConvGroup = async event =>{
                 <>    
             <div className="top-header">
                 <div className="user-header">
-                    <Avatar>TN</Avatar>
+                    <Avatar src={currentChat?.img}></Avatar>
                     <p className="user-name">{
-                        myFriend.username 
+                      currentChat?.name 
+                        //myFriend.username 
                         
                     }</p>
                 </div>
@@ -313,11 +470,15 @@ const createNewConvGroup = async event =>{
                 </div>
             </div>
             <div onLoad={AutoScroll} className="live-chat">  
+
                 <div>
                   {messages.map((m) => (
-                     <Message message={m} own ={m.sender === _id}  />
+                     <Message message={m} own ={m.sender === _id} onClickDelete = {onClickDeleteMgs} 
+                        userId={_id} onClickDeleteMgsUser={onClickDeleteMgsMy}
+                          onClickDeleteMgsFri = {onClickDeleteMgsOfFri}/>
                   ))} 
-                </div>   
+                </div>
+
             </div>
             <div className="sender-cont">
                 <div className="send-message">
@@ -354,11 +515,12 @@ const createNewConvGroup = async event =>{
           </div>
           <div className="mainInfo">
             <div className="infomation_con">
-              <Avatar
+              
+              <Avatar src={currentChat?.img}
                 sx={{width:70,height:70}}>
-                TN</Avatar>
+                </Avatar>
               <div className="name_con">
-                <p className="text_name">Nguyễn Thái Nguyên</p>
+                <p className="text_name">{currentChat?.name}</p>
                 <Tooltip 
                   title="Chỉnh sửa"
                   placement="bottom-end">
@@ -367,11 +529,82 @@ const createNewConvGroup = async event =>{
                   </IconButton>
                 </Tooltip>
               </div>
-              <div className="edit_button">
+              {/* <div className="edit_button">
                 <IconButton>
                   <GroupAddIcon />
                 </IconButton>
                 <p className="title_edit_button">Tạo nhóm trò chuyện</p>
+              </div> */}
+            </div>
+            <div className="user_con">
+              <div className="iv_title">
+                <p>Thành viên</p>
+                <ArrowDropDownIcon/>
+              </div>
+              <div className="iv_main">
+                <ul className="list-user">
+                  {userCons.map( (user)=>(
+                    <li>
+                            <div className="avt"><img src={user.avt ? user.avt : "data:image/jpeg;base64,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"} /></div>
+                          
+                          
+                          <div className="text">
+                            <p className="">{user.username}</p>
+                            <p className="auth">
+                            {authorize.map( (auth)=>(
+                              auth===user._id ? "Quản trị viên" : ""
+                            ))}
+             
+                            </p>
+                          </div>
+                              
+                          {currentChat.authorization.map( (auth)=>(
+                              auth != _id || user._id == _id ?  
+                               <div></div> : 
+                            <div className="more">
+                              <MoreHorizIcon/>
+                              <div className="more-option">
+                    
+                              {authorize.map( (auth1)=>( 
+                                auth1 === user._id ?
+                                 <div className="item"
+                                 onClick={() => RemoveAuth(currentChat._id,user._id)}>Gỡ quyền quản trị viên</div> 
+                                 :
+                                 <div></div>
+                              ))}
+
+                            {
+                              
+                              
+                              authorize.some( (auth1)=>( 
+                                auth1 === user._id
+                              )) ? <div></div> : <div className="item"
+                                onClick={() => {SetAuth(currentChat._id,user._id)
+                                }}>Chỉ định quản trị viên</div>
+                             
+                            } 
+                                <div className="item" onClick={() => {
+                                  RemoveUserCon(currentChat._id,user._id)
+                                  
+                                }} 
+                                >Xóa khỏi nhóm</div>
+                               
+                             </div>
+                           </div>
+                           
+                          ))}
+                          
+                           
+                      
+                          
+                      
+                    </li>
+
+                  ))}
+
+
+            
+                </ul>
               </div>
             </div>
             <div className="image_video_con">

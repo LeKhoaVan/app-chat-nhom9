@@ -11,6 +11,12 @@ const MessageSchema = new mongoose.Schema(
     text: {
       type: String,
     },
+    reCall: {
+      type: Boolean,
+    },
+    delUser: {
+      type: Array,
+    },
   },
   { timestamps: true }
 );

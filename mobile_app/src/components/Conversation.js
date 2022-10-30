@@ -1,8 +1,21 @@
 import { StyleSheet, Text, View, Image} from 'react-native'
 import React from 'react'
+import { GestureHandlerRootView,Swipeable } from 'react-native-gesture-handler'
 
 export default function Conversation({item}) {
+  const rightSwipeActions = () => {
+    return (
+      <View>
+        <Text>Book</Text>
+      </View>
+    );
+  };
   return (
+    <GestureHandlerRootView>
+    <Swipeable
+      renderRightActions={rightSwipeActions}
+      // onSwipeableRightOpen={() => swipeFromRightOpen(item.id)}
+    >
     <View style={styles.container}>
       <Image 
           source={{uri : item.user_avt}}
@@ -18,6 +31,8 @@ export default function Conversation({item}) {
       </View>
       <Text>{item.time_last_chat}</Text>
     </View>
+    </Swipeable>
+    </GestureHandlerRootView>
   )
 }
 
