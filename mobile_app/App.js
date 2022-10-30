@@ -1,23 +1,14 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View, SafeAreaView} from 'react-native';
-import HomeScreen from './src/navigation/HomeNavigator';
-import RootNavigator from './src/navigation/RootNavigator';
+import React, { useContext } from 'react';
+import { AuthContextProvider } from './src/contexts/AuthContext';
+import AppNavigator from './src/navigation/AppNavigator';
+
+
 
 export default function App() {
   return (
-      <NavigationContainer>
-			  <RootNavigator/>
-		  </NavigationContainer>
+    <AuthContextProvider>
+      <AppNavigator/>
+    </AuthContextProvider>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});

@@ -120,6 +120,24 @@ router.put('/removeMember', async (req, res) => {
   }
 })
 
+
+router.put('/addMember', async (req, res) => {
+  try{
+    
+		const postUpdateCondition = { _id: req.body.conId }
+
+    const conversation = await Conversation.findOneAndUpdate(postUpdateCondition,
+      { $push: { "members": req.body.userId } }
+      , { new: true })
+
+    res.status(200).json(conversation.members)
+  }
+  catch(err){
+    res.status(500).json({message: result});
+  }
+})
+
+
 router.get("/", async (req, res) => {
   const conId = req.query.conId;
   try {

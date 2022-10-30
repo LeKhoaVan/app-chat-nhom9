@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TouchableOpacity, FlatList,Image, Modal} from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, FlatList,Image, Modal,TouchableWithoutFeedback} from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -85,16 +85,40 @@ export default function MessagesScreen({navigation}) {
                 />
             </TouchableOpacity>
           )}/>
-    <Modal animationType="slide" transparent visible={modalVisible}>
-      <TouchableOpacity 
-        style={styles.modalContainer}
-        onPress={()=>setModalVisible(false)}
-        activeOpacity={1}>
-		  </TouchableOpacity>
-      <View style={styles.modalInnerContainer}>
-          <Text>Nguy</Text>
-      </View>
-		</Modal>
+    <Modal
+                        visible={modalVisible}
+                        transparent={true}
+                        onRequestClose={() => setModalVisible(false)}
+                        animationType='slide'
+                        hardwareAccelerated>
+                        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+                            <View style={styles.centered_view} >
+                                <View style={styles.modal_cont}>
+                                    <Text style={styles.modal_title}>Tải lên hình ảnh</Text>
+                                    <View style={styles.modal_body}>
+                                        <TouchableOpacity
+                                            onPress={() => openCamera()}
+                                            style={styles.choose}>
+                                            <Ionicons name='camera-outline' size={26} color={'#056282'}/>
+                                            <Text style={styles.text_choose}>Chụp ảnh mới</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            onPress={() => showImagePicker()}
+                                            style={styles.choose}>
+                                            <Ionicons name='images-outline' size={26} color={'#056282'}/>
+                                            <Text style={styles.text_choose}>Chọn ảnh từ thiết bị</Text>
+                                        </TouchableOpacity>
+                                        <TouchableOpacity
+                                            onPress={() => setModalVisible(false)}
+                                            style={styles.choose}>
+                                            <Ionicons name='close-circle-outline' size={26} color={'#056282'}/>
+                                            <Text style={styles.text_choose}>Hủy</Text>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </View>
+                        </TouchableWithoutFeedback>
+    </Modal>
       </View>
   )
 }
@@ -103,5 +127,37 @@ const styles = StyleSheet.create({
   container:{
     flex:1,
   },
+  //demo
+  centered_view: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#00000099',
+  },
+  modal_cont: {
+    width: 300,
+    backgroundColor: '#ffffff',
+    borderRadius: 5,
+  },
+  modal_title: {
+    borderBottomWidth:1,
+    borderBottomColor:'#D0D4D3',
+    padding:10,
+    fontSize:20,
+    fontWeight:'500',
+  },
+  modal_body:{
+    padding:20,
+  },
+  choose:{
+    height:50,
+    justifyContent:'flex-start',
+    alignItems:'center',
+    flexDirection:'row',
+  },
+  text_choose:{
+        marginLeft:15,
+        fontSize:16,
+  }
 })
 

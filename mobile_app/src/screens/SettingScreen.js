@@ -1,10 +1,12 @@
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
-import { SafeAreaView } from 'react-native-safe-area-context'
+import { AuthContext } from '../contexts/AuthContext'
+
 
 export default function SettingScreen() {
+    const{logout} = useContext(AuthContext)
   return (
     <View>
         <TouchableOpacity style={styles.button}>
@@ -57,7 +59,7 @@ export default function SettingScreen() {
                 name='chevron-forward'
                 size={25}/>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={()=>logout()}>
         <Ionicons 
                 name='md-log-out-outline'
                 size={25}
