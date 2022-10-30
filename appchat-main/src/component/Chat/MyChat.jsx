@@ -74,7 +74,8 @@ export default function MyChat() {
     con.then(value => {
       setAuthorize(value.data)
     })
-    
+    const res = axios.get("http://localhost:8800/api/conversations/" + _id);
+    setConversation(res.data);
   }
 
   function RemoveAuth(conId, userId){
@@ -83,7 +84,6 @@ export default function MyChat() {
     con.then(value => {
       setAuthorize(value.data)
     })
-    
   }
 
    function RemoveUserCon(conId, userId){
@@ -488,12 +488,12 @@ export default function MyChat() {
                   </IconButton>
                 </Tooltip>
               </div>
-              <div className="edit_button">
+              {/* <div className="edit_button">
                 <IconButton>
                   <GroupAddIcon />
                 </IconButton>
                 <p className="title_edit_button">Tạo nhóm trò chuyện</p>
-              </div>
+              </div> */}
             </div>
             <div className="user_con">
               <div className="iv_title">
