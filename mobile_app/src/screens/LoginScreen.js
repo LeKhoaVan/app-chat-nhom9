@@ -1,5 +1,5 @@
 import { ActivityIndicator, Image, Keyboard, KeyboardAvoidingView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import {AuthContext}  from '../contexts/AuthContext';
@@ -14,6 +14,13 @@ export default function Login({navigation}) {
   const [email,setEmail] = useState('');
   const [password,setPassword] =useState('');
   const login_onpress = async () => {
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+    if(reg.test(email)===false){
+        setAlert("Định dạng email không đúng")
+        ref_inputEmail.current.focus()
+        setTimeout(() => setAlert(''), 5000)
+    }
+    else        
     try {
         const loginData =  await login({email:email,password:password})
         if (!loginData.success) {
@@ -23,7 +30,9 @@ export default function Login({navigation}) {
     } catch (error) {
         console.log(error)
     }
-}
+  }
+  const ref_inputEmail = useRef();
+  const ref_inputPassword = useRef();
   return (
     <View style={styles.container}>
         <KeyboardAvoidingView behavior={Platform.OS === "ios" ? "padding" : "height"}>
@@ -35,21 +44,35 @@ export default function Login({navigation}) {
             <View style={styles.inputEmail}>
                 <Ionicons name='mail-outline' size={25} color={'#056282'} style={styles.icon}/>
                   <TextInput
+                    ref={ref_inputEmail}
                     style={styles.input}
                     placeholder='Email'
                     value={email}
                     onChangeText={(value)=>setEmail(value)}
-                    onPressIn={()=>setAlert('')}/>
+                    onPressIn={()=>
+                      setAlert('')}
+                    onSubmitEditing={() => ref_inputPassword.current.focus()}
+                    onBlur={()=>{
+                      let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w\w+)+$/;
+                      if(reg.test(email)===false){
+                        setAlert("Định dạng email không đúng")
+                        ref_inputEmail.current.focus()
+                        setTimeout(() => setAlert(''), 5000)
+                      }
+                    }}
+                    />
             </View>
             <View style={styles.inputPass_cont}>
             <Ionicons name='lock-closed-outline' size={25} color={'#056282'} style={styles.icon}/>
               <TextInput
+                ref={ref_inputPassword}
                 style={styles.inputPass}
                 placeholder='Mật khẩu'
                 value={password}
                 onChangeText={(value)=>setPassword(value) }
                 onPressIn={()=>setAlert('')}
-                secureTextEntry={visible}/>
+                secureTextEntry={visible}
+                />
               <TouchableOpacity
                 style={{width:'10%'}}
                 onPress={()=>{
