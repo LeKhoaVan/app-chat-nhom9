@@ -2,6 +2,9 @@ const mongoose = require("mongoose");
 
 const ConversationSchema = new mongoose.Schema(
   {
+    avt:{
+      type: String
+    },
     name: {
       type: String
     },

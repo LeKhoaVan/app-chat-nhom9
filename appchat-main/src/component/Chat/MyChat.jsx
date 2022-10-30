@@ -272,7 +272,7 @@ export default function MyChat() {
 
           {conversations.map((c) => (
               <div onClick={() => {
-                setCurrentChat(c) 
+                setCurrentChat(c)
                 setAuthorize(c.authorization)
               }}>
                 <Conversation conversation={c} currentUser={_id} />
@@ -373,9 +373,9 @@ export default function MyChat() {
             <div className="infomation_con">
               <Avatar
                 sx={{width:70,height:70}}>
-                TN</Avatar>
+                </Avatar>
               <div className="name_con">
-                <p className="text_name">Nguyễn Thái Nguyên</p>
+                <p className="text_name">{currentChat?.name}</p>
                 <Tooltip 
                   title="Chỉnh sửa"
                   placement="bottom-end">
