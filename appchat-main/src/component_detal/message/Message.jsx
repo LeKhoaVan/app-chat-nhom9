@@ -2,9 +2,13 @@ import "./message.css";
 import moment from "moment";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import {AuthContext} from "../../contexts/AuthContext";
+
+
 
 
 export default function Message({ message, own }) {
+
   const [user, setUser] = useState([]);
   useEffect(() => {
     const getUser = async () => {

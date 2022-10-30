@@ -40,6 +40,7 @@ export default function MyChat() {
   const [messages, setMessages] = useState(null);
   const [myFriend, setMyFriend] = useState([]);
   const [userCons, setUserCons] = useState([]);
+  const [authorize, setAuthorize] = useState([]);
   const [userAuth, setUserAuth] = useState("");
   const [newMessage, setNewMessages] = useState("");
   const [arrivalMessage, setArrivalMessages] = useState(null);
@@ -63,7 +64,42 @@ export default function MyChat() {
     }
   }
 
-  
+   function SetAuth(conId, userId){
+
+    const article = { conId,userId };
+    const con = axios.put('http://localhost:8800/api/conversations/setAuthorize', article)
+    con.then(value => {
+      setAuthorize(value.data)
+    })
+    
+  }
+
+  function RemoveAuth(conId, userId){
+    const article = { conId,userId };
+    const con = axios.put('http://localhost:8800/api/conversations/removeAuthorize', article)
+    con.then(value => {
+      setAuthorize(value.data)
+    })
+    
+  }
+
+   function RemoveUserCon(conId, userId){
+   
+    const article = { conId,userId };
+    const con = axios.put('http://localhost:8800/api/conversations/removeMember', article)
+
+    con.then(async value => {
+      let list = [];
+      for (let index = 0; index < value.data.length; index++) {
+          const res = await axios.get("http://localhost:8800/api/users?userId="+ value.data[index]); 
+          list.push(res.data)  
+      }
+      setUserCons(list);
+    })
+    
+    
+   
+  }
 
   // const receiverId = currentChat.members.find(
   //   (member) => member !== user._id
@@ -181,11 +217,9 @@ export default function MyChat() {
         }
         
       }
-      console.log(list);
       setUserCons(list);
     };
     getUserCon();
-    console.log(currentChat)
   },[currentChat]);
 
   
@@ -237,7 +271,10 @@ export default function MyChat() {
           <div className="recent-user">
 
           {conversations.map((c) => (
-              <div onClick={() => setCurrentChat(c)}>
+              <div onClick={() => {
+                setCurrentChat(c) 
+                setAuthorize(c.authorization)
+              }}>
                 <Conversation conversation={c} currentUser={_id} />
               </div>
             ))}
@@ -369,7 +406,7 @@ export default function MyChat() {
                           <div className="text">
                             <p className="">{user.username}</p>
                             <p className="auth">
-                            {currentChat.authorization.map( (auth)=>(
+                            {authorize.map( (auth)=>(
                               auth===user._id ? "Quản trị viên" : ""
                             ))}
              
@@ -383,9 +420,10 @@ export default function MyChat() {
                               <MoreHorizIcon/>
                               <div className="more-option">
                     
-                              {currentChat.authorization.map( (auth1)=>( 
+                              {authorize.map( (auth1)=>( 
                                 auth1 === user._id ?
-                                 <div className="item">Gỡ quyền quản trị viên</div> 
+                                 <div className="item"
+                                 onClick={() => RemoveAuth(currentChat._id,user._id)}>Gỡ quyền quản trị viên</div> 
                                  :
                                  <div></div>
                               ))}
@@ -393,13 +431,19 @@ export default function MyChat() {
                             {
                               
                               
-                              currentChat.authorization.some( (auth1)=>( 
+                              authorize.some( (auth1)=>( 
                                 auth1 === user._id
-                              )) ? <div></div> : <div className="item">Chỉ định quản trị viên</div>
+                              )) ? <div></div> : <div className="item"
+                                onClick={() => {SetAuth(currentChat._id,user._id)
+                                  console.log(userCons)
+                                }}>Chỉ định quản trị viên</div>
                              
                             } 
-      
-                                <div className="item">Xóa khỏi nhóm</div>
+                                <div className="item" onClick={() => {
+                                  RemoveUserCon(currentChat._id,user._id)
+                                  
+                                }} 
+                                >Xóa khỏi nhóm</div>
                                
                              </div>
                            </div>
