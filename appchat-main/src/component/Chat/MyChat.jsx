@@ -42,6 +42,9 @@ export default function MyChat() {
   const [newMessage, setNewMessages] = useState("");
   const [arrivalMessage, setArrivalMessages] = useState(null);
   const [senderMessage, setSendMessage] = useState([]);
+  const [recallMessage, setRecallMessages] = useState(null);
+  const [deleteMessage, setDeleteMessages] = useState([]);
+
   const socket = useRef();
 
   const [openPopup, setOpenPopup] = useState(false);
@@ -69,18 +72,24 @@ export default function MyChat() {
   // console.log(receiverId);
   useEffect(() =>{
     socket.current = io("ws://localhost:8900");
-    socket.current.on("getMessage", (data) =>{
+    socket.current.on("getMessage",(data) =>{
       setArrivalMessages({
         sender: data.senderId,
         text: data.text,
+        delUser: data.delUser,
+        conversationId: data.conversationId,
         createdAt: Date.now(),
       })
-    });
-  },[]);
+    });  
+  },[currentChat]);
+
+  
 
   useEffect(() =>{
-    arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) && 
+    arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) &&
+    currentChat?._id === arrivalMessage.conversationId && 
     setMessages((prev)=>[...prev, arrivalMessage])
+    console.log(arrivalMessage)
   },[arrivalMessage, currentChat])
 
   useEffect(() => {
@@ -108,10 +117,27 @@ export default function MyChat() {
 
   useEffect(() => {
     const getMessages = async () => {
+      let messageList =[];
       try {
-        const res = await axios.get("http://localhost:8800/api/messages/" + currentChat?._id);
-        setMessages(res.data);
-        console.log(currentChat.members[2])
+        const res = await axios.get("http://localhost:8800/api/messages/" + currentChat?._id); 
+
+        for(let i =0; i< res.data.length;i++) {
+          if(res.data[i].delUser[0] !== _id) {
+            if(res.data[i].reCall === true){
+              res.data[i].text = "tin nhắn đã được thu hồi"
+              messageList.push(res.data[i]);
+            }
+            else{
+              messageList.push(res.data[i]);
+            }
+          }
+          
+        }
+
+        for(let i =0; i< res.data.length;i++) {
+          
+        }
+        setMessages(messageList);
       } catch (err) {
         console.log(err);
       }
@@ -138,6 +164,8 @@ export default function MyChat() {
       sender: _id,
       text: newMessage,
       conversationId: currentChat._id,
+      reCall: false,
+      delUser:""
     };
 
     // const receiverId = currentChat.members.find(
@@ -155,6 +183,8 @@ export default function MyChat() {
       senderId: _id,
       receiverIds,
       text: newMessage,
+      conversationId: currentChat._id,
+      delUser:""
     });
 
 
@@ -167,7 +197,73 @@ export default function MyChat() {
     }
   };
 
+  
+  const onClickDeleteMgs = (id) => {
+    setRecallMessages(id);
+    // const mgsdelete = messages.filter(
+    //   (message) => message._id !== id
+    // );
+    // messages.find((message) => message._id !== id).text = "tin nhắn đã được bạn xóa";
+    // setMessages(messages);
+   
+    const receiverIds = [];
+    
+    for (let index = 0; index < currentChat.members.length; index++) {
+      if (currentChat.members[index] !== _id) {
+        receiverIds.push(currentChat.members[index]);
+      }
+    }
 
+    //gửi tin nhắn thu hồi
+    socket.current.emit("deleteMessage", {
+      messagesCurrent: messages,
+      messageId: id,
+      senderId: _id,
+      receiverIds,
+      text: "tin nhắn đã được thu hồi",
+    });
+
+  }
+
+  //nhận tin nhắn thu hồi
+  useEffect(() =>{
+    
+    socket.current.on("delMgs", (data) =>{
+      console.log(data.messageId)
+      
+      setMessages(data.messagesCurrent)
+      
+      //nhận vào và đưa vào Mess
+      // setArrivalMessages({
+      //   sender: data.senderId,
+      //   text: data.text,
+      //   createdAt: Date.now(),
+      // })
+      
+    });
+  },[]);  
+  
+
+  //xóa tin nhắn phía tôi (tin nhắn của tôi)
+  const onClickDeleteMgsMy = (id) => {
+    
+    const mgsdelete = messages.filter(
+      (message) => message._id !== id
+    );
+
+    setMessages(mgsdelete);
+  }
+
+
+  
+   //xóa tin nhắn phía tôi (tin nhắn của bạn)
+   const onClickDeleteMgsOfFri =  async (id) => {
+    const mgsList = messages.filter(
+      (mes) => mes.delUser !== id
+    )
+    setMessages(mgsList)
+    
+  }
 
   
 
@@ -273,11 +369,15 @@ export default function MyChat() {
                 </div>
             </div>
             <div onLoad={AutoScroll} className="live-chat">  
+
                 <div>
                   {messages.map((m) => (
-                     <Message message={m} own ={m.sender === _id}  />
+                     <Message message={m} own ={m.sender === _id} onClickDelete = {onClickDeleteMgs} 
+                        userId={_id} onClickDeleteMgsUser={onClickDeleteMgsMy}
+                          onClickDeleteMgsFri = {onClickDeleteMgsOfFri}/>
                   ))} 
-                </div>   
+                </div>
+
             </div>
             <div className="sender-cont">
                 <div className="send-message">
