@@ -238,7 +238,7 @@ const handleSubmit = async (e) => {
       }
     };
     getConversations();
-  }, [_id]);
+  }, [_id,authorize]);
 
   const sendSubmit = async (e) => {
     e.preventDefault();
@@ -532,12 +532,12 @@ const handleSubmit = async (e) => {
                   </IconButton>
                 </Tooltip>
               </div>
-              <div className="edit_button">
+              {/* <div className="edit_button">
                 <IconButton>
                   <GroupAddIcon />
                 </IconButton>
                 <p className="title_edit_button">Tạo nhóm trò chuyện</p>
-              </div>
+              </div> */}
             </div>
             <div className="user_con">
               <div className="iv_title">
