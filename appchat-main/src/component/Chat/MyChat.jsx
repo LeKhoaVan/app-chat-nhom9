@@ -32,6 +32,12 @@ import {AuthContext} from "../../contexts/AuthContext";
 import Popup from "./Popup";
 
 
+//Avarta
+import PopupAvartar from "./Avarta/Popup";
+import FileInput from "./Avarta/FileInput";
+import styles from "./Avarta/styles.module.css";
+
+
 export default function MyChat() {
   const {authState:{user:{avt, _id, }}} = useContext(AuthContext)
 
@@ -51,6 +57,44 @@ export default function MyChat() {
   const socket = useRef();
 
   const [openPopup, setOpenPopup] = useState(false);
+
+
+
+
+  // poppu onpen form Avarta
+const [openPopupAvarta, setOpenPopupAvarta] = useState(false);
+
+ 
+
+const [data, setData] = useState({
+  name: "",
+  img: ""
+});
+
+const handleChange = ({ currentTarget: input }) => {
+  setData({ ...data, [input.name]: input.value });
+};
+
+const handleInputState = (name, value) => {
+  setData((prev) => ({ ...prev, [name]: value }));
+};
+
+const handleSubmit = async (e) => {
+  e.preventDefault()
+  try {
+    const url = "http://localhost:8800/api/conversations/updateImg/"+currentChat?._id;
+    const { data : res } = await axios.put(url,data);
+    console.log(res)
+    
+  } catch (error) {
+    console.log(error)
+  }
+  
+};
+
+
+
+
 
 
   function Demo(){
@@ -483,8 +527,8 @@ export default function MyChat() {
                 <Tooltip 
                   title="Chỉnh sửa"
                   placement="bottom-end">
-                  <IconButton>
-                    <Edit/>
+                  <IconButton onClick={() => { setOpenPopupAvarta(true);  setData(currentChat)}}>
+                    <Edit />
                   </IconButton>
                 </Tooltip>
               </div>
@@ -656,6 +700,42 @@ export default function MyChat() {
   
 </form>
         </Popup>
+
+
+
+        <PopupAvartar
+                title="Thông tin nhóm"
+                openPopup={openPopupAvarta}
+                setOpenPopup={setOpenPopupAvarta}>
+
+              <h1 >{currentChat?.name}</h1>
+              
+              <div className={styles.container}>
+			<form className={styles.form} onSubmit={handleSubmit} >
+				
+				<input
+					type="text"
+					className={styles.input}
+					placeholder="Ten nhom"
+					name="name"
+					onChange={handleChange}
+					value={data.name}
+				/>
+				
+				<FileInput
+					name="img"
+					label="Choose Image"
+					handleInputState={handleInputState}
+					type="image"
+					value={data.img}
+				/>
+				
+				<button type="submit" className={styles.submit_btn} onClick={() => { setOpenPopupAvarta(false); window.location.reload(false) }}>
+					Submit
+				</button>
+			</form>
+		</div>
+        </PopupAvartar>
     </div>
   );
 }
