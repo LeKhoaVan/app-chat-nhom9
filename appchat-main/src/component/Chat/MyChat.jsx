@@ -27,6 +27,7 @@ import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import {io} from "socket.io-client";
 import {AuthContext} from "../../contexts/AuthContext";
+//import 'bootstrap/dist/css/bootstrap.css';
 
 import Popup from "./Popup";
 
@@ -391,26 +392,26 @@ export default function MyChat() {
                 setOpenPopup={setOpenPopup}
             >
             <form>
-  <div class="form-group">
+  <div className="form-group">
     <label for="exampleFormControlInput1">Nhập tên nhóm</label>
-    <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="Nhập tên nhóm"></input><br></br>
+    <input type="text" className="form-control" id="exampleFormControlInput1" placeholder="Nhập tên nhóm"></input><br></br>
   </div>
   
-  <div class="input-group">
-  <input type="search" class="form-control rounded" placeholder="Tìm kiếm"  aria-describedby="search-addon" />
-  <button type="button" class="btn btn-outline-primary">Tìm</button>
+  <div className="input-group">
+  <input type="search" className="form-control rounded" placeholder="Tìm kiếm"  aria-describedby="search-addon" />
+  <button type="button" className="btn btn-outline-primary">Tìm</button>
 </div>
 
 <div><p>____________________________________________________________________________</p></div>
-<div class="form-check">
-  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"></input>
-  <label class="form-check-label" for="flexRadioDefault1">
+<div className="form-check">
+  <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"></input>
+  <label className="form-check-label" for="flexRadioDefault1">
     Nguyễn Hoàng Quân
   </label>
 </div>
-<div class="form-check">
-  <input class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked></input>
-  <label class="form-check-label" for="flexRadioDefault2">
+<div className="form-check">
+  <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked></input>
+  <label className="form-check-label" for="flexRadioDefault2">
     Nguyễn Hoàng Quan
   </label>
 </div>
@@ -418,8 +419,8 @@ export default function MyChat() {
 
 
 <br></br>
-<button type="button" class="btn btn-primary">Tạo nhóm</button>
-<button type="button" class="btn btn-secondary">Huỷ</button>
+<button type="button" className="btn btn-primary">Tạo nhóm</button>
+<button type="button" className="btn btn-secondary">Huỷ</button>
   
 </form>
         </Popup>
