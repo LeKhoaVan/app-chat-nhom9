@@ -1,7 +1,7 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import LoginScreen from '../screens/LoginScreen.js';
+import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen.js';
 import MessagesScreen from '../screens/MessagesScreen.js';
 import ChattingScreen from '../screens/ChattingScreen';
@@ -17,27 +17,12 @@ const Stack = createNativeStackNavigator();
 const RootNavigator = () => {
 	return (
 		<Stack.Navigator 
-			initialRouteName="LoginScreen" 
+			initialRouteName="HomeNavigator" 
 			screenOptions={()=>({
 				headerShown:false,
 				statusBarColor:'#056282',
 			})}
 		>
-			<Stack.Screen name="LoginScreen" component={LoginScreen} />
-			<Stack.Screen 
-				name="RegisterScreen" 
-				component={RegisterScreen} 
-				options={()=>({
-					headerShown:true,
-					headerStyle:{
-						backgroundColor:'#056282',
-					},
-					title:'Đăng ký',
-					headerTintColor:'#fff',
-					headerTitleStyle:{
-						fontSize:17,
-					}
-				})}/>
 			<Stack.Screen name="HomeNavigator" component={HomeNavigator} />
 			<Stack.Screen name="ChattingScreen" component={ChattingScreen}/>
 			<Stack.Screen 
