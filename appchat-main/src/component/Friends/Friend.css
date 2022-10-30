@@ -1,0 +1,151 @@
+.fr{
+    float: left;
+    width:500px;
+    border:1px solid gray;
+    border-radius:5px;
+    position:relative;
+    height:175px;
+    background-color: #fff;
+    box-sizing: border-box;
+    margin-top: 20px;
+    margin-left: 20px;
+    padding: auto;
+}
+.fr p{
+    font-family:sans-serif;
+    margin: 0 0 0 10px;
+    line-height:30px;
+}
+.fr-top span{
+    color:#4267B2;
+    float:right;
+    margin-right:10px;
+}
+.fr-top{
+    background-color:#efefef;
+    height:30px;
+    width:100%;
+    border-radius:5px 5px 0 0;
+    position:absolute;
+    top:-1px;
+    left:-1px;
+    border:1px solid gray;
+}
+.fr img{
+    position:absolute;
+    left:10px;
+    top:52.5px;
+}
+.info{
+    position:absolute;
+    left:120px;
+    top:75px;
+    color:#4267B2;
+    line-height:25px;
+    font-size:18px;
+}
+
+.info span{
+    color:#777;
+    font-size:14px;
+}
+
+#button-block{
+    position:absolute;
+    right:10px;
+    top:85px;
+  }
+  
+  #button-block div{
+    display:inline-block;
+  }
+  
+  #confirm, #delete{
+    background-color:#bbb;
+    color:#222;
+    padding:7px;
+    border-radius:2px;
+    margin-right:10px;
+    font-family:sans-serif;
+  }
+  
+  #confirm{
+    color:white;
+    background-color:#4267B2; 
+    border:1px solid #999;
+    padding:6px;
+    margin-right:0;
+  }
+  
+  #button-block div:hover{
+    opacity:.8;
+    cursor:pointer;
+  }
+  .fr-title{
+    float: left;
+    color: #495057;
+    width: 73%;
+    min-width: 270px;
+    background-color: #f5f7fb;
+    box-sizing: border-box;
+    padding: 10px;
+    padding-right: 0;
+    display: block;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    align-items: center;
+  }
+
+  .friendlist{
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding:10px;
+    cursor: pointer;
+    margin-top: 10px;
+    border-radius: 10px;
+  }
+  .friendlist:hover{
+    background-color: rgb(230, 235, 245);
+  }
+  .friendlistImg{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .friendlistName{
+    font-weight: 500;
+    margin-right: auto;
+    margin-left: 10px;
+  }
+  @media screen and (max-width: 768px) {
+    .friendlistName {
+      display: none;
+    }
+  }
+  #banBe{
+    margin-left: 12px;
+  }
+  .dskb{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    align-items: center;
+    margin-left: 12px;
+  }
+  .dskb:hover{
+    cursor:pointer;
+    background-color: rgb(230, 235, 245);
+  }
+  .goLeftPlease1{
+    margin-right: 110px;
+    padding: auto;
+  }
+  .goLeftPlease2{
+    padding: auto;
+    margin-right: 125px;
+  }
