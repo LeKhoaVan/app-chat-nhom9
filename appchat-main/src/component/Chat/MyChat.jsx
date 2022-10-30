@@ -122,9 +122,20 @@ export default function MyChat() {
         const res = await axios.get("http://localhost:8800/api/messages/" + currentChat?._id); 
 
         for(let i =0; i< res.data.length;i++) {
-          if(res.data[i].delUser[0] !== _id){
-            messageList.push(res.data[i]);
+          if(res.data[i].delUser[0] !== _id) {
+            if(res.data[i].reCall === true){
+              res.data[i].text = "tin nhắn đã được thu hồi"
+              messageList.push(res.data[i]);
+            }
+            else{
+              messageList.push(res.data[i]);
+            }
           }
+          
+        }
+
+        for(let i =0; i< res.data.length;i++) {
+          
         }
         setMessages(messageList);
       } catch (err) {
@@ -153,6 +164,7 @@ export default function MyChat() {
       sender: _id,
       text: newMessage,
       conversationId: currentChat._id,
+      reCall: false,
       delUser:""
     };
 
