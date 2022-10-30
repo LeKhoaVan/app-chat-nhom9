@@ -31,7 +31,7 @@ io.on("connection", (socket) => {
   });
 
   //send and get message
-  socket.on("sendMessage", function({ senderId, receiverIds, text, delUser }) {
+  socket.on("sendMessage", function({ senderId, receiverIds, text, conversationId,delUser }) {
 
       // const ds = []
       
@@ -47,6 +47,7 @@ io.on("connection", (socket) => {
           io.to(getUser(room).socketId).emit("getMessage", {
             senderId,
             text,
+            conversationId,
             delUser,
           });
         }

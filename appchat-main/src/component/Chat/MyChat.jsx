@@ -77,6 +77,7 @@ export default function MyChat() {
         sender: data.senderId,
         text: data.text,
         delUser: data.delUser,
+        conversationId: data.conversationId,
         createdAt: Date.now(),
       })
     });  
@@ -85,8 +86,10 @@ export default function MyChat() {
   
 
   useEffect(() =>{
-    arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) && 
+    arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) &&
+    currentChat?._id === arrivalMessage.conversationId && 
     setMessages((prev)=>[...prev, arrivalMessage])
+    console.log(arrivalMessage)
   },[arrivalMessage, currentChat])
 
   useEffect(() => {
@@ -168,6 +171,7 @@ export default function MyChat() {
       senderId: _id,
       receiverIds,
       text: newMessage,
+      conversationId: currentChat._id,
       delUser:""
     });
 
