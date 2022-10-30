@@ -435,7 +435,6 @@ export default function MyChat() {
                                 auth1 === user._id
                               )) ? <div></div> : <div className="item"
                                 onClick={() => {SetAuth(currentChat._id,user._id)
-                                  console.log(userCons)
                                 }}>Chỉ định quản trị viên</div>
                              
                             } 
