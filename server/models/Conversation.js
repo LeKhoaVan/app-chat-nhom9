@@ -2,11 +2,19 @@ const mongoose = require("mongoose");
 
 const ConversationSchema = new mongoose.Schema(
   {
+   
+    name: {
+      type: String
+    },
     members: {
       type: Array,
     },
-    name: { type: String},
-    img: { type: String }
+    img: { 
+      type: String 
+    },
+    authorization: {
+      type: Array,
+    },
   },
   { timestamps: true }
 );

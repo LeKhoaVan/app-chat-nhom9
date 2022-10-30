@@ -33,7 +33,7 @@ const handleInputState = (name, value) => {
 const handleSubmit = async (e) => {
   e.preventDefault()
   try {
-    const url = "http://localhost:8800/api/conversations/"+conversation._id;
+    const url = "http://localhost:8800/api/conversations/updateImg/"+conversation._id;
     const { data : res } = await axios.put(url,data);
     console.log(res)
     

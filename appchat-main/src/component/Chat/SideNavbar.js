@@ -28,16 +28,18 @@ export default function SideNavbar(){
 
         return(
         <div className="side-nav">
-          <div>
+          <div className="side-avt">
            <Avatar  
               className="avatar"
               alt="avatar" 
               src={avt}
               sx={{width:46,height:46}}/>
-          </div>
-          <div>
-            {username}
-            <button onClick={logout}>Logout</button>
+            <div className="side-avt-model">
+            
+              <p className="side-avt-model-item name">User: {username}</p>
+              <p className="side-avt-model-item">Xem thông tin tài khoản</p>
+              <button className="side-avt-model-item logout" onClick={logout}>Đăng xuất</button>
+            </div>
           </div>
           <div className="icon">
             <Tooltip placement="bottom-end" title="Chats">
