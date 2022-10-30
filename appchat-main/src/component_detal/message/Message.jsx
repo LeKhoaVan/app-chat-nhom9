@@ -4,7 +4,7 @@ import axios from "axios";
 import { Component, useEffect, useState, useRef, useContext} from "react";
 
 
-export default function Message({ message, own, onClickDelete, userId, onClickDeleteMgsUser  }) {
+export default function Message({ message, own, onClickDelete, userId, onClickDeleteMgsUser, onClickDeleteMgsFri  }) {
 
   
   const [user, setUser] = useState([]);
@@ -58,10 +58,11 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
         id: message._id,
         delUser : userId
       };
-
-      const res = await axios.put("http://localhost:8800/api/messages/del",data );
-      console.log(res.data);
-      onClickDeleteMgsUser(message._id);
+  
+      await axios.put("http://localhost:8800/api/messages/del",data );
+      message.delUser =  "OneNexius209"
+      onClickDeleteMgsFri("OneNexius209");
+      console.log(message._id)
     } catch (err) {
       console.log(err);
     };

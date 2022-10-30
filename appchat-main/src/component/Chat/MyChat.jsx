@@ -43,6 +43,7 @@ export default function MyChat() {
   const [arrivalMessage, setArrivalMessages] = useState(null);
   const [senderMessage, setSendMessage] = useState([]);
   const [recallMessage, setRecallMessages] = useState(null);
+  const [deleteMessage, setDeleteMessages] = useState([]);
 
   const socket = useRef();
 
@@ -71,8 +72,7 @@ export default function MyChat() {
   // console.log(receiverId);
   useEffect(() =>{
     socket.current = io("ws://localhost:8900");
-    socket.current.on("getMessage", (data) =>{
-      console.log(data.text)
+    socket.current.on("getMessage",(data) =>{
       setArrivalMessages({
         sender: data.senderId,
         text: data.text,
@@ -81,7 +81,7 @@ export default function MyChat() {
         createdAt: Date.now(),
       })
     });  
-  },[]);
+  },[currentChat]);
 
   
 
@@ -202,6 +202,7 @@ export default function MyChat() {
       }
     }
 
+    //gửi tin nhắn thu hồi
     socket.current.emit("deleteMessage", {
       messagesCurrent: messages,
       messageId: id,
@@ -212,13 +213,7 @@ export default function MyChat() {
 
   }
 
-  const onClickDeleteMgsMy = (id) => {
-    const mgsdelete = messages.filter(
-      (message) => message._id !== id
-    );
-    setMessages(mgsdelete);
-  }
-  
+  //nhận tin nhắn thu hồi
   useEffect(() =>{
     
     socket.current.on("delMgs", (data) =>{
@@ -235,6 +230,29 @@ export default function MyChat() {
       
     });
   },[]);  
+  
+
+  //xóa tin nhắn phía tôi (tin nhắn của tôi)
+  const onClickDeleteMgsMy = (id) => {
+    
+    const mgsdelete = messages.filter(
+      (message) => message._id !== id
+    );
+
+    setMessages(mgsdelete);
+  }
+
+
+  
+   //xóa tin nhắn phía tôi (tin nhắn của bạn)
+   const onClickDeleteMgsOfFri =  async (id) => {
+    const mgsList = messages.filter(
+      (mes) => mes.delUser !== id
+    )
+    setMessages(mgsList)
+    
+  }
+
   
 
   function AutoScroll(){
@@ -343,7 +361,8 @@ export default function MyChat() {
                 <div>
                   {messages.map((m) => (
                      <Message message={m} own ={m.sender === _id} onClickDelete = {onClickDeleteMgs} 
-                        userId={_id} onClickDeleteMgsUser={onClickDeleteMgsMy}/>
+                        userId={_id} onClickDeleteMgsUser={onClickDeleteMgsMy}
+                          onClickDeleteMgsFri = {onClickDeleteMgsOfFri}/>
                   ))} 
                 </div>
 
