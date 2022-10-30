@@ -30,6 +30,18 @@ router.get("/:userId", async (req, res) => {
   }
 });
 
+
+router.put('/:id', function(req,res){
+  var conditions={_id:req.params.id};
+  Conversation.update(conditions,req.body)
+  .then(doc =>{
+      if(!doc){return res.status(404).end();}
+      return res.status(200).json(doc);
+  })
+  .catch(err=>next(err));
+})
+
+
 //get conv by id
 router.get("/findById/:convId", async (req, res) => {
   try {
