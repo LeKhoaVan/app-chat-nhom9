@@ -18,7 +18,7 @@ const [openPopup, setOpenPopup] = useState(false);
  
 
 const [data, setData] = useState({
-  name: "",
+  name: conversation.name,
   img: conversation.img,
 });
 
@@ -87,14 +87,14 @@ const handleSubmit = async (e) => {
 				
 				<FileInput
 					name="img"
-					label="Choose Image"
+					label="Chọn hình ảnh"
 					handleInputState={handleInputState}
 					type="image"
 					value={data.img}
 				/>
 				
-				<button type="submit" className={styles.submit_btn} onClick={() => { setOpenPopup(false); window.location.reload(false) }}>
-					Submit
+				<button type="submit"  className={styles.submit_btn} onClick={() => { setOpenPopup(false); window.location.reload(false) }}>
+					Xác nhận
 				</button>
 			</form>
 		</div>
