@@ -56,3 +56,29 @@
     font-size : 50px;
     color: darkgrey;
 }
+  #fname{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+   #huyTao{
+    background-color:#bbb;
+    color:#222;
+    padding:7px;
+    border-radius:2px;
+    font-family:sans-serif;
+    margin-left: 0px;
+  }
+  #taoNhom{
+    margin-right:10px;
+    font-family:sans-serif;
+    color:white;
+    background-color:#4267B2; 
+    border-radius:2px;
+    padding:6px;
+    margin-left:405px;
+  }
