@@ -394,6 +394,41 @@ const handleSubmit = async (e) => {
     var element = document.querySelector(".live-chat");
     element.scrollTop = element.scrollHeight ;
   }
+
+  const [convGroupForm , setConvGroupForm] = useState({
+})
+
+
+
+  const createNewConvGroup = async event =>{
+  
+    event.preventDefault()
+    let listMemberId =
+    listUserGroupNew.map((userGr)=>{
+      return userGr._id
+    })
+    let nameGroup = document.querySelector('#groupName').value
+    
+    setConvGroupForm({
+      members:[
+        _id,...listMemberId
+      ],
+      name:nameGroup,
+      authorization:_id,
+      //img:'https://cdn-icons-png.flaticon.com/512/1057/1057089.png?w=360'
+    })
+    try {
+      console.log("test run")
+      const res = await axios.post("http://localhost:8800/api/conversations/newConvGroup", convGroupForm);
+      console.log("test run")  
+      //setconvGr([...convGr,res.data]);
+      //setnewconvGroupForm([...newconvGroupForm,res.data]);
+      console.log(res.data);
+    } catch (err) {
+      console.log(err.message);
+    }
+  
+  }
   
   return (
     <div className="fullSc">
@@ -693,7 +728,7 @@ const handleSubmit = async (e) => {
 
             <form>
   <div className="form-group">
-    <input type="text" className="form-control ip-addGr" placeholder="Nhập tên nhóm"></input><br></br>
+    <input type="text" className="form-control ip-addGr" id="groupName" placeholder="Nhập tên nhóm"></input><br></br>
   </div>
   
 <div className="input-group">
@@ -733,7 +768,7 @@ const handleSubmit = async (e) => {
 
 <br></br>
 <div className="GroupAddButton">
-  <button type="button" className="btn-addGr btn-primary">Tạo nhóm</button>
+  <button type="button" className="btn-addGr btn-primary" onClick={createNewConvGroup}>Tạo nhóm</button>
   <button type="button" className="btn-addGr btn-secondary">Huỷ</button>
 </div>
   
