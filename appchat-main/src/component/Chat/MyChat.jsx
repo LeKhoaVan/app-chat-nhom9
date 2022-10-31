@@ -703,7 +703,7 @@ const handleSubmit = async (e) => {
     <div className="item">
       <Avatar src={userSearch.avt}></Avatar>
       <p>{userSearch.username}</p>
-      <button onClick={clickButtonAdd} className="add">Thêm</button>
+      {userSearch._id === _id ? <div className="add">bạn</div> :<button onClick={clickButtonAdd} className="add">Thêm</button>}
     </div> : <div className="nullUser">Không thấy user</div>}
     
   </div>

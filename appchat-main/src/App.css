@@ -628,6 +628,11 @@ body{
   cursor: pointer;
 }
 
+.model-search .item .add{
+  position: absolute;
+  right: 5px;
+}
+
 .listAdd .itemAdd button{
   background-color: red;
 }
