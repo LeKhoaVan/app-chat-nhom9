@@ -53,6 +53,8 @@ export default function MyChat() {
   const [senderMessage, setSendMessage] = useState([]);
   const [recallMessage, setRecallMessages] = useState(null);
   const [deleteMessage, setDeleteMessages] = useState([]);
+  const [listUserGroupNew, setListUserGroupNew] = useState([]);
+  const [userSearch, setUserSearch] = useState(null);
 
   const socket = useRef();
 
@@ -91,7 +93,6 @@ const handleSubmit = async (e) => {
   }
   
 };
-
 
 
 
@@ -371,8 +372,24 @@ const handleSubmit = async (e) => {
     getUserCon();
   },[currentChat]);
 
-  
-  
+  async function handleTextSearch(e){
+    if(e.keyCode == 13){
+      return false;
+    }
+    let textSearch = document.querySelector('#search-group').value
+    try { 
+      const res = await axios.get("http://localhost:8800/api/users/userByMailOrName?email=" + textSearch);
+      
+      setUserSearch(res.data)
+    } catch (err) {
+      setUserSearch(null)
+    }
+  }
+  function clickButtonAdd(e){
+    e.preventDefault()
+    setListUserGroupNew([...listUserGroupNew,userSearch])
+    console.log(listUserGroupNew)
+  }
 
   function AutoScroll(){
     var element = document.querySelector(".live-chat");
@@ -684,24 +701,37 @@ const handleSubmit = async (e) => {
   </div>
   
 <div className="input-group">
-  <input className="form-control rounded ip-addGr" id="search-group" placeholder="Tìm kiếm"  aria-describedby="search-addon" />
+  <input className="form-control rounded ip-addGr" type="text" onKeyUp={handleTextSearch} id="search-group" placeholder="Tìm kiếm bằng email" />
   <div className="model-search">
+    {userSearch ? 
     <div className="item">
-      <Avatar></Avatar>
-      <p>name</p>
-      <button className="add">Thêm</button>
-    </div>
+      <Avatar src={userSearch.avt}></Avatar>
+      <p>{userSearch.username}</p>
+      {userSearch._id === _id ? <div className="add">bạn</div> :<button onClick={clickButtonAdd} className="add">Thêm</button>}
+    </div> : <div className="nullUser">Không thấy user</div>}
+    
   </div>
 </div>
 
-<div><p>____________________________________________________________________________</p></div>
+<div className="mt-10"><p>____________________________________________________________________________</p></div>
 <p className="title-Add">Đã thêm</p>
 <ul className="listAdd">
-  <li className="itemAdd">
-      <Avatar></Avatar>
-      <p>name</p>
-      <button className="remove">xóa</button>
-  </li>      
+{listUserGroupNew.map( (user_gr)=>( 
+      <li className="itemAdd">
+          <Avatar src={user_gr.avt}></Avatar>
+          <p>{user_gr.username}</p>
+          <button onClick={(e)=>{
+            e.preventDefault()
+            const members = listUserGroupNew.filter(
+              (u) => u._id !== user_gr._id
+            )
+            setListUserGroupNew(members)
+          }} className="remove">xóa</button>
+      </li>                                           
+  ))}
+
+                        
+     
 </ul>
 
 

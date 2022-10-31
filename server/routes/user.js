@@ -71,7 +71,7 @@ router.get("/userByMailOrName", async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
-}); 
+});
  
 //get name a user
 router.get("/name", async (req, res) => {
