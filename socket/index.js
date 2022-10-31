@@ -76,6 +76,11 @@ io.on("connection", (socket) => {
   
   });
 
+  // socket.on("authorize", function(data) {
+   
+  //       io.emit("getAu", data );
+  // });
+
   //when disconnect
   socket.on("disconnect", () => {
     console.log("a user disconnected!");

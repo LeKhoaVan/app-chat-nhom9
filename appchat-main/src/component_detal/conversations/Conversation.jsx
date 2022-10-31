@@ -4,44 +4,11 @@ import "./conversation.css"
 import moment from "moment";
 
 
-import Popup from "./Popup";
-import FileInput from "./FileInput";
-import styles from "./styles.module.css";
+
 
 
 export default function Conversation({ conversation, currentUser}) {
   const [user, setUser] = useState([]);
-
-// poppu onpen form
-const [openPopup, setOpenPopup] = useState(false);
-
- 
-
-const [data, setData] = useState({
-  name: "",
-  img: conversation.img,
-});
-
-const handleChange = ({ currentTarget: input }) => {
-  setData({ ...data, [input.name]: input.value });
-};
-
-const handleInputState = (name, value) => {
-  setData((prev) => ({ ...prev, [name]: value }));
-};
-
-const handleSubmit = async (e) => {
-  e.preventDefault()
-  try {
-    const url = "http://localhost:8800/api/conversations/updateImg/"+conversation._id;
-    const { data : res } = await axios.put(url,data);
-    console.log(res)
-    
-  } catch (error) {
-    console.log(error)
-  }
-  
-};
 
 
   useEffect(() => {
@@ -61,45 +28,12 @@ const handleSubmit = async (e) => {
 
   return (
     <div className='conversation'>
-      <img className='conversationImg' src={conversation.name? conversation.img: user.username  } alt='avarta' onClick={() => { setOpenPopup(true);  }} />
+      <img className='conversationImg' src={conversation.name? conversation.img: user.avt  } alt='avarta'  />
        <span className='conversationName'>{conversation.name? conversation.name : user.username  }</span>
       <span className='time'>09:00</span>
 
 
-      <Popup
-                title="Thông tin nhóm"
-                openPopup={openPopup}
-                setOpenPopup={setOpenPopup}>
-
-              <h1 >{conversation.name? conversation.name : user.username  }</h1>
-              
-              <div className={styles.container}>
-			<form className={styles.form} onSubmit={handleSubmit} >
-				
-				<input
-					type="text"
-					className={styles.input}
-					placeholder="Ten nhom"
-					name="name"
-					onChange={handleChange}
-					value={data.name}
-				/>
-				
-				<FileInput
-					name="img"
-					label="Choose Image"
-					handleInputState={handleInputState}
-					type="image"
-					value={data.img}
-				/>
-				
-				<button type="submit" className={styles.submit_btn} onClick={() => { setOpenPopup(false); window.location.reload(false) }}>
-					Submit
-				</button>
-			</form>
-		</div>
-        </Popup>
-
+      
     </div>
   )
 }

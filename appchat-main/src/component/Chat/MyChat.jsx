@@ -6,7 +6,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Conversation from '../../component_detal/conversations/Conversation';
 import Message from '../../component_detal/message/Message';
 import "../../component_detal/message/message.css";
-import { Alert, Button, IconButton, Input, InputAdornment, InputBase } from "@mui/material";
+import { Alert, Button, IconButton } from "@mui/material";
 import Avatar from "@mui/material/Avatar";
 import CallIcon from '@mui/icons-material/Call';
 import VideoCallIcon from '@mui/icons-material/VideoCall';
@@ -30,7 +30,12 @@ import {AuthContext} from "../../contexts/AuthContext";
 //import 'bootstrap/dist/css/bootstrap.css';
 
 import Popup from "./Popup";
-import { InputLabel } from "@material-ui/core";
+
+
+//Avarta
+import PopupAvartar from "./Avarta/Popup";
+import FileInput from "./Avarta/FileInput";
+import styles from "./Avarta/styles.module.css";
 
 
 export default function MyChat() {
@@ -51,8 +56,45 @@ export default function MyChat() {
 
   const socket = useRef();
 
-
   const [openPopup, setOpenPopup] = useState(false);
+
+
+
+
+  // poppu onpen form Avarta
+const [openPopupAvarta, setOpenPopupAvarta] = useState(false);
+
+ 
+
+const [data, setData] = useState({
+  name: "",
+  img: ""
+});
+
+const handleChange = ({ currentTarget: input }) => {
+  setData({ ...data, [input.name]: input.value });
+};
+
+const handleInputState = (name, value) => {
+  setData((prev) => ({ ...prev, [name]: value }));
+};
+
+const handleSubmit = async (e) => {
+  e.preventDefault()
+  try {
+    const url = "http://localhost:8800/api/conversations/updateImg/"+currentChat?._id;
+    const { data : res } = await axios.put(url,data);
+    console.log(res)
+    
+  } catch (error) {
+    console.log(error)
+  }
+  
+};
+
+
+
+
 
 
   function Demo(){
@@ -76,8 +118,7 @@ export default function MyChat() {
     con.then(value => {
       setAuthorize(value.data)
     })
-    // const res = axios.get("http://localhost:8800/api/conversations/" + _id);
-    // setConversation(res.data);
+    
   }
 
   function RemoveAuth(conId, userId){
@@ -86,6 +127,7 @@ export default function MyChat() {
     con.then(value => {
       setAuthorize(value.data)
     })
+    
   }
 
    function RemoveUserCon(conId, userId){
@@ -185,7 +227,13 @@ export default function MyChat() {
     getMessages();
   }, [currentChat]);
 
- 
+  // useEffect(() => {
+  //   socket.current.emit("authorize", );
+  //   socket.current.on("getAu", (data) => {
+      
+  //   })
+  // },[authorize]);
+
   useEffect(() => {
     const getConversations = async () => {
       try {
@@ -196,7 +244,7 @@ export default function MyChat() {
       }
     };
     getConversations();
-  }, [_id]);
+  }, [_id,authorize]);
 
   const sendSubmit = async (e) => {
     e.preventDefault();
@@ -237,10 +285,6 @@ export default function MyChat() {
     }
   };
 
-  // const [members, setMembers] = useState(null);
-  // const [nameGroup, setNameGroup] = useState(null);
-  // const [newMembers, setnewMembers] = useState("");
-  // const [newNameGroup, setnewNameGroup] = useState("");
   
   const onClickDeleteMgs = (id) => {
     setRecallMessages(id);
@@ -298,42 +342,7 @@ export default function MyChat() {
     setMessages(mgsdelete);
   }
 
-  // const createNewConvGroup = async (e) =>{
-  //   e.preventDefault();
-  //   const convGroup = {
-  //     name: newNameGroup,
-  //   };
-  //   try {
-  //     const res = await axios.post("localhost:8800/api/convgroup/newConvGroup", convGroup);
-  //     setMessages([...messages, res.data]);
-  //     setNewMessages("");
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
-  const [conversationGroup, setconversationGroup] = useState({});
 
-  const [convGroupForm , setConvGroupForm] = useState({
-    members:[''],
-    name:'',
-    authorization:[''],
-})
-
-const {members  ,name ,authorization} = convGroupForm
-
-const onChangeConvGroupForm = event =>
-setConvGroupForm({ ...convGroupForm, [event.target.name]: event.target.value })
-
-const createNewConvGroup = async event =>{
-  event.preventDefault()
-  try {
-    const res = await axios.post("localhost:8800/api/convgroup/newConvGroup", convGroupForm);
-    setconversationGroup(res.data);
-  } catch (err) {
-    console.log(err);
-  }
-
-}
   
    //xóa tin nhắn phía tôi (tin nhắn của bạn)
    const onClickDeleteMgsOfFri =  async (id) => {
@@ -475,7 +484,7 @@ const createNewConvGroup = async event =>{
                   {messages.map((m) => (
                      <Message message={m} own ={m.sender === _id} onClickDelete = {onClickDeleteMgs} 
                         userId={_id} onClickDeleteMgsUser={onClickDeleteMgsMy}
-                          onClickDeleteMgsFri = {onClickDeleteMgsOfFri}/>
+                          onClickDeleteMgsFri = {onClickDeleteMgsOfFri} avatar={avt}/>
                   ))} 
                 </div>
 
@@ -524,8 +533,8 @@ const createNewConvGroup = async event =>{
                 <Tooltip 
                   title="Chỉnh sửa"
                   placement="bottom-end">
-                  <IconButton>
-                    <Edit/>
+                  <IconButton onClick={() => { setOpenPopupAvarta(true);  setData(currentChat)}}>
+                    <Edit />
                   </IconButton>
                 </Tooltip>
               </div>
@@ -657,43 +666,88 @@ const createNewConvGroup = async event =>{
             </div>
           </div>
         </div>
+
+
         <Popup
                 title="Tạo nhóm"
                 openPopup={openPopup}
                 setOpenPopup={setOpenPopup}
             >
+
             <form>
-            <div className="form-group" >
-                <input type="text" id="fname" name="name"
-                placeholder="Nhập tên nhóm" value={name}
-                onChange={onChangeConvGroupForm}/>
-              </div>
+  <div className="form-group">
+    <input type="text" className="form-control ip-addGr" placeholder="Nhập tên nhóm"></input><br></br>
+  </div>
   
+<div className="input-group">
+  <input className="form-control rounded ip-addGr" id="search-group" placeholder="Tìm kiếm"  aria-describedby="search-addon" />
+  <div className="model-search">
+    <div className="item">
+      <Avatar></Avatar>
+      <p>name</p>
+      <button className="add">Thêm</button>
+    </div>
+  </div>
+</div>
+
+<div><p>____________________________________________________________________________</p></div>
+<p className="title-Add">Đã thêm</p>
+<ul className="listAdd">
+  <li className="itemAdd">
+      <Avatar></Avatar>
+      <p>name</p>
+      <button className="remove">xóa</button>
+  </li>      
+</ul>
 
 
-            <div><p>_________________________________________________________________________________</p></div>
-            <div>
-                <input type="checkbox" value={'634553264ad1696ef14d82a5'} name ="members"
-                onChange={onChangeConvGroupForm}/>
-                <span class="checkmark"></span>
-                <label>vantruong</label><br />
-
-                <input type="checkbox" value={'6349afff3279a36da4f050f3'} name ="members"
-                onChange={onChangeConvGroupForm}/>
-                <span class="checkmark"></span>
-                <label>dangkhoa1</label>
-            </div>
+<br></br>
+<div className="GroupAddButton">
+  <button type="button" className="btn-addGr btn-primary">Tạo nhóm</button>
+  <button type="button" className="btn-addGr btn-secondary">Huỷ</button>
+</div>
+  
+</form>
+        </Popup>
 
 
 
-              <br></br>
-              <button type="button" className="btn btn-primary" id="taoNhom" 
-              onClick={createNewConvGroup}>Tạo nhóm</button>
-              <button type="button" className="btn btn-secondary" id="huyTao" 
-              onClick={()=>{setOpenPopup(false)}}>Huỷ</button>
-                
-                  </form>
-                      </Popup>
+        <PopupAvartar
+                title="Thông tin nhóm"
+                openPopup={openPopupAvarta}
+                setOpenPopup={setOpenPopupAvarta}>
+
+              <h1 >{currentChat?.name}</h1>
+              
+              <div className={styles.container}>
+			<form className={styles.form} onSubmit={handleSubmit} >
+				
+				<input
+					type="text"
+					className={styles.input}
+					placeholder="Ten nhom"
+					name="name"
+					onChange={handleChange}
+					value={data.name}
+				/>
+				
+				<FileInput
+					name="img"
+					label="Choose Image"
+					handleInputState={handleInputState}
+					type="image"
+					value={data.img}
+				/>
+				
+				<button type="submit" className={styles.submit_btn} onClick={() => { 
+          setOpenPopupAvarta(false); 
+          //window.location.reload(false)
+           }}>
+					Submit
+				</button>
+			</form>
+		</div>
+        </PopupAvartar>
     </div>
   );
 }
