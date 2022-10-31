@@ -55,6 +55,7 @@ export default function MyChat() {
   const [deleteMessage, setDeleteMessages] = useState([]);
   const [listUserGroupNew, setListUserGroupNew] = useState([]);
   const [userSearch, setUserSearch] = useState(null);
+  const [convGroupForm , setConvGroupForm] = useState({})
 
   const socket = useRef();
 
@@ -245,10 +246,10 @@ const handleSubmit = async (e) => {
       }
     };
     getConversations();
-  }, [_id,authorize]);
+  }, [_id,authorize,listUserGroupNew]);
 
-  const sendSubmit = async (e) => {
-    e.preventDefault();
+  const sendSubmit = async () => {
+    if(newMessage!==""){
     const message = {
       sender: _id,
       text: newMessage,
@@ -284,6 +285,7 @@ const handleSubmit = async (e) => {
     } catch (err) {
       console.log(err);
     }
+  }
   };
 
   
@@ -387,7 +389,9 @@ const handleSubmit = async (e) => {
   function clickButtonAdd(e){
     e.preventDefault()
     setListUserGroupNew([...listUserGroupNew,userSearch])
-    console.log(listUserGroupNew)
+    setUserSearch(null)
+    document.querySelector('#search-group').value = ""
+  
   }
 
   function AutoScroll(){
@@ -395,35 +399,28 @@ const handleSubmit = async (e) => {
     element.scrollTop = element.scrollHeight ;
   }
 
-  const [convGroupForm , setConvGroupForm] = useState({
-})
+ 
 
 
 
-  const createNewConvGroup = async event =>{
-  
-    event.preventDefault()
+
+  const createNewConvGroup =  () =>{
+
     let listMemberId =
     listUserGroupNew.map((userGr)=>{
       return userGr._id
     })
-    let nameGroup = document.querySelector('#groupName').value
-    
-    setConvGroupForm({
+  let nameGroup = document.querySelector('#groupName').value
+    const conv= ({
       members:[
         _id,...listMemberId
       ],
       name:nameGroup,
       authorization:_id,
-      //img:'https://cdn-icons-png.flaticon.com/512/1057/1057089.png?w=360'
+      img:'https://cdn-icons-png.flaticon.com/512/1057/1057089.png?w=360'
     })
     try {
-      console.log("test run")
-      const res = await axios.post("http://localhost:8800/api/conversations/newConvGroup", convGroupForm);
-      console.log("test run")  
-      //setconvGr([...convGr,res.data]);
-      //setnewconvGroupForm([...newconvGroupForm,res.data]);
-      console.log(res.data);
+      const res = axios.post("http://localhost:8800/api/conversations/newConvGroup", conv);
     } catch (err) {
       console.log(err.message);
     }
@@ -545,6 +542,8 @@ const handleSubmit = async (e) => {
                 <div className="send-message">
                   <InputEmoji  onChange ={(e) => setNewMessages(e)} 
                       value={newMessage}
+                      cleanOnEnter
+                      onEnter={()=>sendSubmit()}
                       placeholder="Nhập tin nhắn"/>
                   <Tooltip
                   title="Gửi hình ảnh"
@@ -562,7 +561,7 @@ const handleSubmit = async (e) => {
                     placement="bottom-end">
                     <span
                       className="sendbutton"
-                      onClick={sendSubmit}>
+                      onClick={()=>sendSubmit()}>
                       <SendIcon/>
                     </span>
                   </Tooltip>
@@ -741,7 +740,7 @@ const handleSubmit = async (e) => {
       {userSearch._id === _id ? <div className="add">bạn</div> :<button onClick={clickButtonAdd} className="add">Thêm</button>}
     </div> : <div className="nullUser">Không thấy user</div>}
     
-  </div>
+  </div>  
 </div>
 
 <div className="mt-10"><p>____________________________________________________________________________</p></div>
@@ -768,8 +767,15 @@ const handleSubmit = async (e) => {
 
 <br></br>
 <div className="GroupAddButton">
-  <button type="button" className="btn-addGr btn-primary" onClick={createNewConvGroup}>Tạo nhóm</button>
-  <button type="button" className="btn-addGr btn-secondary">Huỷ</button>
+  <button type="button" className="btn-addGr btn-primary"  onClick={(e)=>{
+    e.preventDefault()
+    createNewConvGroup()
+    setListUserGroupNew([])
+    setOpenPopup(false)
+    }}>Tạo nhóm</button>
+  <button type="button" className="btn-addGr btn-secondary" onClick={() => { 
+          setOpenPopup(false)
+           }}>Huỷ</button>
 </div>
   
 </form>

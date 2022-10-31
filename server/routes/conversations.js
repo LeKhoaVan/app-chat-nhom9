@@ -158,7 +158,7 @@ router.post("/newConvGroup", async (req, res) => {
   //const newConvGroup = new ConversationGroup(req.body)
 
 
-   const newConversationGroup = new Conversation({members,name,authorization})
+   const newConversationGroup = new Conversation({members,name,authorization,img})
 
   try {
     const savedConversationGroup = await newConversationGroup.save();
