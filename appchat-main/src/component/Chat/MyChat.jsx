@@ -246,8 +246,8 @@ const handleSubmit = async (e) => {
     getConversations();
   }, [_id,authorize]);
 
-  const sendSubmit = async (e) => {
-    e.preventDefault();
+  const sendSubmit = async () => {
+    if(newMessage!==""){
     const message = {
       sender: _id,
       text: newMessage,
@@ -283,6 +283,7 @@ const handleSubmit = async (e) => {
     } catch (err) {
       console.log(err);
     }
+  }
   };
 
   
@@ -491,14 +492,16 @@ const handleSubmit = async (e) => {
             </div>
             <div className="sender-cont">
                 <div className="send-message">
-                  <InputEmoji  onChange ={(e) => setNewMessages(e)} 
+                  <InputEmoji  
+                      onChange ={(e) => setNewMessages(e)} 
                       value={newMessage}
-                      placeholder="Nhập tin nhắn"/>
+                      placeholder="Nhập tin nhắn"
+                      onEnter={()=>sendSubmit()}/>
                   <Tooltip
                   title="Gửi hình ảnh"
                   placement="bottom-end">
                   <ImageIcon />
-                </Tooltip>
+                  </Tooltip>
                 <Tooltip
                   title="Đính kèm file"
                   placement="bottom-end">
@@ -510,7 +513,8 @@ const handleSubmit = async (e) => {
                     placement="bottom-end">
                     <span
                       className="sendbutton"
-                      onClick={sendSubmit}>
+                      onClick={()=>sendSubmit()}
+                      >
                       <SendIcon/>
                     </span>
                   </Tooltip>
