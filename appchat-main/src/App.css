@@ -572,3 +572,104 @@ body{
 .avatarInfo{
   
 }
+
+#search-group{
+  position: relative;
+}
+#search-group:focus~.model-search{
+  display: block;
+}
+.model-search{
+  display: none;
+  position: absolute;
+  width: 86%;
+  z-index: 999;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.205);
+  border-radius: 5%;
+}
+
+
+.model-search .item,
+.listAdd .itemAdd{
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  position: relative;
+}
+
+
+  
+
+.listAdd{
+  list-style: none;
+  height: 200px;
+  overflow-y: auto;
+}
+
+
+
+.model-search .item p,
+.listAdd .itemAdd p{
+  margin-left: 5px;
+
+}
+.listAdd .itemAdd button,
+.model-search .item button{
+  position: absolute;
+  right: 5px;
+  outline: none;
+  border: none;
+  color: #fff;
+  font-weight: 500;
+  padding: 5px;
+  border-radius: 10%;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.listAdd .itemAdd button{
+  background-color: red;
+}
+.model-search .item button{
+  background-color: blue;
+} 
+
+.listAdd .itemAdd button:hover{
+  background-color: rgba(255, 0, 0, 0.788);
+}
+.model-search .item button:hover{
+  background-color: rgba(0, 0, 255, 0.781);
+}
+.listAdd .itemAdd:hover,.model-search .item:hover{
+
+  background-color: rgba(0, 0, 0, 0.123);
+}
+
+.ip-addGr{
+  padding: 5px;
+  margin-bottom: 5px;
+  color: #000 !important;
+  font-size: 15px;
+}
+
+.btn-addGr{
+  outline: none;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  margin-left: 10px;
+  font-weight: 500;
+  color: #fff;
+  background-color: #0091FF;
+}
+.btn-addGr:hover{
+  background-color: #0091ffc4;
+}
+.GroupAddButton{
+  float: right;
+}
+
+.title-Add{
+  font-weight: bold;
+}

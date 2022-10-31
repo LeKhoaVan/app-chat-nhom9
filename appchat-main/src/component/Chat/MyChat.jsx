@@ -227,7 +227,13 @@ const handleSubmit = async (e) => {
     getMessages();
   }, [currentChat]);
 
- 
+  // useEffect(() => {
+  //   socket.current.emit("authorize", );
+  //   socket.current.on("getAu", (data) => {
+      
+  //   })
+  // },[authorize]);
+
   useEffect(() => {
     const getConversations = async () => {
       try {
@@ -667,36 +673,39 @@ const handleSubmit = async (e) => {
                 openPopup={openPopup}
                 setOpenPopup={setOpenPopup}
             >
+
             <form>
   <div className="form-group">
-    <label for="exampleFormControlInput1">Nhập tên nhóm</label>
-    <input type="text" className="form-control" id="exampleFormControlInput1" placeholder="Nhập tên nhóm"></input><br></br>
+    <input type="text" className="form-control ip-addGr" placeholder="Nhập tên nhóm"></input><br></br>
   </div>
   
-  <div className="input-group">
-  <input type="search" className="form-control rounded" placeholder="Tìm kiếm"  aria-describedby="search-addon" />
-  <button type="button" className="btn btn-outline-primary">Tìm</button>
+<div className="input-group">
+  <input className="form-control rounded ip-addGr" id="search-group" placeholder="Tìm kiếm"  aria-describedby="search-addon" />
+  <div className="model-search">
+    <div className="item">
+      <Avatar></Avatar>
+      <p>name</p>
+      <button className="add">Thêm</button>
+    </div>
+  </div>
 </div>
 
 <div><p>____________________________________________________________________________</p></div>
-<div className="form-check">
-  <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"></input>
-  <label className="form-check-label" for="flexRadioDefault1">
-    Nguyễn Hoàng Quân
-  </label>
-</div>
-<div className="form-check">
-  <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked></input>
-  <label className="form-check-label" for="flexRadioDefault2">
-    Nguyễn Hoàng Quan
-  </label>
-</div>
-
+<p className="title-Add">Đã thêm</p>
+<ul className="listAdd">
+  <li className="itemAdd">
+      <Avatar></Avatar>
+      <p>name</p>
+      <button className="remove">xóa</button>
+  </li>      
+</ul>
 
 
 <br></br>
-<button type="button" className="btn btn-primary">Tạo nhóm</button>
-<button type="button" className="btn btn-secondary">Huỷ</button>
+<div className="GroupAddButton">
+  <button type="button" className="btn-addGr btn-primary">Tạo nhóm</button>
+  <button type="button" className="btn-addGr btn-secondary">Huỷ</button>
+</div>
   
 </form>
         </Popup>
@@ -730,7 +739,10 @@ const handleSubmit = async (e) => {
 					value={data.img}
 				/>
 				
-				<button type="submit" className={styles.submit_btn} onClick={() => { setOpenPopupAvarta(false); window.location.reload(false) }}>
+				<button type="submit" className={styles.submit_btn} onClick={() => { 
+          setOpenPopupAvarta(false); 
+          //window.location.reload(false)
+           }}>
 					Submit
 				</button>
 			</form>
