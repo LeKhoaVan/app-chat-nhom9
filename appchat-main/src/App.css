@@ -576,7 +576,7 @@ body{
 #search-group{
   position: relative;
 }
-#search-group:focus~.model-search{
+#search-group:valid~.model-search{
   display: block;
 }
 .model-search{
@@ -672,4 +672,14 @@ body{
 
 .title-Add{
   font-weight: bold;
+}
+
+.nullUser{
+  width: 100%;
+  padding: 5px;
+  text-align: center;
+}
+
+.mt-10{
+  margin-top: 30px;
 }
