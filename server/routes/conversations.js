@@ -148,5 +148,29 @@ router.get("/", async (req, res) => {
   }
 });
 
+//new conv_group
+router.post("/newConvGroup", async (req, res) => {
+
+  const {  members  ,
+      name  ,
+      authorization,img } = req.body
+  
+  //const newConvGroup = new ConversationGroup(req.body)
+
+
+   const newConversationGroup = new Conversation({members,name,authorization,img})
+
+  try {
+    const savedConversationGroup = await newConversationGroup.save();
+    res.status(200).json(savedConversationGroup);
+
+  //   const savedConvGr = await newConvGroup.save();
+  // res.status(200).json(savedConvGr);
+
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 
 module.exports = router;

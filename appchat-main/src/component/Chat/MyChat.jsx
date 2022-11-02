@@ -55,6 +55,7 @@ export default function MyChat() {
   const [deleteMessage, setDeleteMessages] = useState([]);
   const [listUserGroupNew, setListUserGroupNew] = useState([]);
   const [userSearch, setUserSearch] = useState(null);
+  const [convGroupForm , setConvGroupForm] = useState({})
 
   const socket = useRef();
 
@@ -245,7 +246,7 @@ const handleSubmit = async (e) => {
       }
     };
     getConversations();
-  }, [_id,authorize]);
+  }, [_id,authorize,listUserGroupNew]);
 
   const sendSubmit = async () => {
     if(newMessage!==""){
@@ -388,12 +389,42 @@ const handleSubmit = async (e) => {
   function clickButtonAdd(e){
     e.preventDefault()
     setListUserGroupNew([...listUserGroupNew,userSearch])
-    console.log(listUserGroupNew)
+    setUserSearch(null)
+    document.querySelector('#search-group').value = ""
+  
   }
 
   function AutoScroll(){
     var element = document.querySelector(".live-chat");
     element.scrollTop = element.scrollHeight ;
+  }
+
+ 
+
+
+
+
+  const createNewConvGroup =  () =>{
+
+    let listMemberId =
+    listUserGroupNew.map((userGr)=>{
+      return userGr._id
+    })
+  let nameGroup = document.querySelector('#groupName').value
+    const conv= ({
+      members:[
+        _id,...listMemberId
+      ],
+      name:nameGroup,
+      authorization:_id,
+      img:'https://cdn-icons-png.flaticon.com/512/1057/1057089.png?w=360'
+    })
+    try {
+      const res = axios.post("http://localhost:8800/api/conversations/newConvGroup", conv);
+    } catch (err) {
+      console.log(err.message);
+    }
+  
   }
   
   return (
@@ -530,8 +561,7 @@ const handleSubmit = async (e) => {
                     placement="bottom-end">
                     <span
                       className="sendbutton"
-                      onClick={()=>sendSubmit()}
-                      >
+                      onClick={()=>sendSubmit()}>
                       <SendIcon/>
                     </span>
                   </Tooltip>
@@ -697,7 +727,7 @@ const handleSubmit = async (e) => {
 
             <form>
   <div className="form-group">
-    <input type="text" className="form-control ip-addGr" placeholder="Nhập tên nhóm"></input><br></br>
+    <input type="text" className="form-control ip-addGr" id="groupName" placeholder="Nhập tên nhóm"></input><br></br>
   </div>
   
 <div className="input-group">
@@ -710,7 +740,7 @@ const handleSubmit = async (e) => {
       {userSearch._id === _id ? <div className="add">bạn</div> :<button onClick={clickButtonAdd} className="add">Thêm</button>}
     </div> : <div className="nullUser">Không thấy user</div>}
     
-  </div>
+  </div>  
 </div>
 
 <div className="mt-10"><p>____________________________________________________________________________</p></div>
@@ -737,8 +767,15 @@ const handleSubmit = async (e) => {
 
 <br></br>
 <div className="GroupAddButton">
-  <button type="button" className="btn-addGr btn-primary">Tạo nhóm</button>
-  <button type="button" className="btn-addGr btn-secondary">Huỷ</button>
+  <button type="button" className="btn-addGr btn-primary"  onClick={(e)=>{
+    e.preventDefault()
+    createNewConvGroup()
+    setListUserGroupNew([])
+    setOpenPopup(false)
+    }}>Tạo nhóm</button>
+  <button type="button" className="btn-addGr btn-secondary" onClick={() => { 
+          setOpenPopup(false)
+           }}>Huỷ</button>
 </div>
   
 </form>

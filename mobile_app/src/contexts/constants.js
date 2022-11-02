@@ -1,1 +1,2 @@
-export const apiUrl = 'http://192.168.31.220:8800/api/auth'
+export const apiUrl = 'http://192.168.74.90:8800/api/auth'
+export const Url = 'http://192.168.74.90:8800'

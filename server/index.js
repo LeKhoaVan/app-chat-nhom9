@@ -11,7 +11,6 @@ const userRoute = require("./routes/user");
 const conversationRoute = require("./routes/conversations");
 const messageRoute = require("./routes/messages");
 const authRoute = require("./routes/auth");
-const convGroupRoute = require("./routes/conversationGroups");
 const router = express.Router();
 const path = require("path");
  
@@ -56,7 +55,7 @@ app.use("/api/users", userRoute);
 app.use("/api/conversations", conversationRoute);
 app.use("/api/messages", messageRoute);
 app.use("/api/auth", authRoute);
-app.use("/api/convgroup",convGroupRoute);
+
 
 app.listen(8800, () => {
   console.log("Backend server is running!");

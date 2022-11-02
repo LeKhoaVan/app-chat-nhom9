@@ -29,6 +29,17 @@ router.get("/:conversationId", async (req, res) => {
   }
 });
 
+router.get("/lastmess/:conversationId", async (req, res) => {
+  try {
+    const messages = await Message.findOne({
+      conversationId: req.params.conversationId,
+    }).sort({_id:-1}) ;
+    res.status(200).json(messages);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 router.put("/del", async (req, res) => {
  
   try{
