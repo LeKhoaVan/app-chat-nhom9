@@ -163,8 +163,8 @@ body{
   border: none;
   background-color: inherit;
   width: 68%;
-  padding: 10px;
-  font-size: 17px;
+  padding: 10px 0px 10px 0px;
+  font-size: 15px;
 }
 .search-c svg {
   margin: 0 12px 0 12px;
@@ -436,12 +436,11 @@ body{
 .list-user li{
   height: 60px;
   width: 100%;
-
   border-radius: 5px;
   padding: 0 20px 0 20px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  position: relative;
 }
 .list-user li:hover{
   background-color: rgba(0, 0, 0, 0.144);
@@ -456,9 +455,18 @@ body{
   overflow: hidden;
   margin-right: 10px;
 }
+
+.list-user li:last-child .more-option{
+  top: -175%;
+  right: 0;
+}
 .list-user .more{
   cursor: pointer;
-  position: relative;
+  z-index: 999;
+  position: absolute;
+  right: 20px;
+  top: 0;
+  transform: translateY(65%);
 }
 .list-user .more:hover .more-option{
   display:block;
@@ -473,12 +481,13 @@ body{
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.205);
   border-radius: 5%;
   overflow: hidden;
-
+  
 }
 .list-user .more .more-option .item{
   font-size: 13px;
   width: 100%;
   padding: 5px;
+  z-index: 1000;
 }
 .list-user .more .more-option .item:hover{
   background-color: rgba(0, 0, 0, 0.178);
@@ -581,9 +590,14 @@ body{
 #search-group{
   position: relative;
 }
-#search-group:valid~.model-search{
+
+#search-group:placeholder-shown~.model-search{
+  display: none;
+}
+#search-group:not(:placeholder-shown)~.model-search{
   display: block;
 }
+
 .model-search{
   display: none;
   position: absolute;
@@ -692,4 +706,46 @@ body{
 
 .mt-10{
   margin-top: 30px;
+}
+
+
+
+#search-user{
+  position: relative;
+}
+
+#search-user:placeholder-shown~.model-usersearch{
+  display: none;
+}
+#search-user:not(:placeholder-shown)~.model-usersearch{
+  display: block;
+}
+
+.model-usersearch{
+  display: none;
+  position: absolute;
+  min-width: 270px;
+  width: 294px;
+  z-index: 999;
+  top: 51px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.205);
+  border-radius: 5%;
+  overflow: hidden;
+}
+
+.model-usersearch .item{
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.model-usersearch .item p{
+  margin-left: 5px;
+}
+
+
+.model-usersearch .item:hover{
+  background-color: rgba(0, 0, 0, 0.123);
 }

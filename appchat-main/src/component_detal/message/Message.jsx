@@ -78,7 +78,7 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
         
           <div className="messageTop">
               <div className="messageText">
-                <p>{message.text}</p>
+                {message.type === 0 ? <p>{message.text}</p> : <div></div>}
                 <div class="dropdown-content own">
                   <li>
                     <span className="sendbutton" onClick={handleDeleteMessage}>
@@ -119,8 +119,7 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
               />
               <div className="messageText">
               <span className="owner">{user.username}</span>
-              
-              <p>{message.text}</p>
+              {message.type === 0 ? <p>{message.text}</p> : <div></div>}
                 <div class="dropdown-content">
                 <li>
                     <span className="sendbutton" onClick={handleDeleteMgsFri}>
