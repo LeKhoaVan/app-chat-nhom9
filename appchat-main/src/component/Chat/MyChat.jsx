@@ -161,6 +161,7 @@ const handleSubmit = async (e) => {
       setArrivalMessages({
         sender: data.senderId,
         text: data.text,
+        type:0,
         delUser: data.delUser,
         conversationId: data.conversationId,
         createdAt: Date.now(),
@@ -254,6 +255,7 @@ const handleSubmit = async (e) => {
     const message = {
       sender: _id,
       text: newMessage,
+      type:0,
       conversationId: currentChat._id,
       reCall: false,
       delUser:""
@@ -273,6 +275,7 @@ const handleSubmit = async (e) => {
     socket.current.emit("sendMessage", {
       senderId: _id,
       receiverIds,
+      type:0,
       text: newMessage,
       conversationId: currentChat._id,
       delUser:""
