@@ -1,11 +1,14 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { GestureHandlerRootView,Swipeable } from 'react-native-gesture-handler'
 import axios from 'axios';
+import { AuthContext } from '../contexts/AuthContext';
+import { Url } from '../contexts/constants'
 
 export default function Conversation({ conversation, currentUser,navigation}) {
   const [user, setUser] = useState([]);
   const [lastMess, setLastMess] = useState([]);
+  const {currentChat,setCurrentChat,userInfo} = useContext(AuthContext)
   const CTime = (date) => {
     let tempDate = new Date(date);
     let fDate =tempDate.getHours()+":"+tempDate.getMinutes();
@@ -19,10 +22,10 @@ export default function Conversation({ conversation, currentUser,navigation}) {
   }
 
   useEffect(() => {
-    const friendId = conversation.members.find((m) => m !== currentUser);
+    const friendId = conversation.members.find((m) => m !== userInfo);
     const getUser = async () => {
       try {
-        const res = await axios("http://192.168.74.90:8800/api/users?userId="+friendId);  
+        const res = await axios(`${Url}/api/users?userId=${friendId}`);  
         setUser(res.data);
       } catch (err) {
         console.log(err); 
@@ -30,7 +33,7 @@ export default function Conversation({ conversation, currentUser,navigation}) {
     };
     const getLastMess = async () => {
       try {
-        const res = await axios("http://192.168.74.90:8800/api/messages/lastmess/"+conversation._id);  
+        const res = await axios(`${Url}/api/messages/lastmess/${conversation._id}`);  
         setLastMess(res.data);
         
       } catch (err) {
@@ -56,7 +59,10 @@ export default function Conversation({ conversation, currentUser,navigation}) {
     //   // onSwipeableRightOpen={() => swipeFromRightOpen(item.id)}
     // >
     <TouchableOpacity
-      onPress={()=>navigation.navigate('ChattingScreen')}>
+      onPress={()=>{
+        navigation.navigate('ChattingScreen')
+        setCurrentChat(conversation)
+        }}>
     <View style={styles.container}>
       <Image 
           source={{uri : conversation.name? conversation.img: user.avt}}
@@ -85,7 +91,8 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     justifyContent:'space-between',
     alignItems:'center',
-    padding:10,
+    paddingHorizontal:20,
+    paddingVertical:10,
     borderBottomWidth:1,
     borderBottomColor:'#ECE9E9',
   },

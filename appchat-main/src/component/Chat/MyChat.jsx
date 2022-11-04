@@ -227,7 +227,7 @@ const handleSubmit = async (e) => {
       }
     };
     getMessages();
-  }, [currentChat]);
+  }, [currentChat,messages]);
 
   // useEffect(() => {
   //   socket.current.emit("authorize", );

@@ -12,6 +12,7 @@ export const AuthContextProvider = ({ children }) => {
 	const [userInfo,setUserInfo] = useState({});
 	const [isLoading,setIsLoading] = useState(false);
 	const [isRegisterSuccess,setIsRegisterSuccess] = useState(false);
+	const [currentChat,setCurrentChat] = useState("");
 	//Login
 	const login = async userForm =>{
 		try{
@@ -109,7 +110,8 @@ export const AuthContextProvider = ({ children }) => {
 	}
 	// Return provider
 	return (
-		<AuthContext.Provider value={{userToken,register,login,logout,userInfo,isLoading,loadUser_Register,setUserToken}}>
+		<AuthContext.Provider value={{userToken,register,login,logout,userInfo,
+		isLoading,loadUser_Register,setUserToken,currentChat,setCurrentChat}}>
 			{children}
 		</AuthContext.Provider>
 	)
