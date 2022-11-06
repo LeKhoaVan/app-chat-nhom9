@@ -21,6 +21,7 @@ import ChattingPage from "./ChattingPage";
 import Edit from "@mui/icons-material/Edit";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import LogoutIcon from '@mui/icons-material/Logout';
 import avatar from '../../assets/avatar.jpg'; 
 import ChatOutlinedIcon from "@mui/icons-material/ChatOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
@@ -519,10 +520,10 @@ const handleSubmit = async (e) => {
                 <>    
             <div className="top-header">
                 <div className="user-header">
-                    <Avatar src={currentChat?.img}></Avatar>
+                    <Avatar src={ currentChat? (currentChat.img? currentChat.img :  myFriend.avt ) : ""}></Avatar>
                     <p className="user-name">{
-                      currentChat?.name 
-                        //myFriend.username 
+                      currentChat? (currentChat.name? currentChat.name :  myFriend.username ) : <span></span>
+                       
                         
                     }</p>
                 </div>
@@ -609,18 +610,21 @@ const handleSubmit = async (e) => {
           <div className="mainInfo">
             <div className="infomation_con">
               
-              <Avatar src={currentChat?.img}
+              <Avatar src={ currentChat? (currentChat.img? currentChat.img :  myFriend.avt ) : ""}
                 sx={{width:70,height:70}}>
                 </Avatar>
               <div className="name_con">
-                <p className="text_name">{currentChat?.name}</p>
+                <p className="text_name">{currentChat? (currentChat.name? currentChat.name :  myFriend.username ) : <span></span>}</p>
+                
+                {currentChat?.authorization != null ? 
                 <Tooltip 
                   title="Chỉnh sửa"
                   placement="bottom-end">
                   <IconButton onClick={() => { setOpenPopupAvarta(true);  setData(currentChat)}}>
                     <Edit />
                   </IconButton>
-                </Tooltip>
+                </Tooltip> : <div></div>}
+               
               </div>
               {/* <div className="edit_button">
                 <IconButton>
@@ -651,7 +655,7 @@ const handleSubmit = async (e) => {
                             </p>
                           </div>
                               
-                          {currentChat.authorization.map( (auth)=>(
+                          {authorize.map( (auth)=>(
                               auth != _id || user._id == _id ?  
                                <div></div> : 
                             <div className="more">
@@ -736,21 +740,36 @@ const handleSubmit = async (e) => {
                 </span>
               </div>
             </div>
-            <div className="security_con">
+            <div className="user_con">
               <div className="iv_title">
                 <p>Thiết lập bảo mật</p>
                 <ArrowDropDownIcon/>
               </div>
               <div className="iv_main">
-                <span className="removeall">
+                <span className="option-security">
                   <DeleteOutlineIcon/>
                   <p>Xóa lịch sử trò chuyện</p>
                 </span>
               </div>
+              <div className="iv_main">
+                <span className="option-security">
+                  <LogoutIcon/>
+                  <p>Rời nhóm</p>
+                </span>
+              </div>
+
+              {authorize.map((auth)=>(
+                              auth != _id ?  
+                               <div></div> : 
+                    <div className="iv_main">
+                    <span className="option-security disband">
+                      <p className="disband">Giải tán nhóm</p>
+                    </span>
+                  </div>
+              ))}
             </div>
           </div>
         </div>
-
 
         <Popup
                 title="Tạo nhóm"

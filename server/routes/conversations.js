@@ -110,7 +110,8 @@ router.put('/removeMember', async (req, res) => {
 		const postUpdateCondition = { _id: req.body.conId }
 
     const conversation = await Conversation.findOneAndUpdate(postUpdateCondition,
-      { $pull: { "members": req.body.userId } }
+      { $pull: { "members": req.body.userId ,"authorization": req.body.userId},
+      }
       , { new: true })
 
     res.status(200).json(conversation.members)
