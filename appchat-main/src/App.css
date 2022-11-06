@@ -288,6 +288,11 @@ body{
   align-items: center;
   border-top: 1px solid #f0eff5;
 }
+.sender-cont svg {
+  margin: 0 5px 0 12px;
+  cursor: pointer;
+}
+
 .react-input-emoji--container {
   background: none !important;
   overflow:auto;

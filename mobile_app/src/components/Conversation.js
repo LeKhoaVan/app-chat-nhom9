@@ -1,24 +1,71 @@
-import { StyleSheet, Text, View, Image} from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
 import { GestureHandlerRootView,Swipeable } from 'react-native-gesture-handler'
+import axios from 'axios';
+import { AuthContext } from '../contexts/AuthContext';
+import { Url } from '../contexts/constants'
 
-export default function Conversation({item}) {
-  const rightSwipeActions = () => {
-    return (
-      <View>
-        <Text>Book</Text>
-      </View>
-    );
+export default function Conversation({ conversation, currentUser,navigation}) {
+  const [user, setUser] = useState([]);
+  const [lastMess, setLastMess] = useState([]);
+  const {currentChat,setCurrentChat,userInfo} = useContext(AuthContext)
+  const CTime = (date) => {
+    let tempDate = new Date(date);
+    let fDate =tempDate.getHours()+":"+tempDate.getMinutes();
+    return fDate;
   };
+  const mess=(m)=>{
+    if(m.length<=23)
+      return m
+    else 
+      return m.slice(0,19)+'...'
+  }
+
+  useEffect(() => {
+    const friendId = conversation.members.find((m) => m !== userInfo);
+    const getUser = async () => {
+      try {
+        const res = await axios(`${Url}/api/users?userId=${friendId}`);  
+        setUser(res.data);
+      } catch (err) {
+        console.log(err); 
+      }
+    };
+    const getLastMess = async () => {
+      try {
+        const res = await axios(`${Url}/api/messages/lastmess/${conversation._id}`);  
+        setLastMess(res.data);
+        
+      } catch (err) {
+        console.log(err); 
+      }
+    };
+    getUser();
+    getLastMess();
+
+  }, [currentUser, conversation]);
+
+  // const rightSwipeActions = () => {
+  //   return (
+  //     <View>
+  //       <Text>Book</Text>
+  //     </View>
+  //   );
+  // };
   return (
-    <GestureHandlerRootView>
-    <Swipeable
-      renderRightActions={rightSwipeActions}
-      // onSwipeableRightOpen={() => swipeFromRightOpen(item.id)}
-    >
+    // <GestureHandlerRootView>
+    // <Swipeable
+    //   renderRightActions={rightSwipeActions}
+    //   // onSwipeableRightOpen={() => swipeFromRightOpen(item.id)}
+    // >
+    <TouchableOpacity
+      onPress={()=>{
+        navigation.navigate('ChattingScreen')
+        setCurrentChat(conversation)
+        }}>
     <View style={styles.container}>
       <Image 
-          source={{uri : item.user_avt}}
+          source={{uri : conversation.name? conversation.img: user.avt}}
           style={{
               width:60,
               height:60,
@@ -26,13 +73,15 @@ export default function Conversation({item}) {
               backgroundColor:'#008FF3',
           }}/>
       <View style={styles.center}>
-        <Text style={styles.name_user}>{item.user_name}</Text>
-        <Text style={styles.last_chat}>{item.last_chat}</Text>
+        <Text style={styles.name_user}>{conversation.name? conversation.name : user.username}</Text>
+        <Text style={styles.last_chat}>{lastMess?.text? conversation.name?   mess('Khoa: '+lastMess?.text) :mess(lastMess?.text): 'Chưa có tin nhắn'}</Text>
+        
       </View>
-      <Text>{item.time_last_chat}</Text>
+      <Text>{lastMess?.text? CTime(lastMess?.createdAt):''}</Text>
     </View>
-    </Swipeable>
-    </GestureHandlerRootView>
+    </TouchableOpacity>
+    // </Swipeable>
+    // </GestureHandlerRootView>
   )
 }
 
@@ -42,7 +91,8 @@ const styles = StyleSheet.create({
     flexDirection:'row',
     justifyContent:'space-between',
     alignItems:'center',
-    padding:15,
+    paddingHorizontal:20,
+    paddingVertical:10,
     borderBottomWidth:1,
     borderBottomColor:'#ECE9E9',
   },

@@ -1,11 +1,97 @@
-import { StyleSheet, Text, View,TouchableOpacity, TextInput} from 'react-native'
-import React from 'react'
+import { StyleSheet, Text, View,TouchableOpacity, TextInput, ScrollView, ActivityIndicator,} from 'react-native'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import Messager from '../components/Messager'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { Url } from '../contexts/constants'
+import { AuthContext } from '../contexts/AuthContext'
+import axios from 'axios'
 
 export default function ChattingScreen({navigation}) {
+    const [newMessage, setNewMessage] = useState("");
+    const scrollView_ref = useRef();
+    const [messages, setMessages] = useState([]);
+    const [user, setUser] = useState([]);
+    const {userInfo,currentChat} = useContext(AuthContext);
+    useEffect(() => {
+        const friendId = currentChat.members.find((m) => m !== userInfo);
+        const getUser = async () => {
+            try {
+                const res = await axios(`${Url}/api/users?userId=${friendId}`);  
+                setUser(res.data);
+            } catch (err) {
+                console.log(err); 
+            }
+        };
+        getUser();
+        const getMessages = async () => {
+          let messageList =[];
+          try {
+            const res = await axios.get(`${Url}/api/messages/${currentChat._id}`); 
+            for(let i =0; i< res.data.length;i++) {
+              if(res.data[i].delUser[0] !== userInfo._id) {
+                if(res.data[i].reCall === true){
+                  res.data[i].text = "tin nhắn đã được thu hồi"
+                  messageList.push(res.data[i]);
+                }
+                else{
+                  messageList.push(res.data[i]);
+                }
+              }
+              
+            }
+            setMessages(messageList);
+          } catch (err) {
+            console.log(err);
+          }
+        };
+       
+        getMessages();
+        scrollView_ref.current.scrollToEnd({animated: false})
+        
+      }, [userInfo,messages]);
+      const sendSubmit = async () => {
+        if(newMessage!==""){
+        const message = {
+          sender: userInfo._id,
+          text: newMessage,
+          conversationId: currentChat._id,
+          reCall: false,
+          delUser:""
+        };
+    
+        // const receiverId = currentChat.members.find(
+        //   (member) => member !== _id
+        // );
+        const receiverIds = [];
+        
+        for (let index = 0; index < currentChat.members.length; index++) {
+          if (currentChat.members[index] !== userInfo._id) {
+            receiverIds.push(currentChat.members[index]);
+          }
+        }
+    
+        // socket.current.emit("sendMessage", {
+        //   senderId: _id,
+        //   receiverIds,
+        //   text: newMessage,
+        //   conversationId: currentChat._id,
+        //   delUser:""
+        // });
+    
+    
+        try {
+          const res = await axios.post(`${Url}/api/messages`,message);
+          setMessages([...messages, res.data]);
+          setNewMessage("");
+        } catch (err) {
+          console.log(err);
+        }
+      }
+      };
   return (
-    <SafeAreaView>
+    <SafeAreaView style={{height:'100%'}}>
         <View style={styles.Header}>
             <TouchableOpacity 
                 onPress={()=> navigation.goBack()}>
@@ -16,8 +102,8 @@ export default function ChattingScreen({navigation}) {
                     />
             </TouchableOpacity>
             <View style={styles.Name}>
-                <Text style={styles.text_Name}>Nguyễn Thái Nguyên</Text>
-                <Text style={styles.active}>Đang hoạt động</Text>
+                <Text style={styles.text_Name}>{currentChat.name? currentChat.name : user.username}</Text>
+                <Text style={styles.active}>{currentChat.name? '3 thành viên' : 'Đang hoạt động'}</Text>
             </View>
             <TouchableOpacity>
                 <Ionicons
@@ -38,24 +124,55 @@ export default function ChattingScreen({navigation}) {
                     color='#fff'/>
             </TouchableOpacity>
         </View>
+        <View style={styles.MessageList}>
+        <ScrollView
+            ref={scrollView_ref}
+            onContentSizeChange={() => scrollView_ref.current.scrollToEnd({animated: false})}> 
+            <KeyboardAwareScrollView  onKeyboardDidShow={()=>scrollView_ref.current.scrollToEnd({animated: false})}>
+                {messages.map((m) => (
+                     <Messager key={m._id} message={m} own={m.sender === userInfo._id} 
+                        userId={userInfo._id}/>
+                   
+                  ))} 
+                  
+            </KeyboardAwareScrollView>
+            </ScrollView>
+        </View>
         <View style={styles.input}>
-            <TouchableOpacity>
+            <View style={{width:'10%',justifyContent:'center',alignItems:'center'}}>
+            <TouchableOpacity >
                 <Ionicons
                     name='happy-outline'
                     size={25}/>
             </TouchableOpacity>
+            </View>
             <TextInput style={styles.input_text}
-                placeholder='Nhập tin nhắn'/>
-            <TouchableOpacity>
-                <Ionicons
-                    name='attach'
-                    size={25}/>
-            </TouchableOpacity>
-            <TouchableOpacity>
-                <Ionicons
-                    name='images-outline'
-                    size={25}/>
-            </TouchableOpacity>
+                placeholder='Nhập tin nhắn'
+                value={newMessage}
+                onChangeText={(value)=>setNewMessage(value)}/>
+            {newMessage? 
+                <View style={{width:'18%',alignItems:'center',}}>
+                    <TouchableOpacity
+                        onPress={()=>sendSubmit()}>
+                        <Ionicons
+                                name='send'
+                                size={25}
+                                color={'#056282'}/>
+                    </TouchableOpacity>
+                </View>:
+                <View style={{flexDirection:'row',width:'18%', alignItems:'center',justifyContent:'space-around',paddingHorizontal:5}}>
+                    <TouchableOpacity>
+                        <Ionicons
+                            name='attach'
+                            size={25}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                    <Ionicons
+                        name='images-outline'
+                        size={25}/>
+                    </TouchableOpacity>
+                </View>
+                }   
         </View>
     </SafeAreaView>
 
@@ -84,18 +201,22 @@ const styles = StyleSheet.create({
     Name:{
         width:200,
     },
+    MessageList:{
+        flex:1,
+    },
     input:{
         display:'flex',
         flexDirection:'row',
         backgroundColor:"#fff",
-        padding:10,
-        justifyContent:'space-between',
+        paddingVertical:10,
+        justifyContent:'center',
         alignItems:'center',
-        height:50,
+        height:60,
     },
     input_text:{
-        width:'70%',
+        width:'72%',
         height:50,
         maxHeight:100,
+        fontSize:16,
     }
 })

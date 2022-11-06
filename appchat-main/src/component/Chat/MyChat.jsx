@@ -574,16 +574,16 @@ const handleSubmit = async (e) => {
             </div>
             <div className="sender-cont">
                 <div className="send-message">
-                  <InputEmoji  onChange ={(e) => setNewMessages(e)} 
+                  <InputEmoji  
+                      onChange ={(e) => setNewMessages(e)} 
                       value={newMessage}
-                      cleanOnEnter
-                      onEnter={()=>sendSubmit()}
-                      placeholder="Nhập tin nhắn"/>
+                      placeholder="Nhập tin nhắn"
+                      onEnter={()=>sendSubmit()}/>
                   <Tooltip
                   title="Gửi hình ảnh"
                   placement="bottom-end">
                   <ImageIcon />
-                </Tooltip>
+                  </Tooltip>
                 <Tooltip
                   title="Đính kèm file"
                   placement="bottom-end">
