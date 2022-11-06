@@ -173,5 +173,17 @@ router.post("/newConvGroup", async (req, res) => {
   }
 });
 
+router.delete("/deleteCon", async (req, res) => {
+  try {
+    const condition = { _id: req.body.convId}
+    const conversation = await Conversation.findOneAndDelete(condition);
+    res.status(200).json(conversation);
+  }
+  catch(err){
+    res.status(500).json(err);
+  }
+})
+
+
 
 module.exports = router;
