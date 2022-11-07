@@ -1,0 +1,86 @@
+.popup-question{
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.432);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.popup-question-modal{
+    border-radius: 5px;
+    width: 350px;
+    background-color: #fff;
+}
+
+
+
+.popup-question-modal .header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 20px;
+    font-weight: 500;
+    padding: 5px 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.274);
+}
+
+.popup-question-modal .header .icon{
+    font-size: 30px;
+    cursor: pointer;
+    font-weight: 400;
+    border-radius: 5px;
+    transition: 0.2s;
+}
+.popup-question-modal .header .icon:hover{
+    color: #DB342E;
+}
+.popup-question-modal .body{
+    padding: 5px 10px 10px 10px;
+}
+.popup-question-modal .body .title{
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+}
+.popup-question-modal .body .btn-group{
+    float: right;
+   
+}
+.popup-question-modal .body .clear{
+    clear: both;
+   
+}
+.popup-question-modal .body .btn{
+    
+    outline: none;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 5px;
+    margin-left: 5px;
+    margin-top: 15px;
+    font-size: 16px;
+    transition: 0.2s;
+    font-weight: 700;
+}
+
+.popup-question-modal .body .btn.yes{
+    background-color: #f7d8d4;
+    color: #DB342E;
+}
+.popup-question-modal .body .btn.yes:hover{
+    background-color:#f0a3a1;
+}
+
+
+.popup-question-modal .body .btn.no{
+    background-color: rgba(0, 0, 0, 0.05);
+    color: rgba(0, 0, 0, 0.678);
+}
+.popup-question-modal .body .btn.no:hover{
+    background-color: rgba(0, 0, 0, 0.1);
+}

@@ -22,6 +22,9 @@ import Edit from "@mui/icons-material/Edit";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import LogoutIcon from '@mui/icons-material/Logout';
+import PopupQuestion  from "../PopupQuestion/PopupQuestion";
+import PopupQuestionOutGroup  from "../PopupQuestion/PopupQuestionOutGroup";
+import PopupNotify  from "../PopupQuestion/PopupNotify";
 import avatar from '../../assets/avatar.jpg'; 
 import ChatOutlinedIcon from "@mui/icons-material/ChatOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
@@ -58,6 +61,22 @@ export default function MyChat() {
   const [userSearch, setUserSearch] = useState(null);
   const [userSearchCon, setUserSearchCon] = useState(null);
   const [convGroupForm , setConvGroupForm] = useState({})
+  const [popupQuestion , setPopupQuestion] = useState({
+    title:'',
+    message:'',
+    isLoading: false
+  })
+  const [popupQuestionOutGroup , setPopupQuestionOutGroup] = useState({
+    title:'',
+    message:'',
+    isLoading: false
+  })
+  const [popupNotify , setPopupNotify] = useState({
+    title:'',
+    message:'',
+    isLoading: false
+  })
+
 
   const socket = useRef();
 
@@ -152,36 +171,112 @@ const handleSubmit = async (e) => {
     
    
   }
+ 
 
-  async function DisbandGroup(convId){
-    const con = await axios.delete('http://localhost:8800/api/conversations/deleteCon',  
-     {
-      data:{convId}
-    } 
-    )
-    // const res = await axios.get("http://localhost:8800/api/conversations/" + _id);
-    // setConversation(res.data);
-    Demo()
-    setCurrentChat(null)
-    setAuthorize([])
+ function DisbandGroup(){
+    setPopupQuestion({
+      title: 'Giải tán nhóm',
+      message: 'Bạn có chắc chắn muốn giải tán nhóm?',
+      isLoading:true
+    });
+  }
+  async function disbandGroupSure(choose){
+    if(choose){
+      try{
+          const con = await axios.delete('http://localhost:8800/api/conversations/deleteCon',  {
+          data:{convId: currentChat._id}
+          })
+        // const res = await axios.get("http://localhost:8800/api/conversations/" + _id);
+        // setConversation(res.data);
+        Demo()
+        setCurrentChat(null)
+        setAuthorize([])
 
+        setPopupQuestion({
+          title: '',
+          message: '',
+          isLoading:false
+        });
+      }
+      catch(err){
+        console.log(err);
+      }
+    }else{
+      setPopupQuestion({
+        title: '',
+        message: '',
+        isLoading:false
+      });
+    }
   }
 
+  async function HandleOutGroup(){
+   setPopupQuestionOutGroup({
+      title: 'Rời nhóm',
+      message: 'Bạn có chắc chắn muốn rời nhóm?',
+      isLoading:true
+   })
+  }
 
-  async function HandleOutGroup(conId, userId){
-    if(authorize.length == 1 && authorize[0] === _id){
-      console.log("Cần chỉ định thêm quản trị viên trước khi rời nhóm");
+  function outGroupSure(choose){
+    if(choose){
+      try{
+
+        if(authorize.length == 1 && authorize[0] === _id){
+          setPopupQuestionOutGroup({
+            title: '',
+            message: '',
+            isLoading:false
+          });
+          setPopupNotify({
+            title: 'Thông báo',
+            message: 'Cần chỉ định thêm quản trị viên trước khi rời nhóm',
+            isLoading:true
+          });
+          
+        }
+        else{
+          const article = { 
+            conId:currentChat._id,
+            userId : _id 
+          };
+          const con = axios.put('http://localhost:8800/api/conversations/removeMember', article)
+          // const res = await axios.get("http://localhost:8800/api/conversations/" + _id);
+          // setConversation(res.data);
+          Demo()
+          setCurrentChat(null)
+          setAuthorize([])
+          setPopupQuestionOutGroup({
+            title: '',
+            message: '',
+            isLoading:false
+          });
+        }
+        
+        
+      }
+      catch(err){
+        console.log(err);
+      }
+    }else{
+      setPopupQuestionOutGroup({
+        title: '',
+        message: '',
+        isLoading:false
+      });
     }
-    else{
-      const article = { conId,userId };
-      const con = axios.put('http://localhost:8800/api/conversations/removeMember', article)
-      // const res = await axios.get("http://localhost:8800/api/conversations/" + _id);
-      // setConversation(res.data);
-      Demo()
-      setCurrentChat(null)
-      setAuthorize([])
+   
+  }
+  function handleNotify(choose){
+    if(choose){
+      setPopupNotify({
+        title: '',
+        message: '',
+        isLoading:false
+      });
     }
   }
+
   async function handleChatOne(senderId,receiverId){
     let conv
     let checkCon = false
@@ -207,9 +302,8 @@ const handleSubmit = async (e) => {
         
         const con = await axios.get("http://localhost:8800/api/conversations/" + _id);
         setConversation(con.data);
-
         setCurrentChat(res.data);
-
+        setAuthorize(res.data.authorization)
       } catch (err) {
         console.log(err)
       }
@@ -824,7 +918,7 @@ const handleSubmit = async (e) => {
               {currentChat?.authorization.length > 0  ? 
               <div className="iv_main">
                 <span onClick={()=>
-                  HandleOutGroup(currentChat._id,_id)
+                  HandleOutGroup()
                   } className="option-security">
                   <LogoutIcon/>
                   <p>Rời nhóm</p>
@@ -836,7 +930,7 @@ const handleSubmit = async (e) => {
                                <div></div> : 
                     <div className="iv_main">
                     <span onClick={()=>{
-                      DisbandGroup(currentChat._id)
+                      DisbandGroup()
                     }} className="option-security disband">
                       <p className="disband">Giải tán nhóm</p>
                     </span>
@@ -946,6 +1040,9 @@ const handleSubmit = async (e) => {
 			</form>
 		</div>
         </PopupAvartar>
+        {popupQuestion.isLoading &&  <PopupQuestion onDialog={disbandGroupSure} title={popupQuestion.title} message={popupQuestion.message} />}
+        {popupQuestionOutGroup.isLoading &&  <PopupQuestionOutGroup onDialog={outGroupSure} title={popupQuestionOutGroup.title} message={popupQuestionOutGroup.message} />}
+        {popupNotify.isLoading &&  <PopupNotify onDialog={handleNotify} title={popupNotify.title} message={popupNotify.message} />}
     </div>
   );
 }
