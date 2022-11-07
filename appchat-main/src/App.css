@@ -163,8 +163,8 @@ body{
   border: none;
   background-color: inherit;
   width: 68%;
-  padding: 10px;
-  font-size: 17px;
+  padding: 10px 0px 10px 0px;
+  font-size: 15px;
 }
 .search-c svg {
   margin: 0 12px 0 12px;
@@ -288,6 +288,11 @@ body{
   align-items: center;
   border-top: 1px solid #f0eff5;
 }
+.sender-cont svg {
+  margin: 0 5px 0 12px;
+  cursor: pointer;
+}
+
 .react-input-emoji--container {
   background: none !important;
   overflow:auto;
@@ -312,17 +317,6 @@ body{
 }
 .react-input-emoji--input::-webkit-scrollbar {
   display: none;  
-}
-.sendbutton{
-  background-color:#fff; 
-  border-radius: 50%;
-  cursor: pointer;
-  width: 50px;
-  height: 50px;
-  padding: 12px;
-}
-.sendbutton:hover{
-  background-color: #F3F3F5;
 }
 .sender-cont svg {
   font-size: 27px;
@@ -398,7 +392,7 @@ body{
   padding: 20px;
   margin-bottom: 10px;
 }
-.image_video_con, .file_con, .link_con, .security_con{
+.image_video_con,.user_con, .file_con, .link_con, .security_con{
   width: 100%;
   height: auto;
   background-color: #fff;
@@ -409,6 +403,13 @@ body{
   padding: 20px;
   margin-bottom: 10px;
 }
+.user_con{
+  padding: 20px 0 20px 0;
+}
+.user_con .iv_title{
+  padding: 0 20px 5px 20px;
+}
+
 .iv_title{
   width: 100%;
   display: flex;
@@ -423,6 +424,78 @@ body{
   flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+
+.list-user{
+  width: 100%;
+  height: 180px;
+  overflow-y: auto;
+  padding: 0;
+}
+
+.list-user li{
+  height: 60px;
+  width: 100%;
+  border-radius: 5px;
+  padding: 0 20px 0 20px;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+.list-user li:hover{
+  background-color: rgba(0, 0, 0, 0.144);
+}
+.list-user .text .auth{
+  font-size: 13px;
+}
+.list-user .avt{
+  height: 46px;
+  width: 46px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 10px;
+}
+
+.list-user li:last-child .more-option{
+  top: -175%;
+  right: 0;
+}
+.list-user .more{
+  cursor: pointer;
+  z-index: 999;
+  position: absolute;
+  right: 20px;
+  top: 0;
+  transform: translateY(65%);
+}
+.list-user .more:hover .more-option{
+  display:block;
+}
+.list-user .more .more-option{
+  display: none;
+  background-color: #fff;
+  width: 150px;
+  position: absolute;
+  top: 20px;
+  right: 0;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.205);
+  border-radius: 5%;
+  overflow: hidden;
+  
+}
+.list-user .more .more-option .item{
+  font-size: 13px;
+  width: 100%;
+  padding: 5px;
+  z-index: 1000;
+}
+.list-user .more .more-option .item:hover{
+  background-color: rgba(0, 0, 0, 0.178);
+}
+.list-user img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 .not_value{
   text-align: center;
@@ -458,3 +531,221 @@ body{
 }
 
 
+.side-avt{
+  position: relative;
+}
+
+.side-avt:hover .side-avt-model{
+  display: block;
+}
+
+
+.side-avt-model{
+  border-radius: 5px;
+  position: absolute;
+  display: none;
+  top: 0;
+  left: 50px;
+  width: 200px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.205);
+}
+.side-avt-model::before{
+  content: "";
+  position: absolute;
+  display: block;
+  height: 50px;
+  top: 0;
+  width: 5px;
+  left: -5px;
+}
+
+.side-avt-model-item{
+  border: none;
+  outline: none;
+  text-align: left;
+  font-size: 14px;
+  padding: 10px;
+  background-color: transparent;
+  width: 100%;
+  transition: 0.2s;
+}
+
+.side-avt-model-item:hover{
+  background-color: rgba(0, 0, 0, 0.096);
+}
+.side-avt-model-item.name{
+  text-align: center;
+  font-weight: bold;
+  margin: 0;
+}
+.side-avt-model-item.logout{
+  cursor: pointer;
+  border-top: 1px solid rgba(0, 0, 0, 0.096);
+}
+.avatarInfo{
+  
+}
+
+#search-group{
+  position: relative;
+}
+
+#search-group:placeholder-shown~.model-search{
+  display: none;
+}
+#search-group:not(:placeholder-shown)~.model-search{
+  display: block;
+}
+
+.model-search{
+  display: none;
+  position: absolute;
+  width: 86%;
+  z-index: 999;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.205);
+  border-radius: 5%;
+}
+
+
+.model-search .item,
+.listAdd .itemAdd{
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  position: relative;
+}
+
+
+  
+
+.listAdd{
+  list-style: none;
+  height: 200px;
+  overflow-y: auto;
+}
+
+
+
+.model-search .item p,
+.listAdd .itemAdd p{
+  margin-left: 5px;
+
+}
+.listAdd .itemAdd button,
+.model-search .item button{
+  position: absolute;
+  right: 5px;
+  outline: none;
+  border: none;
+  color: #fff;
+  font-weight: 500;
+  padding: 5px;
+  border-radius: 10%;
+  transition: 0.2s;
+  cursor: pointer;
+}
+
+.model-search .item .add{
+  position: absolute;
+  right: 5px;
+}
+
+.listAdd .itemAdd button{
+  background-color: red;
+}
+.model-search .item button{
+  background-color: blue;
+} 
+
+.listAdd .itemAdd button:hover{
+  background-color: rgba(255, 0, 0, 0.788);
+}
+.model-search .item button:hover{
+  background-color: rgba(0, 0, 255, 0.781);
+}
+.listAdd .itemAdd:hover,.model-search .item:hover{
+
+  background-color: rgba(0, 0, 0, 0.123);
+}
+
+.ip-addGr{
+  padding: 5px;
+  margin-bottom: 5px;
+  color: #000 !important;
+  font-size: 15px;
+}
+
+.btn-addGr{
+  outline: none;
+  border: none;
+  padding: 10px;
+  border-radius: 5px;
+  margin-left: 10px;
+  font-weight: 500;
+  color: #fff;
+  background-color: #0091FF;
+}
+.btn-addGr:hover{
+  background-color: #0091ffc4;
+}
+.GroupAddButton{
+  float: right;
+}
+
+.title-Add{
+  font-weight: bold;
+}
+
+.nullUser{
+  width: 100%;
+  padding: 5px;
+  text-align: center;
+}
+
+.mt-10{
+  margin-top: 30px;
+}
+
+
+
+#search-user{
+  position: relative;
+}
+
+#search-user:placeholder-shown~.model-usersearch{
+  display: none;
+}
+#search-user:not(:placeholder-shown)~.model-usersearch{
+  display: block;
+}
+
+.model-usersearch{
+  display: none;
+  position: absolute;
+  min-width: 270px;
+  width: 294px;
+  z-index: 999;
+  top: 51px;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.205);
+  border-radius: 5%;
+  overflow: hidden;
+}
+
+.model-usersearch .item{
+  padding: 5px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.model-usersearch .item p{
+  margin-left: 5px;
+}
+
+
+.model-usersearch .item:hover{
+  background-color: rgba(0, 0, 0, 0.123);
+}

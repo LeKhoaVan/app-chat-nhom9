@@ -16,13 +16,6 @@
   margin-right: 10px;
 }
 
-.messageText{
-    padding: 10px;
-    border-radius: 20px;
-    background-color: #1877f2;
-    color: white;
-    max-width: 300px;
-}
 
 .messageText .owner{
     font-weight: bold;
@@ -56,55 +49,73 @@
     font-size : 50px;
     color: darkgrey;
 }
-.dropdown{
+  #fname{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+   #huyTao{
+    background-color:#bbb;
+    color:#222;
+    padding:7px;
+    border-radius:2px;
+    font-family:sans-serif;
+    margin-left: 0px;
+  }
+  #taoNhom{
+    margin-right:10px;
+    font-family:sans-serif;
+    color:white;
+    background-color:#4267B2; 
+    border-radius:2px;
+    padding:6px;
+    margin-left:405px;
+  }
+
+  .messageText{
+    padding: 10px;
+    border-radius: 20px;
+    background-color: #1877f2;
+    color: white;
+    max-width: 300px;
     position: relative;
- }
+}
 
  .dropdown-content{
-    left: 100px;
+    width: 140px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.493);
     
-    width: 200px;
-    height: 50px;
-    line-height: 50px;
-    text-align: center;
-    border-radius: 20%;
     display: none;
     position: absolute;
     background-color: #ffffff;
     z-index: 1;
     list-style: none;
-    margin: 5px;
- }
-
- .dropdown:hover .dropdown-content{
-    display: block;
-    float: left;
-    color: #1877f2;
- }
-
-
-
-.dropdown-own{
-    position: relative;
- }
-
-.dropdown-content-own{
-    right: 80px;
-    width: 300px;
-    height: 50px;
-    line-height: 50px;
-    text-align: center;
-    border-radius: 20%;
-    display: none;
-    position: absolute;
-    background-color: #ffffff;
-    z-index: 1;
-    list-style: none;
- }
-
-.dropdown-own:hover .dropdown-content-own{
-    display: block;
-    float: left;
-    color: #1877f2;
+    top: 62px;
  }
  
+ .dropdown-content.own{
+    right: 15px;
+    top: 40px;
+    width: 193px;
+ }
+
+ .messageText:hover .dropdown-content{
+    display: block;
+   
+ }
+
+
+ .sendbutton{
+  cursor: pointer;
+  font-size: 14px;
+  padding: 5px;
+  color: #000;
+  display: inline-block;
+}
+.sendbutton:hover{
+  background-color: #F3F3F5;
+}

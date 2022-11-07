@@ -32,6 +32,12 @@ import {AuthContext} from "../../contexts/AuthContext";
 import Popup from "./Popup";
 
 
+//Avarta
+import PopupAvartar from "./Avarta/Popup";
+import FileInput from "./Avarta/FileInput";
+import styles from "./Avarta/styles.module.css";
+
+
 export default function MyChat() {
   const {authState:{user:{avt, _id, }}} = useContext(AuthContext)
 
@@ -39,15 +45,59 @@ export default function MyChat() {
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState(null);
   const [myFriend, setMyFriend] = useState([]);
+  const [userCons, setUserCons] = useState([]);
+  const [authorize, setAuthorize] = useState([]);
+  const [userAuth, setUserAuth] = useState("");
   const [newMessage, setNewMessages] = useState("");
   const [arrivalMessage, setArrivalMessages] = useState(null);
   const [senderMessage, setSendMessage] = useState([]);
   const [recallMessage, setRecallMessages] = useState(null);
   const [deleteMessage, setDeleteMessages] = useState([]);
+  const [listUserGroupNew, setListUserGroupNew] = useState([]);
+  const [userSearch, setUserSearch] = useState(null);
+  const [userSearchCon, setUserSearchCon] = useState(null);
+  const [convGroupForm , setConvGroupForm] = useState({})
 
   const socket = useRef();
 
   const [openPopup, setOpenPopup] = useState(false);
+
+
+
+
+  // poppu onpen form Avarta
+const [openPopupAvarta, setOpenPopupAvarta] = useState(false);
+
+ 
+
+const [data, setData] = useState({
+  name: "",
+  img: ""
+});
+
+const handleChange = ({ currentTarget: input }) => {
+  setData({ ...data, [input.name]: input.value });
+};
+
+const handleInputState = (name, value) => {
+  setData((prev) => ({ ...prev, [name]: value }));
+};
+
+const handleSubmit = async (e) => {
+  e.preventDefault()
+  try {
+    const url = "http://localhost:8800/api/conversations/updateImg/"+currentChat?._id;
+    const { data : res } = await axios.put(url,data);
+    console.log(res)
+    
+  } catch (error) {
+    console.log(error)
+  }
+  
+};
+
+
+
 
 
   function Demo(){
@@ -64,7 +114,42 @@ export default function MyChat() {
     }
   }
 
-  
+   function SetAuth(conId, userId){
+
+    const article = { conId,userId };
+    const con = axios.put('http://localhost:8800/api/conversations/setAuthorize', article)
+    con.then(value => {
+      setAuthorize(value.data)
+    })
+    
+  }
+
+  function RemoveAuth(conId, userId){
+    const article = { conId,userId };
+    const con = axios.put('http://localhost:8800/api/conversations/removeAuthorize', article)
+    con.then(value => {
+      setAuthorize(value.data)
+    })
+    
+  }
+
+   function RemoveUserCon(conId, userId){
+   
+    const article = { conId,userId };
+    const con = axios.put('http://localhost:8800/api/conversations/removeMember', article)
+
+    con.then(async value => {
+      let list = [];
+      for (let index = 0; index < value.data.length; index++) {
+          const res = await axios.get("http://localhost:8800/api/users?userId="+ value.data[index]); 
+          list.push(res.data)  
+      }
+      setUserCons(list);
+    })
+    
+    
+   
+  }
 
   // const receiverId = currentChat.members.find(
   //   (member) => member !== user._id
@@ -76,6 +161,7 @@ export default function MyChat() {
       setArrivalMessages({
         sender: data.senderId,
         text: data.text,
+        type:0,
         delUser: data.delUser,
         conversationId: data.conversationId,
         createdAt: Date.now(),
@@ -145,7 +231,13 @@ export default function MyChat() {
     getMessages();
   }, [currentChat]);
 
- 
+  // useEffect(() => {
+  //   socket.current.emit("authorize", );
+  //   socket.current.on("getAu", (data) => {
+      
+  //   })
+  // },[authorize]);
+
   useEffect(() => {
     const getConversations = async () => {
       try {
@@ -156,13 +248,14 @@ export default function MyChat() {
       }
     };
     getConversations();
-  }, [_id]);
+  }, [_id,authorize,listUserGroupNew]);
 
-  const sendSubmit = async (e) => {
-    e.preventDefault();
+  const sendSubmit = async () => {
+    if(newMessage!==""){
     const message = {
       sender: _id,
       text: newMessage,
+      type:0,
       conversationId: currentChat._id,
       reCall: false,
       delUser:""
@@ -182,6 +275,7 @@ export default function MyChat() {
     socket.current.emit("sendMessage", {
       senderId: _id,
       receiverIds,
+      type:0,
       text: newMessage,
       conversationId: currentChat._id,
       delUser:""
@@ -195,6 +289,7 @@ export default function MyChat() {
     } catch (err) {
       console.log(err);
     }
+  }
   };
 
   
@@ -265,11 +360,97 @@ export default function MyChat() {
     
   }
 
+  useEffect(() => {
+    const getUserCon = async () => {
+      let list = [];
+      for (let index = 0; index < currentChat?.members.length; index++) {
+        try {
+          const res = await axios.get("http://localhost:8800/api/users?userId="+ currentChat?.members[index]); 
+          list.push(res.data)
+        } catch (err) {
+          console.log(err);
+        }
+        
+      }
+      setUserCons(list);
+    };
+    getUserCon();
+  },[currentChat]);
+
+  async function handleTextSearchUser(e){
+    if(e.keyCode == 13){
+      return false;
+    }
+    let textSearch = document.querySelector('#search-user').value
+    try { 
+      const res = await axios.get("http://localhost:8800/api/users/userByMailOrName?email=" + textSearch);
+      
+      setUserSearchCon(res.data)
+    } catch (err) {
+      setUserSearchCon(null)
+    }
+  }
+
+  async function handleTextSearch(e){
+    if(e.keyCode == 13){
+      return false;
+    }
+    let textSearch = document.querySelector('#search-group').value
+    try { 
+      const res = await axios.get("http://localhost:8800/api/users/userByMailOrName?email=" + textSearch);
+      
+      setUserSearch(res.data)
+    } catch (err) {
+      setUserSearch(null)
+    }
+  }
+  function clickButtonAdd(e){
+    e.preventDefault()
+    setListUserGroupNew([...listUserGroupNew,userSearch])
+    setUserSearch(null)
+    document.querySelector('#search-group').value = ""
+  
+  }
+
+  function handleChatOne(e){
+    e.preventDefault()
+    setUserSearchCon(null)
+    document.querySelector('#search-user').value = ""
+  
+  }
   
 
   function AutoScroll(){
     var element = document.querySelector(".live-chat");
     element.scrollTop = element.scrollHeight ;
+  }
+
+ 
+
+
+
+
+  const createNewConvGroup =  () =>{
+
+    let listMemberId =
+    listUserGroupNew.map((userGr)=>{
+      return userGr._id
+    })
+  let nameGroup = document.querySelector('#groupName').value
+    const conv= ({
+      members:[
+        _id,...listMemberId
+      ],
+      name:nameGroup,
+      authorization:_id,
+      img:'https://cdn-icons-png.flaticon.com/512/1057/1057089.png?w=360'
+    })
+    try {
+      const res = axios.post("http://localhost:8800/api/conversations/newConvGroup", conv);
+    } catch (err) {
+      console.log(err.message);
+    }
+  
   }
   
   return (
@@ -298,7 +479,14 @@ export default function MyChat() {
         <div className="search-c">
           <div className="search-cont">
             <SearchIcon />
-            <input type="text"placeholder="Tìm kiếm"/>
+            <input type="text"placeholder="Tìm kiếm" id="search-user"  onKeyUp={handleTextSearchUser} />
+            <div className="model-usersearch">
+            {userSearchCon ? 
+              <div className="item" onClick={handleChatOne}>
+                <Avatar src={userSearchCon.avt}></Avatar>
+                <p>{userSearchCon.username}</p>
+              </div> : <div className="nullUser">Không thấy user</div>}
+            </div>
           </div>
           <Tooltip placement="bottom-end"  title="Thêm bạn"> 
           <PersonAddAlt1Icon />
@@ -313,7 +501,10 @@ export default function MyChat() {
           <div className="recent-user">
 
           {conversations.map((c) => (
-              <div onClick={() => setCurrentChat(c)}>
+              <div onClick={() => {
+                setCurrentChat(c)
+                setAuthorize(c.authorization)
+              }}>
                 <Conversation conversation={c} currentUser={_id} />
               </div>
             ))}
@@ -328,9 +519,10 @@ export default function MyChat() {
                 <>    
             <div className="top-header">
                 <div className="user-header">
-                    <Avatar>TN</Avatar>
+                    <Avatar src={currentChat?.img}></Avatar>
                     <p className="user-name">{
-                        myFriend.username 
+                      currentChat?.name 
+                        //myFriend.username 
                         
                     }</p>
                 </div>
@@ -374,21 +566,23 @@ export default function MyChat() {
                   {messages.map((m) => (
                      <Message message={m} own ={m.sender === _id} onClickDelete = {onClickDeleteMgs} 
                         userId={_id} onClickDeleteMgsUser={onClickDeleteMgsMy}
-                          onClickDeleteMgsFri = {onClickDeleteMgsOfFri}/>
+                          onClickDeleteMgsFri = {onClickDeleteMgsOfFri} avatar={avt}/>
                   ))} 
                 </div>
 
             </div>
             <div className="sender-cont">
                 <div className="send-message">
-                  <InputEmoji  onChange ={(e) => setNewMessages(e)} 
+                  <InputEmoji  
+                      onChange ={(e) => setNewMessages(e)} 
                       value={newMessage}
-                      placeholder="Nhập tin nhắn"/>
+                      placeholder="Nhập tin nhắn"
+                      onEnter={()=>sendSubmit()}/>
                   <Tooltip
                   title="Gửi hình ảnh"
                   placement="bottom-end">
                   <ImageIcon />
-                </Tooltip>
+                  </Tooltip>
                 <Tooltip
                   title="Đính kèm file"
                   placement="bottom-end">
@@ -400,7 +594,7 @@ export default function MyChat() {
                     placement="bottom-end">
                     <span
                       className="sendbutton"
-                      onClick={sendSubmit}>
+                      onClick={()=>sendSubmit()}>
                       <SendIcon/>
                     </span>
                   </Tooltip>
@@ -414,24 +608,96 @@ export default function MyChat() {
           </div>
           <div className="mainInfo">
             <div className="infomation_con">
-              <Avatar
+              
+              <Avatar src={currentChat?.img}
                 sx={{width:70,height:70}}>
-                TN</Avatar>
+                </Avatar>
               <div className="name_con">
-                <p className="text_name">Nguyễn Thái Nguyên</p>
+                <p className="text_name">{currentChat?.name}</p>
                 <Tooltip 
                   title="Chỉnh sửa"
                   placement="bottom-end">
-                  <IconButton>
-                    <Edit/>
+                  <IconButton onClick={() => { setOpenPopupAvarta(true);  setData(currentChat)}}>
+                    <Edit />
                   </IconButton>
                 </Tooltip>
               </div>
-              <div className="edit_button">
+              {/* <div className="edit_button">
                 <IconButton>
                   <GroupAddIcon />
                 </IconButton>
                 <p className="title_edit_button">Tạo nhóm trò chuyện</p>
+              </div> */}
+            </div>
+            <div className="user_con">
+              <div className="iv_title">
+                <p>Thành viên</p>
+                <ArrowDropDownIcon/>
+              </div>
+              <div className="iv_main">
+                <ul className="list-user">
+                  {userCons.map( (user)=>(
+                    <li>
+                            <div className="avt"><img src={user.avt ? user.avt : "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAkGBwgHBgkIBwgKCgkLDRYPDQwMDRsUFRAWIB0iIiAdHx8kKDQsJCYxJx8fLT0tMTU3Ojo6Iys/RD84QzQ5OjcBCgoKDQwNGg8PGjclHyU3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3Nzc3N//AABEIAHoAUQMBIgACEQEDEQH/xAAaAAADAQEBAQAAAAAAAAAAAAADBAUCAQAG/8QAOhAAAQQABAMFBAgFBQAAAAAAAQACAxESITFBBBNRBSJhgZEUccHRJDIzQlKhseEVU3KS8AYWQ2Jz/8QAGgEAAwEBAQEAAAAAAAAAAAAAAQIDBAAFBv/EACQRAAIBAwQBBQEAAAAAAAAAAAABAgMREgQTITFRIkGRobEU/9oADAMBAAIRAxEAPwBWGGqI0R+XYy1R44C0JgRd0Yh5r0XIyUqTtawgyI6O12ReSa0TYY0EWPNMN4a2pXNLs0U9LKfEeSS6GyguhN5BWH8OQl3w52njMz1tO49kqWHCM9SlxHqFUlZSAYd1aLPOqx9XBNmhytAkhoWPNVnxWEGSCwqKRlnSvdpEvlnovKh7KvJs0Q2ang+jjaWo4aayRxCDstCKl57dz66EHEWwWbKMLAz0RWxi6IWntAbVDJTk0a6FOXLixZzbGWSXkZSbL2VuCsuYH5jNPCxm1Sk+GTnR2VkxKjyPBZdCOivkjzZUWyYYlh0KpOiAFoDwEckTVBoR5K8mLC8hkHaZdbE+I2XW3omGssWmWgFEawLHke+4CYjzXnQ3unBEAulgq0bhSceiceGJyIBCE7hXg9wUqpMbdXD1XQ1r220gg7go3FlHyTGsfXeaLQZIHlxNUq7mAJaeWJn13NHvRyJqll0RZ2yOBA1SEscoGXqVT4jiGNxGKYYj0agMa1/fnmB8KyTKROdFIlcqX8bV5Vfon4Geq8myJbR9Q+MxiyMuoQBNhP1ifBTj21M9mGPC0/8AZt/EJeXtCfBieyIncxtP7rGkz120XBxF5YUhxvG4LDWuaCNS74JJvajY83RP/Vb4ztx2TWkNyyIAsfqmSYucUT/bxHOcYDheVlPf7ia1oDTkNmtASxkbxQuXiGEnW2C0vJwPDF14mmuli0ylHpjS0taXrj0UH/6h5oDeSK3dmhv7WgkJMjYy4ddEh7NA1zncwNHRu3qkpouFDz9IcSdRqmun0IqUqavNoo8R2zEGGmWBsKCkTdoPlf3YjS7y+DA7rnYurgvOjDa5cxN7BUSSMlWU5cR6Me0zfyXei8vVJ+N66m4M+3UBfxRu3E5/+Z+a6O03hx+lNr+mvip8cR6N9EdkcX3i3zCmx0m/cZPGl+vEtPkPmuHiS4EDiW0ddM/zWI4oiT3Wu9xCZbwsBH2fvQc7Dqhf3FC6XIt4iLxsgZ+q6X8S/wCvxLCN8Lm/NOjg+HP3fzXfYoDohulFpmum/lkuZk+WGUOzz77Rl6ofsxdm6ZwPhI35qq7gYgP2QzwMPX8kyrslLQxb5/SW7ggW2Znl16Y2162hnhHV9uR7y0/FVHdnQnQj0QX9nRbEJlXkRloIeCX7LP8Azmf3BdT/APD4uo9F1NvyJ/wQ8fZxrraLPmUSPC5ugy3CnGdrciMqzKb4eWN1CPRTaLQkORuoAtaPJG5mzikrc0YQAQcgttn7wJIB8yPVI4miM7DofnTnDPxW+YTVWkmSE5uO/XK13nB2THDXMhDEoqg5jsfFYElt3yKX5luNt0GvVZ5oByzo6DZDE7cCvkAN5DqsOeKtDdLmRsgOmNjLyCZInKYfGuoHMXk2Im4TLaXNtuI0EzE5zTRaABqb0SURLqJNDetUVpFEPfk/etPcqWMkZD4LcQe2r/VYoGrFgeHTfolxJhFMvTyC2JCCSSlsUyDNdbSWGhVAkIkbsDQKz3ACDjGQWTINjlsusNkMiQYqxZhZxZknPceCXMuGjlpVBYxODyL8iV1jnMZdJmKzHpSy94rwQOZZBJsBDc8mqOmqNibmHxt6uXkvzPAeq8usDIVMlgiqINkrhcTo6gTmhDQLTtfMIsmhgOGIm7sWTeQWxJkDsl/+NvuWm/UHvROuMcw7FaMmmeiXbr5rn3L8Vwbh+ZZonxWJZSQ54A1pDP2h/pXD02XHXCGbu93dDc4V3aCxshHQ+9BgQbEP8K4lbPUrqGQbH//Z"} /></div>
+                          
+                          
+                          <div className="text">
+                            <p className="">{user.username}</p>
+                            <p className="auth">
+                            {authorize.map( (auth)=>(
+                              auth===user._id ? "Quản trị viên" : ""
+                            ))}
+             
+                            </p>
+                          </div>
+                              
+                          {currentChat.authorization.map( (auth)=>(
+                              auth != _id || user._id == _id ?  
+                               <div></div> : 
+                            <div className="more">
+                              <MoreHorizIcon/>
+                              <div className="more-option">
+                    
+                              {authorize.map( (auth1)=>( 
+                                auth1 === user._id ?
+                                 <div className="item"
+                                 onClick={() => RemoveAuth(currentChat._id,user._id)}>Gỡ quyền quản trị viên</div> 
+                                 :
+                                 <div></div>
+                              ))}
+
+                            {
+                              
+                              
+                              authorize.some( (auth1)=>( 
+                                auth1 === user._id
+                              )) ? <div></div> : <div className="item"
+                                onClick={() => {SetAuth(currentChat._id,user._id)
+                                }}>Chỉ định quản trị viên</div>
+                             
+                            } 
+                                <div className="item" onClick={() => {
+                                  RemoveUserCon(currentChat._id,user._id)
+                                  
+                                }} 
+                                >Xóa khỏi nhóm</div>
+                               
+                             </div>
+                           </div>
+                           
+                          ))}
+                          
+                           
+                      
+                          
+                      
+                    </li>
+
+                  ))}
+
+
+            
+                </ul>
               </div>
             </div>
             <div className="image_video_con">
@@ -491,39 +757,101 @@ export default function MyChat() {
                 openPopup={openPopup}
                 setOpenPopup={setOpenPopup}
             >
+
             <form>
   <div className="form-group">
-    <label for="exampleFormControlInput1">Nhập tên nhóm</label>
-    <input type="text" className="form-control" id="exampleFormControlInput1" placeholder="Nhập tên nhóm"></input><br></br>
+    <input type="text" className="form-control ip-addGr" id="groupName" placeholder="Nhập tên nhóm"></input><br></br>
   </div>
   
-  <div className="input-group">
-  <input type="search" className="form-control rounded" placeholder="Tìm kiếm"  aria-describedby="search-addon" />
-  <button type="button" className="btn btn-outline-primary">Tìm</button>
+<div className="input-group">
+  <input className="form-control rounded ip-addGr" type="text" onKeyUp={handleTextSearch} id="search-group" placeholder="Tìm kiếm bằng email" />
+  <div className="model-search">
+    {userSearch ? 
+    <div className="item">
+      <Avatar src={userSearch.avt}></Avatar>
+      <p>{userSearch.username}</p>
+      {userSearch._id === _id ? <div className="add">bạn</div> :<button onClick={clickButtonAdd} className="add">Thêm</button>}
+    </div> : <div className="nullUser">Không thấy user</div>}
+    
+  </div>  
 </div>
 
 <div><p>____________________________________________________________________________</p></div>
-<div className="form-check">
-  <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1"></input>
-  <label className="form-check-label" for="flexRadioDefault1">
-    Nguyễn Hoàng Quân
-  </label>
-</div>
-<div className="form-check">
-  <input className="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2" checked></input>
-  <label className="form-check-label" for="flexRadioDefault2">
-    Nguyễn Hoàng Quan
-  </label>
-</div>
+<p className="title-Add">Đã thêm</p>
+<ul className="listAdd">
+{listUserGroupNew.map( (user_gr)=>( 
+      <li className="itemAdd">
+          <Avatar src={user_gr.avt}></Avatar>
+          <p>{user_gr.username}</p>
+          <button onClick={(e)=>{
+            e.preventDefault()
+            const members = listUserGroupNew.filter(
+              (u) => u._id !== user_gr._id
+            )
+            setListUserGroupNew(members)
+          }} className="remove">xóa</button>
+      </li>                                           
+  ))}
 
+                        
+     
+</ul>
 
 
 <br></br>
-<button type="button" className="btn btn-primary">Tạo nhóm</button>
-<button type="button" className="btn btn-secondary">Huỷ</button>
+<div className="GroupAddButton">
+  <button type="button" className="btn-addGr btn-primary"  onClick={(e)=>{
+    e.preventDefault()
+    createNewConvGroup()
+    setListUserGroupNew([])
+    setOpenPopup(false)
+    }}>Tạo nhóm</button>
+  <button type="button" className="btn-addGr btn-secondary" onClick={() => { 
+          setOpenPopup(false)
+           }}>Huỷ</button>
+</div>
   
 </form>
         </Popup>
+
+
+
+        <PopupAvartar
+                title="Thông tin nhóm"
+                openPopup={openPopupAvarta}
+                setOpenPopup={setOpenPopupAvarta}>
+
+              <h1 >{currentChat?.name}</h1>
+              
+              <div className={styles.container}>
+			<form className={styles.form} onSubmit={handleSubmit} >
+				
+				<input
+					type="text"
+					className={styles.input}
+					placeholder="Ten nhom"
+					name="name"
+					onChange={handleChange}
+					value={data.name}
+				/>
+				
+				<FileInput
+					name="img"
+					label="Choose Image"
+					handleInputState={handleInputState}
+					type="image"
+					value={data.img}
+				/>
+				
+				<button type="submit" className={styles.submit_btn} onClick={() => { 
+          setOpenPopupAvarta(false); 
+          //window.location.reload(false)
+           }}>
+					Submit
+				</button>
+			</form>
+		</div>
+        </PopupAvartar>
     </div>
   );
 }
