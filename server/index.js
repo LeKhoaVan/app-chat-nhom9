@@ -6,6 +6,8 @@ const dotenv = require("dotenv");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const multer = require("multer");
+const http = require('http');
+const socketio = require('socket.io');
 
 const userRoute = require("./routes/user");
 const conversationRoute = require("./routes/conversations");
@@ -57,15 +59,18 @@ app.use("/api/messages", messageRoute);
 app.use("/api/auth", authRoute);
 
 
-app.listen(8800, () => {
-  console.log("Backend server is running!");
-});
+
 
 //socket
-const io = require("socket.io")(8900, {
+// const io = require("socket.io")(8900, {
+//   cors: {
+//     origin: "http://localhost:9000",
+//   },
+// });
+const server = http.createServer(app);
+const io = socketio(server,{
   cors: {
-    origin: "http://localhost:9000",
-    // origin:"exp://192.168.74.90:19000",
+    origin: ["http://localhost:9000","exp://192.168.74.90:19000"],
   },
 });
 
@@ -97,7 +102,7 @@ io.on("connection", (socket) => {
   });
 
   //send and get message
-  socket.on("sendMessage", function({ senderId, receiverIds, text,type, conversationId,delUser }) {
+  socket.on("sendMessage", function({ senderId, receiverIds, text,type, conversationId,delUser,date,username }) {
 
       // const ds = []
       
@@ -116,12 +121,42 @@ io.on("connection", (socket) => {
             type,
             conversationId,
             delUser,
+            date,
+            username,
           });
           console.log('Sento:',getUser(room).userId,'conten:',text);
         }
       });
     
   });
+
+  //update status
+  socket.on("sendStatus", function({senderId,username,receiverIds,type,text,conversationId,delUser,date}) {
+
+    // const ds = []
+    
+    // receiverIds.forEach(function(receiverId){
+    //   ds.push(getUser(receiverId).socketId)
+    // })
+    // ds.push(receiverId)
+    receiverIds.forEach(function(room){
+      if( getUser(room) == undefined){
+        console.log("user offline");
+      }
+      else {
+        io.to(getUser(room).socketId).emit("getStatus", {
+          senderId,
+          text,
+          type,
+          conversationId,
+          delUser,
+          date,
+          username,
+        });
+      }
+    });
+  
+});
 
 
 
@@ -144,6 +179,27 @@ io.on("connection", (socket) => {
   
   });
 
+  socket.on("recallMessageStatus", function({senderId,username,receiverIds,type,text,conversationId,delUser,date}) {
+
+    receiverIds.forEach(function(room){
+      if( getUser(room) == undefined){
+        console.log("user offline");
+      }
+      else {
+        io.to(getUser(room).socketId).emit("recallMgsStatus", {
+          senderId,
+          text,
+          type,
+          conversationId,
+          delUser,
+          date,
+          username,
+        });
+      }
+    });
+  
+  });
+
   // socket.on("authorize", function(data) {
    
   //       io.emit("getAu", data );
@@ -155,4 +211,7 @@ io.on("connection", (socket) => {
     removeUser(socket.id);
     io.emit("getUsers", users);
   });
+});
+server.listen(8800, () => {
+  console.log("Backend server is running!");
 });
