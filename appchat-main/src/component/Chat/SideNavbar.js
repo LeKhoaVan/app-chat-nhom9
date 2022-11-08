@@ -78,12 +78,14 @@ export default function SideNavbar(){
                 </Tooltip>  
                  
                 </li>
-                <li onClick={handleToggle} className={isActive ? "nav__tabs--item dark-theme dark" : "nav__tabs--item dark-theme"}>
-                  <div className="dark-mode">
-                    <div className="item dark-item"><DarkModeIcon/></div>
-                    <div className="item light-item"><LightModeIcon/></div>
-                  </div>
-                 
+                <li onClick={handleToggle} className={isActive ? "nav__tabs--item dark-theme dark" : "nav__tabs--item dark-theme light"}>
+                  <Tooltip placement="top" title={isActive ? "LightMode" : "DarkMode"} enterDelay={1000} leaveDelay={100}>
+                    <div className="dark-mode">
+                      <div className="item light-item"><LightModeIcon/></div>
+                      <div className="item dark-item"><DarkModeIcon/></div>
+                      <span className="ball"></span>
+                    </div>
+                  </Tooltip>  
                 </li>
               </ul>    
            </div>

@@ -219,34 +219,69 @@ body{
 .dark-mode{
   width: 45px;
   height: 25px ;
-  background-color: var(--white);
   border-radius: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 2px;
+  padding: 2px 4px;
+  position: relative;
+  transition: 0.2s;
 }
-.dark .dark-mode{
- 
-}
-
 
 
 .dark-mode .item{
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 2;
+}
+.ball{
+    position: absolute;
+    border-radius: 50%;
+    height: 90%;
+    width: 20px;
+    transition: 0.2s ease-in;
+}
+.light .ball{
+  background-color: var(--black);
+  left:2px;
+}
+.dark .ball{
+  background-color: var(--white);
+  right: 2px;
 }
 
-.dark-mode .item .dark-item{
-
+.light .dark-mode{
+  background-color: var(--white);
 }
-.dark-mode .item .light-item{
-  
+.dark .dark-mode{
+  background-color: var(--black);
+}
+
+
+.dark .dark-item svg{
+  color: var(--black);
+}
+.dark .light-item svg{
+  color: var(--white);
+}
+.light .light-item svg{
+  color: var(--white);
+}
+
+.light .dark-item svg{
+  color: var(--black);
+}
+
+
+.dark  .dark-item svg{
+  color: var(--black);
+}
+.dark .light-item svg{
+  color: var(--white);
 }
 
 .dark-mode .item svg{
-  color: var(--black);
   font-size: 16px;
 }
 
@@ -918,4 +953,12 @@ body{
 
 .model-usersearch .item:hover{
   background-color: var(--bg-item-hover-01);
+}
+
+.noChat{
+  position: absolute;
+  top : 10%;
+  left: 50%;
+  font-size : 50px;
+  color: var(--bd-01);
 }
