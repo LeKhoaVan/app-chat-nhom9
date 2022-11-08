@@ -22,7 +22,7 @@ router.post('/register', async (req, res) => {
 
     const {   emailRe  ,
 			passwordRe  ,
-		 username , birthday , gender } = req.body
+		 username , birthday , gender , avt} = req.body
 	const email = emailRe
 	const password = passwordRe
 
@@ -43,7 +43,7 @@ router.post('/register', async (req, res) => {
 		
 		
         const hashedPassword = await argon2.hash(password);
-        const newUser = new User({ email, password: hashedPassword ,username,birthday,gender})
+        const newUser = new User({ email, password: hashedPassword ,username,birthday,gender , avt})
         await newUser.save();
 
         const accessToken = jwt.sign({ userId: newUser._id},process.env.ACCESS_TOKEN_SECRET_KEY)

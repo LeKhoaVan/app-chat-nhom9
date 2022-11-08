@@ -76,7 +76,58 @@ export default function Conversation({ conversation, currentUser, timeM, myMes,r
       <div className="bodyConversation">
         <div className='conversation'>
           <img className='conversationImg' src={conversation.name? conversation.img: user.avt  } alt='avarta'  />
-          <span className='conversationName'>{conversation.name? conversation.name : user.username  }</span>
+          <div className="conversationGrMess">
+            <span className='conversationName'>{conversation.name? conversation.name : user.username  }</span>
+            <span className="messageConver">
+                {recall? recall.conversationId === conversation._id?
+                <>
+                  {myMes.sender === currentUser? "Bạn": myMes.username} : {recall.text}
+                </> 
+                :
+                <>
+                  {myMes ? 
+                  (
+                    myMes.conversationId === conversation._id ? 
+                    <>
+                      {myMes.sender === currentUser? "Bạn": myMes.username} : {myMes.text}
+                    </>
+                    : 
+                    <>
+                      {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {newMes !== null ? newMes.text : "vừa tham gia nhóm"} 
+                    </>     
+                  )
+                  :
+                  (    
+                    <>
+                      {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {newMes !== null ? newMes.text : "vừa tham gia nhóm"} 
+                    </>     
+                  )       
+                }
+                </>
+                :
+                <>
+                  {myMes ? 
+                  (
+                    myMes.conversationId === conversation._id ? 
+                    <>
+                      {myMes.sender === currentUser? "Bạn": myMes.username} : {myMes.text}
+                    </>
+                    : 
+                    <>
+                      {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {newMes !== null ? newMes.text : "vừa tham gia nhóm"} 
+                    </>     
+                  )
+                  :
+                  (    
+                    <>
+                      {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {newMes !== null ? newMes.text : "vừa tham gia nhóm"} 
+                    </>     
+                  )       
+                }
+                </>
+                }
+            </span>
+          </div>
           <span className='time'>
             {myMes? 
               <>
@@ -93,58 +144,7 @@ export default function Conversation({ conversation, currentUser, timeM, myMes,r
           </span>
         </div>
       
-        <div>
-            <span className="messageConver">
-             {recall? recall.conversationId === conversation._id?
-            <>
-              {myMes.sender === currentUser? "Bạn": myMes.username} : {recall.text}
-            </> 
-            :
-            <>
-               {myMes ? 
-              (
-                myMes.conversationId === conversation._id ? 
-                <>
-                  {myMes.sender === currentUser? "Bạn": myMes.username} : {myMes.text}
-                </>
-                : 
-                <>
-                  {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {newMes !== null ? newMes.text : "vừa tham gia nhóm"} 
-                </>     
-              )
-              :
-              (    
-                <>
-                  {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {newMes !== null ? newMes.text : "vừa tham gia nhóm"} 
-                </>     
-              )       
-            }
-            </>
-            :
-            <>
-               {myMes ? 
-              (
-                myMes.conversationId === conversation._id ? 
-                <>
-                  {myMes.sender === currentUser? "Bạn": myMes.username} : {myMes.text}
-                </>
-                : 
-                <>
-                  {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {newMes !== null ? newMes.text : "vừa tham gia nhóm"} 
-                </>     
-              )
-              :
-              (    
-                <>
-                  {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {newMes !== null ? newMes.text : "vừa tham gia nhóm"} 
-                </>     
-              )       
-            }
-            </>
-            }
-          </span>
-  
-        </div>
+        
       </div>
       
     )

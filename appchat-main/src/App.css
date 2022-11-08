@@ -32,7 +32,7 @@
   --cl-warning:#DB342E;
   --cl-send-svg:#858585;
   --bg-05:#E5E7EB;
-
+  --bg-con-005:rgb(230, 235, 245);
 
   --red: red;
   --blue:blue;
@@ -707,6 +707,14 @@ body{
 .list-user .text .auth{
   font-size: 13px;
 }
+.list-user .text .text-name{
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
 .list-user .avt{
   height: 46px;
   width: 46px;
