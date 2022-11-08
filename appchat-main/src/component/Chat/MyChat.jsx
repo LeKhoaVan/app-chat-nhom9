@@ -817,7 +817,8 @@ const handleSubmit = async (e) => {
                       onChange ={(e) => setNewMessages(e)} 
                       value={newMessage}
                       placeholder="Nhập tin nhắn"
-                      onEnter={()=>sendSubmit()}/>
+                      onEnter={()=>sendSubmit()}
+                      cleanOnEnter/>
                   <Tooltip
                   title="Gửi hình ảnh"
                   placement="bottom-end">
