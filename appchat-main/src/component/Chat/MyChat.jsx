@@ -59,6 +59,7 @@ export default function MyChat() {
   const [deleteMessage, setDeleteMessages] = useState([]);
   const [listUserGroupNew, setListUserGroupNew] = useState([]);
   const [userSearch, setUserSearch] = useState(null);
+  const [userSearchCon, setUserSearchCon] = useState(null);
   const [convGroupForm , setConvGroupForm] = useState({})
   const [popupQuestion , setPopupQuestion] = useState({
     title:'',
@@ -329,7 +330,7 @@ const handleSubmit = async (e) => {
       setArrivalMessages({
         sender: data.senderId,
         text: data.text,
-        type: data.type,
+        type:0,
         delUser: data.delUser,
         conversationId: data.conversationId,
         createdAt: data.date,
@@ -377,7 +378,7 @@ const handleSubmit = async (e) => {
   useEffect(() => {
     socket.current.emit("addUser", _id);
     socket.current.on("getUsers", (users) => {
-      console.log(users)
+      // console.log(users)
     })
   },[_id]);
 
@@ -483,8 +484,8 @@ const handleSubmit = async (e) => {
     socket.current.emit("sendMessage", {
       senderId: _id,
       receiverIds,
-      text: newMessage,
       type:0,
+      text: newMessage,
       conversationId: currentChat._id,
       delUser:"",
       date: Date.now(),
@@ -619,6 +620,20 @@ const handleSubmit = async (e) => {
     };
     getUserCon();
   },[currentChat]);
+
+  async function handleTextSearchUser(e){
+    if(e.keyCode == 13){
+      return false;
+    }
+    let textSearch = document.querySelector('#search-user').value
+    try { 
+      const res = await axios.get("http://localhost:8800/api/users/userByMailOrName?email=" + textSearch);
+      
+      setUserSearchCon(res.data)
+    } catch (err) {
+      setUserSearchCon(null)
+    }
+  }
 
   async function handleTextSearch(e){
     if(e.keyCode == 13){
@@ -1026,7 +1041,7 @@ const handleSubmit = async (e) => {
   </div>  
 </div>
 
-<div className="mt-10"><p>____________________________________________________________________________</p></div>
+<div><p>____________________________________________________________________________</p></div>
 <p className="title-Add">Đã thêm</p>
 <ul className="listAdd">
 {listUserGroupNew.map( (user_gr)=>( 
