@@ -4,7 +4,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.432);
+    background-color: var(--bg-popup-05);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -13,7 +13,7 @@
 .popup-question-modal{
     border-radius: 5px;
     width: 350px;
-    background-color: #fff;
+    background-color: var(--white);
 }
 
 
@@ -25,7 +25,7 @@
     font-size: 20px;
     font-weight: 500;
     padding: 5px 10px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.274);
+    border-bottom: 1px solid var(--bd-popup-01);
 }
 
 .popup-question-modal .header .icon{
@@ -36,7 +36,7 @@
     transition: 0.2s;
 }
 .popup-question-modal .header .icon:hover{
-    color: #DB342E;
+    color: var(--cl-warning);
 }
 .popup-question-modal .body{
     padding: 5px 10px 10px 10px;
@@ -69,18 +69,18 @@
 }
 
 .popup-question-modal .body .btn.yes{
-    background-color: #f7d8d4;
-    color: #DB342E;
+    background-color: var(--bg-popup-01);
+    color: var(--cl-warning);
 }
 .popup-question-modal .body .btn.yes:hover{
-    background-color:#f0a3a1;
+    background-color:var(--bg-popup-02);
 }
 
 
 .popup-question-modal .body .btn.no{
-    background-color: rgba(0, 0, 0, 0.05);
-    color: rgba(0, 0, 0, 0.678);
+    background-color: var(--bg-popup-03);
+    color: var(--cl-popup-01);
 }
 .popup-question-modal .body .btn.no:hover{
-    background-color: rgba(0, 0, 0, 0.1);
+    background-color: var(--bg-popup-04);
 }

@@ -11,7 +11,7 @@
 }
 
 .conversation:hover {
-  background-color: rgb(230, 235, 245);
+  background-color: var(--bg-hover-05);
 }
 
 .conversationImg {

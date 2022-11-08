@@ -6,7 +6,7 @@
 
 .form {
 	width: 450px;
-	background: white;
+	background: var(--white);
 	border-radius: 2px;
 	padding: 10px;
 	display: flex;
@@ -22,7 +22,7 @@
 	width: calc(100% - 20px);
 	height: 40px;
 	outline: none;
-	border: 1px solid black;
+	border: 1px solid var(--black);
 	border-radius: 2px;
 	font-size: 16px;
 	padding: 0 5px;
@@ -35,7 +35,7 @@
 	font-weight: bold;
 	background: transparent;
 	padding: 10px 20px;
-	border: 1px solid black;
+	border: 1px solid var(--black);
 	border-radius: 2px;
 	cursor: pointer;
 	margin: 5px 5px 5px auto;

@@ -652,9 +652,9 @@ const handleSubmit = async (e) => {
               </div> : <div className="nullUser">Không thấy user</div>}
             </div>
           </div>
-          <Tooltip placement="bottom-end"  title="Thêm bạn"> 
+          {/* <Tooltip placement="bottom-end"  title="Thêm bạn"> 
           <PersonAddAlt1Icon />
-          </Tooltip>
+          </Tooltip> */}
           <Tooltip  placement="bottom-end" title="Tạo nhóm chat">
           <IconButton onClick={() => { setOpenPopup(true);  }}><GroupAddIcon /></IconButton>
 
