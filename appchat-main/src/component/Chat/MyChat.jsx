@@ -325,7 +325,7 @@ const handleSubmit = async (e) => {
   // );
   // console.log(receiverId);
   useEffect(() =>{
-    socket.current = io("ws://localhost:8900");
+    socket.current = io("ws://localhost:8800");
     socket.current.on("getMessage",(data) =>{
       setArrivalMessages({
         sender: data.senderId,
