@@ -39,7 +39,7 @@ import styles from "./Avarta/styles.module.css";
 
 
 export default function MyChat() {
-  const {authState:{user:{avt, _id, }}} = useContext(AuthContext)
+  const {authState:{user:{avt, _id, username }}} = useContext(AuthContext)
 
   const [conversations, setConversation] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
@@ -50,14 +50,14 @@ export default function MyChat() {
   const [userAuth, setUserAuth] = useState("");
   const [newMessage, setNewMessages] = useState("");
   const [arrivalMessage, setArrivalMessages] = useState(null);
-  const [senderMessage, setSendMessage] = useState([]);
+  const [senderMessage, setSenderMessage] = useState(null);
   const [recallMessage, setRecallMessages] = useState(null);
   const [deleteMessage, setDeleteMessages] = useState([]);
   const [listUserGroupNew, setListUserGroupNew] = useState([]);
   const [userSearch, setUserSearch] = useState(null);
   const [userSearchCon, setUserSearchCon] = useState(null);
   const [convGroupForm , setConvGroupForm] = useState({})
-
+  const [recallStatus,setRecallStatus] = useState(null)
   const socket = useRef();
 
   const [openPopup, setOpenPopup] = useState(false);
@@ -164,10 +164,38 @@ const handleSubmit = async (e) => {
         type:0,
         delUser: data.delUser,
         conversationId: data.conversationId,
-        createdAt: Date.now(),
+        createdAt: data.date,
+        username: data.username,
+      });
+      
+    });
+    socket.current.on("getStatus",(data) =>{
+      setSenderMessage({
+        sender: data.senderId,
+        text: data.text,
+        type:0,
+        delUser: data.delUser,
+        conversationId: data.conversationId,
+        createdAt: data.date,
+        username: data.username,
+      });
+      setRecallStatus(null)
+    });
+
+    socket.current.on("recallMgsStatus",(data) =>{
+      setRecallStatus({
+        sender: data.senderId,
+        text: data.text,
+        type:0,
+        delUser: data.delUser,
+        conversationId: data.conversationId,
+        createdAt: data.date,
+        username: data.username,
       })
-    });  
+    });
+   
   },[currentChat]);
+
 
   
 
@@ -189,11 +217,11 @@ const handleSubmit = async (e) => {
     const getMyFriend = async () => {
       try { 
         const res = await axios.get("http://localhost:8800/api/conversations/findById/"+currentChat?._id);
-        const friendId = res.data.find((m) => m !== _id);
-        console.log(friendId)
-        const friend = await axios.get("http://localhost:8800/api/users?userId="+friendId);  
-        console.log(friend);
-        setMyFriend(friend.data);
+        // const friendId = res.data.find((m) => m !== _id);
+        // console.log(friendId)
+        // const friend = await axios.get("http://localhost:8800/api/users?userId="+friendId);  
+        // console.log(friend);
+        // setMyFriend(friend.data);
       } catch (err) {
         console.log(err); 
       }
@@ -250,17 +278,23 @@ const handleSubmit = async (e) => {
     getConversations();
   }, [_id,authorize,listUserGroupNew]);
 
+
   const sendSubmit = async () => {
-    if(newMessage!==""){
+    
+    if(newMessage.trim()  !=="" ){
     const message = {
       sender: _id,
       text: newMessage,
       type:0,
       conversationId: currentChat._id,
       reCall: false,
-      delUser:""
-    };
+      delUser:"",
+      date: Date.now(), 
+    };  
 
+    
+    
+  
     // const receiverId = currentChat.members.find(
     //   (member) => member !== _id
     // );
@@ -272,23 +306,40 @@ const handleSubmit = async (e) => {
       }
     }
 
+
     socket.current.emit("sendMessage", {
       senderId: _id,
       receiverIds,
       type:0,
       text: newMessage,
       conversationId: currentChat._id,
-      delUser:""
+      delUser:"",
+      date: Date.now(),
+      username: username
     });
+
+    socket.current.emit("sendStatus", {
+      senderId: _id,
+      username: username,
+      receiverIds: currentChat.members,
+      type:0,
+      text: newMessage,
+      conversationId: currentChat._id,
+      delUser:"",
+      date: Date.now(),
+      
+    })
 
 
     try {
       const res = await axios.post("http://localhost:8800/api/messages", message);
-      setMessages([...messages, res.data]);
+      setMessages([...messages, res.data]);      
       setNewMessages("");
+     
     } catch (err) {
       console.log(err);
     }
+   
   }
   };
 
@@ -318,6 +369,22 @@ const handleSubmit = async (e) => {
       text: "tin nhắn đã được thu hồi",
     });
 
+    socket.current.emit("recallMessageStatus", {
+      senderId: _id,
+      username: username,
+      receiverIds: currentChat.members,
+      type:0,
+      text: "tin nhắn đã được thu hồi",
+      conversationId: currentChat._id,
+      delUser:"",
+      date: Date.now(),
+    });
+    
+
+    
+
+
+
   }
 
   //nhận tin nhắn thu hồi
@@ -328,6 +395,7 @@ const handleSubmit = async (e) => {
       
       setMessages(data.messagesCurrent)
       
+      
       //nhận vào và đưa vào Mess
       // setArrivalMessages({
       //   sender: data.senderId,
@@ -336,6 +404,8 @@ const handleSubmit = async (e) => {
       // })
       
     });
+
+    
   },[]);  
   
 
@@ -505,7 +575,7 @@ const handleSubmit = async (e) => {
                 setCurrentChat(c)
                 setAuthorize(c.authorization)
               }}>
-                <Conversation conversation={c} currentUser={_id} />
+                <Conversation conversation={c} currentUser={_id} timeM={arrivalMessage} myMes={senderMessage} recall={recallStatus}/>
               </div>
             ))}
             
@@ -594,7 +664,8 @@ const handleSubmit = async (e) => {
                     placement="bottom-end">
                     <span
                       className="sendbutton"
-                      onClick={()=>sendSubmit()}>
+                      onClick={()=>sendSubmit()
+                      }>
                       <SendIcon/>
                     </span>
                   </Tooltip>
