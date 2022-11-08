@@ -1,63 +1,75 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { GestureHandlerRootView,Swipeable } from 'react-native-gesture-handler'
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
 import { Url } from '../contexts/constants'
+import Ionicons from 'react-native-vector-icons/Ionicons' 
 
 export default function Conversation({ conversation, currentUser,navigation}) {
-  const [user, setUser] = useState([]);
-  const [lastMess, setLastMess] = useState([]);
-  const {currentChat,setCurrentChat,userInfo} = useContext(AuthContext)
+  const [user, setUser] = useState({});
+  const [lastMess, setLastMess] = useState({});
+  const [name,setName]= useState("");
+  const {currentChat,setCurrentChat,userInfo} = useContext(AuthContext);
+  const ref_sw = useRef();
   const CTime = (date) => {
     let tempDate = new Date(date);
-    let fDate =tempDate.getHours()+":"+tempDate.getMinutes();
+    let minute = tempDate.getMinutes();
+    {minute<10? minute='0'+minute:minute=minute}
+    let fDate =tempDate.getHours()+":"+minute;
     return fDate;
   };
+  const friendId = conversation.members.find((m) => m !== userInfo._id);
   const mess=(m)=>{
     if(m.length<=23)
       return m
     else 
       return m.slice(0,19)+'...'
   }
-
+  const getUser = async () => {
+    try {
+      const res = await axios(`${Url}/api/users?userId=${friendId}`);  
+      setUser(res.data);
+    } catch (err) {
+      // console.log(err); 
+    }
+  };
+  const getLastMess = async () => {
+    try {
+      const res = await axios(`${Url}/api/messages/lastmess/${conversation._id}`);  
+      setLastMess(res.data);
+      const ress = await axios(`${Url}/api/users/name?userId=${res.data.sender}`);  
+      setName(ress.data.username);
+    } catch (err) {
+      // console.log(err); 
+    }
+  };
   useEffect(() => {
-    const friendId = conversation.members.find((m) => m !== userInfo);
-    const getUser = async () => {
-      try {
-        const res = await axios(`${Url}/api/users?userId=${friendId}`);  
-        setUser(res.data);
-      } catch (err) {
-        console.log(err); 
-      }
-    };
-    const getLastMess = async () => {
-      try {
-        const res = await axios(`${Url}/api/messages/lastmess/${conversation._id}`);  
-        setLastMess(res.data);
-        
-      } catch (err) {
-        console.log(err); 
-      }
-    };
     getUser();
     getLastMess();
-
-  }, [currentUser, conversation]);
-
-  // const rightSwipeActions = () => {
-  //   return (
-  //     <View>
-  //       <Text>Book</Text>
-  //     </View>
-  //   );
-  // };
+    // getUsernameSendLastMess();
+  }, []);
+  const rightSwipeActions = () => {
+    return (
+      <View style={{justifyContent:'center',backgroundColor:'red',paddingHorizontal:20}}>
+        <TouchableOpacity
+          onPress={()=>{
+            ref_sw.current.close();
+          }}>
+          <Ionicons name='trash-outline' size={21} color={'#fff'}/>
+        </TouchableOpacity>
+        
+      </View>
+    );
+  };
   return (
-    // <GestureHandlerRootView>
-    // <Swipeable
-    //   renderRightActions={rightSwipeActions}
-    //   // onSwipeableRightOpen={() => swipeFromRightOpen(item.id)}
-    // >
+    <GestureHandlerRootView>
+    <Swipeable
+      ref={ref_sw}
+      renderRightActions={rightSwipeActions}
+      // onSwipeableRightOpen={() => swipeFromRightOpen(item.id)}
+
+    >
     <TouchableOpacity
       onPress={()=>{
         navigation.navigate('ChattingScreen')
@@ -74,14 +86,14 @@ export default function Conversation({ conversation, currentUser,navigation}) {
           }}/>
       <View style={styles.center}>
         <Text style={styles.name_user}>{conversation.name? conversation.name : user.username}</Text>
-        <Text style={styles.last_chat}>{lastMess?.text? conversation.name?   mess('Khoa: '+lastMess?.text) :mess(lastMess?.text): 'Chưa có tin nhắn'}</Text>
+        <Text style={styles.last_chat}>{lastMess?.text? conversation.name?   mess( name+': '+lastMess?.text) :mess(lastMess?.text): 'Chưa có tin nhắn'}</Text>
         
       </View>
       <Text>{lastMess?.text? CTime(lastMess?.createdAt):''}</Text>
     </View>
     </TouchableOpacity>
-    // </Swipeable>
-    // </GestureHandlerRootView>
+    </Swipeable>
+    </GestureHandlerRootView>
   )
 }
 

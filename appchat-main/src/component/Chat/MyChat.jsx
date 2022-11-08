@@ -325,7 +325,7 @@ const handleSubmit = async (e) => {
   // );
   // console.log(receiverId);
   useEffect(() =>{
-    socket.current = io("ws://localhost:8900");
+    socket.current = io("ws://localhost:8800");
     socket.current.on("getMessage",(data) =>{
       setArrivalMessages({
         sender: data.senderId,
@@ -817,7 +817,8 @@ const handleSubmit = async (e) => {
                       onChange ={(e) => setNewMessages(e)} 
                       value={newMessage}
                       placeholder="Nhập tin nhắn"
-                      onEnter={()=>sendSubmit()}/>
+                      onEnter={()=>sendSubmit()}
+                      cleanOnEnter/>
                   <Tooltip
                   title="Gửi hình ảnh"
                   placement="bottom-end">

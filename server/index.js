@@ -6,6 +6,8 @@ const dotenv = require("dotenv");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const multer = require("multer");
+const http = require('http');
+const socketio = require('socket.io');
 
 const userRoute = require("./routes/user");
 const conversationRoute = require("./routes/conversations");
@@ -57,22 +59,27 @@ app.use("/api/messages", messageRoute);
 app.use("/api/auth", authRoute);
 
 
-app.listen(8800, () => {
-  console.log("Backend server is running!");
-});
+
 
 //socket
-const io = require("socket.io")(8900, {
+// const io = require("socket.io")(8900, {
+//   cors: {
+//     origin: "http://localhost:9000",
+//   },
+// });
+const server = http.createServer(app);
+const io = socketio(server,{
   cors: {
-    origin: "http://localhost:9000",
+    origin: ["http://localhost:9000","exp://192.168.74.90:19000"],
   },
 });
+
 
 let users = [];
 
 const addUser = (userId, socketId) => {
   !users.some((user) => user.userId === userId) &&
-    users.push({ userId, socketId });
+    users.push({ userId, socketId});
 };
 
 
@@ -105,7 +112,7 @@ io.on("connection", (socket) => {
       // ds.push(receiverId)
       receiverIds.forEach(function(room){
         if( getUser(room) == undefined){
-          console.log("user offline");
+          console.log("user offline,users online:",users);
         }
         else {
           io.to(getUser(room).socketId).emit("getMessage", {
@@ -117,6 +124,7 @@ io.on("connection", (socket) => {
             date,
             username,
           });
+          console.log('Sento:',getUser(room).userId,'conten:',text);
         }
       });
     
@@ -157,7 +165,7 @@ io.on("connection", (socket) => {
 
     receiverIds.forEach(function(room){
       if( getUser(room) == undefined){
-        console.log("user offline");
+        console.log("user offline,users online:",users);
       }
       else {
         io.to(getUser(room).socketId).emit("delMgs", {
@@ -203,4 +211,7 @@ io.on("connection", (socket) => {
     removeUser(socket.id);
     io.emit("getUsers", users);
   });
+});
+server.listen(8800, () => {
+  console.log("Backend server is running!");
 });
