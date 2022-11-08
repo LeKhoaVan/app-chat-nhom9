@@ -65,14 +65,16 @@ app.listen(8800, () => {
 const io = require("socket.io")(8900, {
   cors: {
     origin: "http://localhost:9000",
+    // origin:"exp://192.168.74.90:19000",
   },
 });
+
 
 let users = [];
 
 const addUser = (userId, socketId) => {
   !users.some((user) => user.userId === userId) &&
-    users.push({ userId, socketId });
+    users.push({ userId, socketId});
 };
 
 
@@ -105,7 +107,7 @@ io.on("connection", (socket) => {
       // ds.push(receiverId)
       receiverIds.forEach(function(room){
         if( getUser(room) == undefined){
-          console.log("user offline");
+          console.log("user offline,users online:",users);
         }
         else {
           io.to(getUser(room).socketId).emit("getMessage", {
@@ -115,6 +117,7 @@ io.on("connection", (socket) => {
             conversationId,
             delUser,
           });
+          console.log('Sento:',getUser(room).userId,'conten:',text);
         }
       });
     
@@ -127,7 +130,7 @@ io.on("connection", (socket) => {
 
     receiverIds.forEach(function(room){
       if( getUser(room) == undefined){
-        console.log("user offline");
+        console.log("user offline,users online:",users);
       }
       else {
         io.to(getUser(room).socketId).emit("delMgs", {

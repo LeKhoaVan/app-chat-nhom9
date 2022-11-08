@@ -1,8 +1,9 @@
-import { createContext, useEffect, useState } from 'react'
+import { createContext, useEffect, useRef, useState } from 'react'
 import { apiUrl} from './constants'
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import setAuthToken from '../utils/setAuthToken'
+
 
 export const AuthContext = createContext()
 
@@ -13,6 +14,7 @@ export const AuthContextProvider = ({ children }) => {
 	const [isLoading,setIsLoading] = useState(false);
 	const [isRegisterSuccess,setIsRegisterSuccess] = useState(false);
 	const [currentChat,setCurrentChat] = useState("");
+	const socket = useRef();
 	//Login
 	const login = async userForm =>{
 		try{
@@ -55,7 +57,9 @@ export const AuthContextProvider = ({ children }) => {
 			const response = await axios.get(`${apiUrl}`)
 			if (response.data.success) {
 				setUserInfo(response.data.user)
+				
 			} 
+
 			
 		} catch(error) {
 			setUserToken(null);
@@ -91,7 +95,6 @@ export const AuthContextProvider = ({ children }) => {
 	useEffect(() => {
 		loadUser();
 	  }, []); 
-
 	//register
 	const register = async userForm => {
 		try {
@@ -111,7 +114,7 @@ export const AuthContextProvider = ({ children }) => {
 	// Return provider
 	return (
 		<AuthContext.Provider value={{userToken,register,login,logout,userInfo,
-		isLoading,loadUser_Register,setUserToken,currentChat,setCurrentChat}}>
+		isLoading,loadUser_Register,setUserToken,currentChat,setCurrentChat,socket}}>
 			{children}
 		</AuthContext.Provider>
 	)

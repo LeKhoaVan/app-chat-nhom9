@@ -55,7 +55,6 @@ export default function MyChat() {
   const [deleteMessage, setDeleteMessages] = useState([]);
   const [listUserGroupNew, setListUserGroupNew] = useState([]);
   const [userSearch, setUserSearch] = useState(null);
-  const [userSearchCon, setUserSearchCon] = useState(null);
   const [convGroupForm , setConvGroupForm] = useState({})
 
   const socket = useRef();
@@ -161,7 +160,7 @@ const handleSubmit = async (e) => {
       setArrivalMessages({
         sender: data.senderId,
         text: data.text,
-        type:0,
+        type: data.type,
         delUser: data.delUser,
         conversationId: data.conversationId,
         createdAt: Date.now(),
@@ -181,7 +180,7 @@ const handleSubmit = async (e) => {
   useEffect(() => {
     socket.current.emit("addUser", _id);
     socket.current.on("getUsers", (users) => {
-      // console.log(users)
+      console.log(users)
     })
   },[_id]);
 
@@ -275,8 +274,8 @@ const handleSubmit = async (e) => {
     socket.current.emit("sendMessage", {
       senderId: _id,
       receiverIds,
-      type:0,
       text: newMessage,
+      type:0,
       conversationId: currentChat._id,
       delUser:""
     });
@@ -377,20 +376,6 @@ const handleSubmit = async (e) => {
     getUserCon();
   },[currentChat]);
 
-  async function handleTextSearchUser(e){
-    if(e.keyCode == 13){
-      return false;
-    }
-    let textSearch = document.querySelector('#search-user').value
-    try { 
-      const res = await axios.get("http://localhost:8800/api/users/userByMailOrName?email=" + textSearch);
-      
-      setUserSearchCon(res.data)
-    } catch (err) {
-      setUserSearchCon(null)
-    }
-  }
-
   async function handleTextSearch(e){
     if(e.keyCode == 13){
       return false;
@@ -411,14 +396,6 @@ const handleSubmit = async (e) => {
     document.querySelector('#search-group').value = ""
   
   }
-
-  function handleChatOne(e){
-    e.preventDefault()
-    setUserSearchCon(null)
-    document.querySelector('#search-user').value = ""
-  
-  }
-  
 
   function AutoScroll(){
     var element = document.querySelector(".live-chat");
@@ -479,14 +456,7 @@ const handleSubmit = async (e) => {
         <div className="search-c">
           <div className="search-cont">
             <SearchIcon />
-            <input type="text"placeholder="Tìm kiếm" id="search-user"  onKeyUp={handleTextSearchUser} />
-            <div className="model-usersearch">
-            {userSearchCon ? 
-              <div className="item" onClick={handleChatOne}>
-                <Avatar src={userSearchCon.avt}></Avatar>
-                <p>{userSearchCon.username}</p>
-              </div> : <div className="nullUser">Không thấy user</div>}
-            </div>
+            <input type="text"placeholder="Tìm kiếm"/>
           </div>
           <Tooltip placement="bottom-end"  title="Thêm bạn"> 
           <PersonAddAlt1Icon />
@@ -776,7 +746,7 @@ const handleSubmit = async (e) => {
   </div>  
 </div>
 
-<div><p>____________________________________________________________________________</p></div>
+<div className="mt-10"><p>____________________________________________________________________________</p></div>
 <p className="title-Add">Đã thêm</p>
 <ul className="listAdd">
 {listUserGroupNew.map( (user_gr)=>( 
