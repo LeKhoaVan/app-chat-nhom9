@@ -68,6 +68,10 @@ router.get("/find/:firstUserId/:secondUserId", async (req, res) => {
   }
 });
 
+router.get("/findMesLatest/", async(req, res) =>{
+  
+});
+
 
 
 

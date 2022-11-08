@@ -95,7 +95,7 @@ io.on("connection", (socket) => {
   });
 
   //send and get message
-  socket.on("sendMessage", function({ senderId, receiverIds, text,type, conversationId,delUser }) {
+  socket.on("sendMessage", function({ senderId, receiverIds, text,type, conversationId,delUser,date,username }) {
 
       // const ds = []
       
@@ -114,11 +114,41 @@ io.on("connection", (socket) => {
             type,
             conversationId,
             delUser,
+            date,
+            username,
           });
         }
       });
     
   });
+
+  //update status
+  socket.on("sendStatus", function({senderId,username,receiverIds,type,text,conversationId,delUser,date}) {
+
+    // const ds = []
+    
+    // receiverIds.forEach(function(receiverId){
+    //   ds.push(getUser(receiverId).socketId)
+    // })
+    // ds.push(receiverId)
+    receiverIds.forEach(function(room){
+      if( getUser(room) == undefined){
+        console.log("user offline");
+      }
+      else {
+        io.to(getUser(room).socketId).emit("getStatus", {
+          senderId,
+          text,
+          type,
+          conversationId,
+          delUser,
+          date,
+          username,
+        });
+      }
+    });
+  
+});
 
 
 
@@ -135,6 +165,27 @@ io.on("connection", (socket) => {
           messageId,
           senderId,
           text,
+        });
+      }
+    });
+  
+  });
+
+  socket.on("recallMessageStatus", function({senderId,username,receiverIds,type,text,conversationId,delUser,date}) {
+
+    receiverIds.forEach(function(room){
+      if( getUser(room) == undefined){
+        console.log("user offline");
+      }
+      else {
+        io.to(getUser(room).socketId).emit("recallMgsStatus", {
+          senderId,
+          text,
+          type,
+          conversationId,
+          delUser,
+          date,
+          username,
         });
       }
     });
