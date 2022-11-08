@@ -80,18 +80,18 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
               <div className="messageText">
                 {message.type === 0 ? <p>{message.text}</p> : <div></div>}
                 <div class="dropdown-content own">
-                  <li>
-                    <span className="sendbutton" onClick={handleDeleteMessage}>
+             
+                    <li className="sendbutton" onClick={handleDeleteMessage}>
                      thu hồi
-                    </span> 
+                    </li> 
 
-                    <span className="sendbutton" onClick={handleDeleteMgsUser} >
+                    <li className="sendbutton" onClick={handleDeleteMgsUser} >
                       xóa phía mình
-                    </span> 
-                    <span className="sendbutton" >
+                    </li> 
+                    <li className="sendbutton" >
                       ghim
-                    </span> 
-                  </li>
+                    </li> 
+      
                 </div>
               </div>
               <img
@@ -99,7 +99,6 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
                 src={avatar}
                 alt=""
               />
-            
           </div>
           <div className="messageBottom">{moment(message.createdAt).format("LT")}</div>
         

@@ -8,6 +8,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    z-index: 999;
 }
 
 .popup-question-modal{
@@ -83,4 +84,66 @@
 }
 .popup-question-modal .body .btn.no:hover{
     background-color: var(--bg-popup-04);
+}
+
+.popup-question-modal.if{
+    height: 580px;
+    position: relative;
+}
+
+.popup-question .avt{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.popup-question .username{
+    text-align: center;
+    font-weight: 600;
+    font-size: 22px;
+    margin-top: 10px;
+}
+
+.popup-question .title-info{
+    font-weight: 500;
+    margin-top: 20px;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.popup-question .title-gr{
+    margin-top: 10px;
+    font-size: 16px;
+    position: relative;
+    
+}
+.popup-question .title-gr .title-name{
+    color: var(--cl-info-text);
+}
+.popup-question .title-gr .title-value{
+    position: absolute;
+    top:0;
+    left: 100px;
+}
+.popup-question .btn-gr{
+    width: calc(100% - 20px);
+    position: absolute;
+    bottom: 10px;
+}
+.popup-question .btn-info{
+    width: 100%;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+    font-size: 16px;
+    padding: 10px;
+    background-color: var(--bg-navbar);
+    color: var(--white);
+    cursor: pointer;
+    transition: 0.2s;
+    margin-top: 10px;
+    font-weight: 500;
+}
+
+.popup-question .btn-info:hover{
+    background-color: var(--bg-navbar-hover);
 }
