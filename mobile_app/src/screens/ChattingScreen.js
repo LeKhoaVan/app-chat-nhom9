@@ -4,8 +4,10 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import Messager from '../components/Messager'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { Url } from '../contexts/constants'
+import { Url, UrlSK } from '../contexts/constants'
 import { AuthContext } from '../contexts/AuthContext'
+import {io} from 'socket.io-client';
+
 import axios from 'axios'
 
 export default function ChattingScreen({navigation}) {
@@ -13,9 +15,11 @@ export default function ChattingScreen({navigation}) {
     const scrollView_ref = useRef();
     const [messages, setMessages] = useState([]);
     const [user, setUser] = useState([]);
-    const {userInfo,currentChat} = useContext(AuthContext);
+    const {userInfo,currentChat,socket} = useContext(AuthContext);
+    const [arrivalMessage, setArrivalMessages] = useState(null);
+    const [Nmember,setNMember]= useState(0);
     useEffect(() => {
-        const friendId = currentChat.members.find((m) => m !== userInfo);
+        const friendId = currentChat.members.find((m) => m !== userInfo._id);
         const getUser = async () => {
             try {
                 const res = await axios(`${Url}/api/users?userId=${friendId}`);  
@@ -46,16 +50,46 @@ export default function ChattingScreen({navigation}) {
             console.log(err);
           }
         };
-       
         getMessages();
-        scrollView_ref.current.scrollToEnd({animated: false})
         
-      }, [userInfo,messages]);
+      }, [currentChat]);
+      useEffect(() =>{
+        socket.current = io(`${UrlSK}`,{
+          transports:['websocket'],
+        }); 
+        socket.current.on("getMessage",(data) =>{
+          setArrivalMessages({
+            _id:Math.random(),
+            sender: data.senderId,
+            text: data.text,
+            type: data.type,
+            delUser: data.delUser,
+            conversationId: data.conversationId,
+            createdAt: Date.now(),
+          })
+          console.log("text:",data.text);
+        });  
+        setNMember(currentChat.members.length)
+      },[currentChat]);
+      useEffect(() => {
+        socket.current.emit("addUser",userInfo._id);
+        socket.current.on("getUsers", (users) => {
+          console.log(users)
+        })
+      },[userInfo]);
+      useEffect(() =>{
+        arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) &&
+        currentChat?._id === arrivalMessage.conversationId && 
+        setMessages((prev)=>[...prev, arrivalMessage])
+        console.log("arrivalMessage:",arrivalMessage)
+      },[arrivalMessage])
+      
       const sendSubmit = async () => {
         if(newMessage!==""){
         const message = {
           sender: userInfo._id,
           text: newMessage,
+          type:0,
           conversationId: currentChat._id,
           reCall: false,
           delUser:""
@@ -71,16 +105,14 @@ export default function ChattingScreen({navigation}) {
             receiverIds.push(currentChat.members[index]);
           }
         }
-    
-        // socket.current.emit("sendMessage", {
-        //   senderId: _id,
-        //   receiverIds,
-        //   text: newMessage,
-        //   conversationId: currentChat._id,
-        //   delUser:""
-        // });
-    
-    
+        socket.current.emit("sendMessage", {
+          senderId: userInfo._id,
+          receiverIds,
+          text: newMessage,
+          type:0,
+          conversationId: currentChat._id,
+          delUser:""
+        });
         try {
           const res = await axios.post(`${Url}/api/messages`,message);
           setMessages([...messages, res.data]);
@@ -103,7 +135,7 @@ export default function ChattingScreen({navigation}) {
             </TouchableOpacity>
             <View style={styles.Name}>
                 <Text style={styles.text_Name}>{currentChat.name? currentChat.name : user.username}</Text>
-                <Text style={styles.active}>{currentChat.name? '3 thành viên' : 'Đang hoạt động'}</Text>
+                <Text style={styles.active}>{currentChat.name? Nmember+' thành viên' : 'Đang hoạt động'}</Text>
             </View>
             <TouchableOpacity>
                 <Ionicons
@@ -117,7 +149,7 @@ export default function ChattingScreen({navigation}) {
                     size={25}
                     color='#fff'/>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={()=>navigation.navigate('MoreInfo')}>
                 <Ionicons
                     name='list-outline'
                     size={25}
@@ -131,12 +163,9 @@ export default function ChattingScreen({navigation}) {
             <KeyboardAwareScrollView  onKeyboardDidShow={()=>scrollView_ref.current.scrollToEnd({animated: false})}>
                 {messages.map((m) => (
                      <Messager key={m._id} message={m} own={m.sender === userInfo._id} 
-                        userId={userInfo._id}/>
-                   
-                  ))} 
-                  
+                        userId={userInfo._id}/>))}          
             </KeyboardAwareScrollView>
-            </ScrollView>
+        </ScrollView>
         </View>
         <View style={styles.input}>
             <View style={{width:'10%',justifyContent:'center',alignItems:'center'}}>

@@ -6,7 +6,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { AuthContext } from '../contexts/AuthContext'
 export default function MeScreen() {
   const {userInfo} = useContext(AuthContext);
-  console.log('UserInfo:',userInfo);
+  // console.log('UserInfo:',userInfo);
   const Cdate = (date) => {
     let tempDate = new Date(date);
     let fDate =tempDate.getDate()+"/"+(tempDate.getMonth()*1+1) +"/"+tempDate.getFullYear();

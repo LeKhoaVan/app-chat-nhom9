@@ -21,6 +21,10 @@ import ChattingPage from "./ChattingPage";
 import Edit from "@mui/icons-material/Edit";
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import LogoutIcon from '@mui/icons-material/Logout';
+import PopupQuestion  from "../PopupQuestion/PopupQuestion";
+import PopupQuestionOutGroup  from "../PopupQuestion/PopupQuestionOutGroup";
+import PopupNotify  from "../PopupQuestion/PopupNotify";
 import avatar from '../../assets/avatar.jpg'; 
 import ChatOutlinedIcon from "@mui/icons-material/ChatOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
@@ -57,6 +61,23 @@ export default function MyChat() {
   const [userSearch, setUserSearch] = useState(null);
   const [userSearchCon, setUserSearchCon] = useState(null);
   const [convGroupForm , setConvGroupForm] = useState({})
+  const [popupQuestion , setPopupQuestion] = useState({
+    title:'',
+    message:'',
+    isLoading: false
+  })
+  const [popupQuestionOutGroup , setPopupQuestionOutGroup] = useState({
+    title:'',
+    message:'',
+    isLoading: false
+  })
+  const [popupNotify , setPopupNotify] = useState({
+    title:'',
+    message:'',
+    isLoading: false
+  })
+
+
   const [recallStatus,setRecallStatus] = useState(null)
   const socket = useRef();
 
@@ -133,6 +154,7 @@ const handleSubmit = async (e) => {
     
   }
 
+
    function RemoveUserCon(conId, userId){
    
     const article = { conId,userId };
@@ -150,13 +172,160 @@ const handleSubmit = async (e) => {
     
    
   }
+ 
 
+ function DisbandGroup(){
+    setPopupQuestion({
+      title: 'Giải tán nhóm',
+      message: 'Bạn có chắc chắn muốn giải tán nhóm?',
+      isLoading:true
+    });
+  }
+  async function disbandGroupSure(choose){
+    if(choose){
+      try{
+          const con = await axios.delete('http://localhost:8800/api/conversations/deleteCon',  {
+          data:{convId: currentChat._id}
+          })
+        // const res = await axios.get("http://localhost:8800/api/conversations/" + _id);
+        // setConversation(res.data);
+        Demo()
+        setCurrentChat(null)
+        setAuthorize([])
+
+        setPopupQuestion({
+          title: '',
+          message: '',
+          isLoading:false
+        });
+      }
+      catch(err){
+        console.log(err);
+      }
+    }else{
+      setPopupQuestion({
+        title: '',
+        message: '',
+        isLoading:false
+      });
+    }
+  }
+
+  async function HandleOutGroup(){
+   setPopupQuestionOutGroup({
+      title: 'Rời nhóm',
+      message: 'Bạn có chắc chắn muốn rời nhóm?',
+      isLoading:true
+   })
+  }
+
+  function outGroupSure(choose){
+    if(choose){
+      try{
+
+        if(authorize.length == 1 && authorize[0] === _id){
+          setPopupQuestionOutGroup({
+            title: '',
+            message: '',
+            isLoading:false
+          });
+          setPopupNotify({
+            title: 'Thông báo',
+            message: 'Cần chỉ định thêm quản trị viên trước khi rời nhóm',
+            isLoading:true
+          });
+          
+        }
+        else{
+          const article = { 
+            conId:currentChat._id,
+            userId : _id 
+          };
+          const con = axios.put('http://localhost:8800/api/conversations/removeMember', article)
+          // const res = await axios.get("http://localhost:8800/api/conversations/" + _id);
+          // setConversation(res.data);
+          Demo()
+          setCurrentChat(null)
+          setAuthorize([])
+          setPopupQuestionOutGroup({
+            title: '',
+            message: '',
+            isLoading:false
+          });
+        }
+        
+        
+      }
+      catch(err){
+        console.log(err);
+      }
+    }else{
+      setPopupQuestionOutGroup({
+        title: '',
+        message: '',
+        isLoading:false
+      });
+    }
+   
+  }
+  function handleNotify(choose){
+    if(choose){
+      setPopupNotify({
+        title: '',
+        message: '',
+        isLoading:false
+      });
+    }
+  }
+
+  async function handleChatOne(senderId,receiverId){
+    let conv
+    let checkCon = false
+    conversations.forEach((c) => {
+      if(c.members.length == 2 && c.authorization.length == 0){
+        if(c.members.some((member)=>(member == senderId))){
+          if(c.members.some((member)=>(member == receiverId))){
+            checkCon = true
+            conv = c
+          }
+       } 
+       
+      }
+    })
+    if(checkCon) {
+      setCurrentChat(conv);
+      setAuthorize(conv.authorization)
+    }
+    else{
+      const args = {senderId,receiverId}
+      try { 
+        const res = await axios.post("http://localhost:8800/api/conversations" ,args);
+        
+        const con = await axios.get("http://localhost:8800/api/conversations/" + _id);
+        setConversation(con.data);
+        setCurrentChat(res.data);
+        setAuthorize(res.data.authorization)
+      } catch (err) {
+        console.log(err)
+      }
+    
+    }
+
+    setUserSearchCon(null)
+    document.querySelector('#search-user').value = ""
+
+    
+  
+  }
+  
+
+  
   // const receiverId = currentChat.members.find(
   //   (member) => member !== user._id
   // );
   // console.log(receiverId);
   useEffect(() =>{
-    socket.current = io("ws://localhost:8900");
+    socket.current = io("ws://localhost:8800");
     socket.current.on("getMessage",(data) =>{
       setArrivalMessages({
         sender: data.senderId,
@@ -217,6 +386,11 @@ const handleSubmit = async (e) => {
     const getMyFriend = async () => {
       try { 
         const res = await axios.get("http://localhost:8800/api/conversations/findById/"+currentChat?._id);
+        const friendId = res.data.find((m) => m !== _id);
+        //console.log(friendId)
+        const friend = await axios.get("http://localhost:8800/api/users?userId="+friendId);  
+        //console.log(friend);
+        setMyFriend(friend.data);
         // const friendId = res.data.find((m) => m !== _id);
         // console.log(friendId)
         // const friend = await axios.get("http://localhost:8800/api/users?userId="+friendId);  
@@ -482,13 +656,7 @@ const handleSubmit = async (e) => {
   
   }
 
-  function handleChatOne(e){
-    e.preventDefault()
-    setUserSearchCon(null)
-    document.querySelector('#search-user').value = ""
-  
-  }
-  
+ 
 
   function AutoScroll(){
     var element = document.querySelector(".live-chat");
@@ -552,15 +720,17 @@ const handleSubmit = async (e) => {
             <input type="text"placeholder="Tìm kiếm" id="search-user"  onKeyUp={handleTextSearchUser} />
             <div className="model-usersearch">
             {userSearchCon ? 
-              <div className="item" onClick={handleChatOne}>
+              <div className="item" onClick={()=>{
+                handleChatOne(_id,userSearchCon._id)
+              }}>
                 <Avatar src={userSearchCon.avt}></Avatar>
                 <p>{userSearchCon.username}</p>
               </div> : <div className="nullUser">Không thấy user</div>}
             </div>
           </div>
-          <Tooltip placement="bottom-end"  title="Thêm bạn"> 
+          {/* <Tooltip placement="bottom-end"  title="Thêm bạn"> 
           <PersonAddAlt1Icon />
-          </Tooltip>
+          </Tooltip> */}
           <Tooltip  placement="bottom-end" title="Tạo nhóm chat">
           <IconButton onClick={() => { setOpenPopup(true);  }}><GroupAddIcon /></IconButton>
 
@@ -589,10 +759,10 @@ const handleSubmit = async (e) => {
                 <>    
             <div className="top-header">
                 <div className="user-header">
-                    <Avatar src={currentChat?.img}></Avatar>
+                    <Avatar src={ currentChat? (currentChat.img? currentChat.img :  myFriend.avt ) : ""}></Avatar>
                     <p className="user-name">{
-                      currentChat?.name 
-                        //myFriend.username 
+                      currentChat? (currentChat.name? currentChat.name :  myFriend.username ) : <span></span>
+                       
                         
                     }</p>
                 </div>
@@ -647,7 +817,8 @@ const handleSubmit = async (e) => {
                       onChange ={(e) => setNewMessages(e)} 
                       value={newMessage}
                       placeholder="Nhập tin nhắn"
-                      onEnter={()=>sendSubmit()}/>
+                      onEnter={()=>sendSubmit()}
+                      cleanOnEnter/>
                   <Tooltip
                   title="Gửi hình ảnh"
                   placement="bottom-end">
@@ -680,18 +851,21 @@ const handleSubmit = async (e) => {
           <div className="mainInfo">
             <div className="infomation_con">
               
-              <Avatar src={currentChat?.img}
+              <Avatar src={ currentChat? (currentChat.img? currentChat.img :  myFriend.avt ) : ""}
                 sx={{width:70,height:70}}>
                 </Avatar>
               <div className="name_con">
-                <p className="text_name">{currentChat?.name}</p>
+                <p className="text_name">{currentChat? (currentChat.name? currentChat.name :  myFriend.username ) : <span></span>}</p>
+                
+                {currentChat?.authorization.length > 0  ? 
                 <Tooltip 
                   title="Chỉnh sửa"
                   placement="bottom-end">
                   <IconButton onClick={() => { setOpenPopupAvarta(true);  setData(currentChat)}}>
                     <Edit />
                   </IconButton>
-                </Tooltip>
+                </Tooltip> : <div></div>}
+               
               </div>
               {/* <div className="edit_button">
                 <IconButton>
@@ -700,6 +874,7 @@ const handleSubmit = async (e) => {
                 <p className="title_edit_button">Tạo nhóm trò chuyện</p>
               </div> */}
             </div>
+            {currentChat?.authorization.length > 0  ? 
             <div className="user_con">
               <div className="iv_title">
                 <p>Thành viên</p>
@@ -722,7 +897,7 @@ const handleSubmit = async (e) => {
                             </p>
                           </div>
                               
-                          {currentChat.authorization.map( (auth)=>(
+                          {authorize.map( (auth)=>(
                               auth != _id || user._id == _id ?  
                                <div></div> : 
                             <div className="more">
@@ -770,7 +945,7 @@ const handleSubmit = async (e) => {
             
                 </ul>
               </div>
-            </div>
+            </div> : <div></div> }
             <div className="image_video_con">
               <div className="iv_title">
                 <p>Ảnh/Video</p>
@@ -807,21 +982,41 @@ const handleSubmit = async (e) => {
                 </span>
               </div>
             </div>
-            <div className="security_con">
+            <div className="user_con">
               <div className="iv_title">
                 <p>Thiết lập bảo mật</p>
                 <ArrowDropDownIcon/>
               </div>
               <div className="iv_main">
-                <span className="removeall">
+                <span className="option-security">
                   <DeleteOutlineIcon/>
                   <p>Xóa lịch sử trò chuyện</p>
                 </span>
               </div>
+              {currentChat?.authorization.length > 0  ? 
+              <div className="iv_main">
+                <span onClick={()=>
+                  HandleOutGroup()
+                  } className="option-security">
+                  <LogoutIcon/>
+                  <p>Rời nhóm</p>
+                </span>
+              </div> : <div></div>}
+
+              {authorize.map((auth)=>(
+                              auth != _id ?  
+                               <div></div> : 
+                    <div className="iv_main">
+                    <span onClick={()=>{
+                      DisbandGroup()
+                    }} className="option-security disband">
+                      <p className="disband">Giải tán nhóm</p>
+                    </span>
+                  </div>
+              ))}
             </div>
           </div>
         </div>
-
 
         <Popup
                 title="Tạo nhóm"
@@ -923,6 +1118,9 @@ const handleSubmit = async (e) => {
 			</form>
 		</div>
         </PopupAvartar>
+        {popupQuestion.isLoading &&  <PopupQuestion onDialog={disbandGroupSure} title={popupQuestion.title} message={popupQuestion.message} />}
+        {popupQuestionOutGroup.isLoading &&  <PopupQuestionOutGroup onDialog={outGroupSure} title={popupQuestionOutGroup.title} message={popupQuestionOutGroup.message} />}
+        {popupNotify.isLoading &&  <PopupNotify onDialog={handleNotify} title={popupNotify.title} message={popupNotify.message} />}
     </div>
   );
 }

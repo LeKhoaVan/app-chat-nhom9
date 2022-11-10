@@ -37,7 +37,9 @@
     "react-native-screens": "^3.18.2",
     "react-native-tab-view": "^3.3.0",
     "react-native-vector-icons": "^9.2.0",
-    "react-native-web": "~0.18.7"
+    "react-native-web": "~0.18.7",
+    "react-router-dom": "^6.4.3",
+    "socket.io-client": "^4.5.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

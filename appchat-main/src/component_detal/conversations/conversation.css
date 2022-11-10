@@ -12,6 +12,10 @@
   
 }
 
+.conversation:hover {
+  background-color: var(--bg-hover-05);
+}
+
 .bodyConversation:hover {
   background-color: rgb(230, 235, 245);
 }

@@ -1,10 +1,5 @@
-import { StyleSheet, Text, View, TouchableOpacity, FlatList,Image, Modal,TouchableWithoutFeedback, ScrollView, Keyboard} from 'react-native'
+import { StyleSheet, Text, View, ScrollView, Keyboard} from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
-import { SafeAreaView } from 'react-native-safe-area-context'
-import Ionicons from 'react-native-vector-icons/Ionicons'
-import { Navigation} from '@react-navigation/native';
-import ChattingScreen from './ChattingScreen';
-
 import Conversation from '../components/Conversation'
 import { AuthContext } from '../contexts/AuthContext';
 import axios from 'axios';
@@ -29,6 +24,7 @@ export default function MessagesScreen({navigation}) {
       <View style={styles.container}>
         <ScrollView>
          {conversations.map((c) => (
+
                 <Conversation key={c._id} conversation={c} currentUser={userInfo._id} navigation={navigation}/>
             ))}
         </ScrollView>
