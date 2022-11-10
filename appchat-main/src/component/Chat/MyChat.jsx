@@ -335,6 +335,7 @@ const handleSubmit = async (e) => {
         conversationId: data.conversationId,
         createdAt: data.date,
         username: data.username,
+        avt: data.avt
       });
       
     });
@@ -421,10 +422,6 @@ const handleSubmit = async (e) => {
           }
           
         }
-
-        for(let i =0; i< res.data.length;i++) {
-          
-        }
         setMessages(messageList);
       } catch (err) {
         console.log(err);
@@ -463,7 +460,9 @@ const handleSubmit = async (e) => {
       conversationId: currentChat._id,
       reCall: false,
       delUser:"",
-      date: Date.now(), 
+      date: Date.now(),
+      username: username,
+      avt: avt, 
     };  
 
     
@@ -489,7 +488,8 @@ const handleSubmit = async (e) => {
       conversationId: currentChat._id,
       delUser:"",
       date: Date.now(),
-      username: username
+      username: username,
+      avt: avt,
     });
 
     socket.current.emit("sendStatus", {
@@ -541,6 +541,8 @@ const handleSubmit = async (e) => {
       senderId: _id,
       receiverIds,
       text: "tin nhắn đã được thu hồi",
+      username: username,
+      avt: avt,
     });
 
     socket.current.emit("recallMessageStatus", {
