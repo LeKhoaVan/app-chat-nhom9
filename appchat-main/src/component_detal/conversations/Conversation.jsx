@@ -33,22 +33,23 @@ export default function Conversation({ conversation, currentUser, timeM, myMes,r
       //http://localhost:8800/api/messages/lastmess/63681efaf338cdd7632c04f1
       try {
         const res = await axios("http://localhost:8800/api/messages/lastmess/"+conversation._id);
-        const newM = res.data;
-
+        console.log(res.data.sender)
+        // const newM = res.data;
+        
         
         if(res.data.conversationId === conversation._id){
-          if(newM.reCall){
-            newM.text = "tin nhắn đã thu hồi"
-            setNewMes(newM)
+          if(res.data.reCall === true){
+            res.data.text = "tin nhắn đã thu hồi"
+            setNewMes(res.data)
           }
           else{
-            setNewMes(newM);
+            setNewMes(res.data);
           }
         }
 
         
 
-        console.log(newMes)
+        console.log(res.data)
           
       } catch (err) {
         console.log(err); 
@@ -97,7 +98,16 @@ export default function Conversation({ conversation, currentUser, timeM, myMes,r
             <span className="messageConver">
              {recall? recall.conversationId === conversation._id?
             <>
-              {myMes.sender === currentUser? "Bạn": myMes.username} : {recall.text}
+              {myMes? 
+                <>
+                  {myMes.sender === currentUser? "Bạn": myMes.username} : {recall.text}
+                </>
+                :
+                <>
+                  {newMes.sender === currentUser? "Bạn": newMes.username} : tin nhắn đã được thu hồi
+                </>
+              }
+              
             </> 
             :
             <>

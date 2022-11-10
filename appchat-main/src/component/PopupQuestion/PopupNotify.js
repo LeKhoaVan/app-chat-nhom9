@@ -1,5 +1,5 @@
 import './PopupQuestion.css'
-function PopupNotify({title, message,onDialog}) {
+function PopupNotify({title, mes,onDialog}) {
     return ( 
         <div  onClick={()=>onDialog(true)} className='popup-question'>
             <div onClick={(e)=>e.stopPropagation()} className="popup-question-modal">
@@ -7,7 +7,7 @@ function PopupNotify({title, message,onDialog}) {
                     <p>{title}</p>
                 </div>
                 <div className="body">
-                    <p className="title">{message}</p>
+                <p className="title">{mes}</p>
                     <div className='btn-group'>
                         <button onClick={()=>onDialog(true)} className="btn no">OK</button>
                     </div>

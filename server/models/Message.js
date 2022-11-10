@@ -20,6 +20,12 @@ const MessageSchema = new mongoose.Schema(
     delUser: {
       type: Array,
     },
+    username: {
+      type: String,
+    },
+    avt: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

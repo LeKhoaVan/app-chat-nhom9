@@ -11,17 +11,17 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
   const [messageDelete, setMessageDelete] = useState(null);
 
 
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const res = await axios("http://localhost:8800/api/users/name?userId="+message.sender);  
-        setUser(res.data);
-      } catch (err) {
-        console.log(err); 
-      }
-    };
-    getUser();
-  }, [message]);
+  // useEffect(() => {
+  //   const getUser = async () => {
+  //     try {
+  //       const res = await axios("http://localhost:8800/api/users/name?userId="+message.sender);  
+  //       setUser(res.data);
+  //     } catch (err) {
+  //       console.log(err); 
+  //     }
+  //   };
+  //   getUser();
+  // }, [message]);
 
 
 
@@ -114,11 +114,11 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
           <div className="messageTop">
             <img
                 className="messageImg"
-                src={user.avt}
+                src={message.avt}
                 alt=""
               />
               <div className="messageText">
-              <span className="owner">{user.username}</span>
+              <span className="owner">{message.username}</span>
               {message.type === 0 ? <p>{message.text}</p> : <div></div>}
                 <div class="dropdown-content">
                 <li>
