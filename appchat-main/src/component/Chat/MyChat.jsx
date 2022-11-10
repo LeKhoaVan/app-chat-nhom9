@@ -63,17 +63,17 @@ export default function MyChat() {
   const [convGroupForm , setConvGroupForm] = useState({})
   const [popupQuestion , setPopupQuestion] = useState({
     title:'',
-    message:'',
+    mes:'',
     isLoading: false
   })
   const [popupQuestionOutGroup , setPopupQuestionOutGroup] = useState({
     title:'',
-    message:'',
+    mes:'',
     isLoading: false
   })
   const [popupNotify , setPopupNotify] = useState({
     title:'',
-    message:'',
+    mes:'',
     isLoading: false
   })
 
@@ -177,7 +177,7 @@ const handleSubmit = async (e) => {
  function DisbandGroup(){
     setPopupQuestion({
       title: 'Giải tán nhóm',
-      message: 'Bạn có chắc chắn muốn giải tán nhóm?',
+      mes: 'Bạn có chắc chắn muốn giải tán nhóm?',
       isLoading:true
     });
   }
@@ -195,7 +195,7 @@ const handleSubmit = async (e) => {
 
         setPopupQuestion({
           title: '',
-          message: '',
+          mes: '',
           isLoading:false
         });
       }
@@ -205,7 +205,7 @@ const handleSubmit = async (e) => {
     }else{
       setPopupQuestion({
         title: '',
-        message: '',
+        mes: '',
         isLoading:false
       });
     }
@@ -214,7 +214,7 @@ const handleSubmit = async (e) => {
   async function HandleOutGroup(){
    setPopupQuestionOutGroup({
       title: 'Rời nhóm',
-      message: 'Bạn có chắc chắn muốn rời nhóm?',
+      mes: 'Bạn có chắc chắn muốn rời nhóm?',
       isLoading:true
    })
   }
@@ -226,12 +226,12 @@ const handleSubmit = async (e) => {
         if(authorize.length == 1 && authorize[0] === _id){
           setPopupQuestionOutGroup({
             title: '',
-            message: '',
+            mes: '',
             isLoading:false
           });
           setPopupNotify({
             title: 'Thông báo',
-            message: 'Cần chỉ định thêm quản trị viên trước khi rời nhóm',
+            mes: 'Cần chỉ định thêm quản trị viên trước khi rời nhóm',
             isLoading:true
           });
           
@@ -249,7 +249,7 @@ const handleSubmit = async (e) => {
           setAuthorize([])
           setPopupQuestionOutGroup({
             title: '',
-            message: '',
+            mes: '',
             isLoading:false
           });
         }
@@ -262,7 +262,7 @@ const handleSubmit = async (e) => {
     }else{
       setPopupQuestionOutGroup({
         title: '',
-        message: '',
+        mes: '',
         isLoading:false
       });
     }
@@ -272,7 +272,7 @@ const handleSubmit = async (e) => {
     if(choose){
       setPopupNotify({
         title: '',
-        message: '',
+        mes: '',
         isLoading:false
       });
     }
@@ -1118,9 +1118,9 @@ const handleSubmit = async (e) => {
 			</form>
 		</div>
         </PopupAvartar>
-        {popupQuestion.isLoading &&  <PopupQuestion onDialog={disbandGroupSure} title={popupQuestion.title} message={popupQuestion.message} />}
-        {popupQuestionOutGroup.isLoading &&  <PopupQuestionOutGroup onDialog={outGroupSure} title={popupQuestionOutGroup.title} message={popupQuestionOutGroup.message} />}
-        {popupNotify.isLoading &&  <PopupNotify onDialog={handleNotify} title={popupNotify.title} message={popupNotify.message} />}
+        {popupQuestion.isLoading &&  <PopupQuestion onDialog={disbandGroupSure} title={popupQuestion.title} mes={popupQuestion.mes} />}
+        {popupQuestionOutGroup.isLoading &&  <PopupQuestionOutGroup onDialog={outGroupSure} title={popupQuestionOutGroup.title} mes={popupQuestionOutGroup.mes} />}
+        {popupNotify.isLoading &&  <PopupNotify onDialog={handleNotify} title={popupNotify.title} mes={popupNotify.mes} />}
     </div>
   );
 }
