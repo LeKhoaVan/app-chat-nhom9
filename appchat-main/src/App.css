@@ -32,7 +32,7 @@
   --cl-warning:#DB342E;
   --cl-send-svg:#858585;
   --bg-05:#E5E7EB;
-
+  --bg-con-005:rgb(230, 235, 245);
 
   --red: red;
   --blue:blue;
@@ -54,6 +54,7 @@
   --bg-message:#1877f2;
   --cl-message-own:rgb(230, 233, 50);
   --boxshadow-022:rgba(0, 0, 0, 0.493);
+  --bg-08:rgb(245, 241, 241);
 
 
   --bg-popup-01:#f7d8d4;
@@ -64,6 +65,8 @@
   --bd-popup-01:rgba(0, 0, 0, 0.274);
   --cl-popup-01:rgba(0, 0, 0, 0.678);
 
+
+  --cl-info-text:#72808e;
 }
 
 
@@ -706,6 +709,14 @@ body{
 .list-user .text .auth{
   font-size: 13px;
 }
+.list-user .text .text-name{
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
 .list-user .avt{
   height: 46px;
   width: 46px;

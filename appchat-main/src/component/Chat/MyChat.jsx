@@ -63,17 +63,17 @@ export default function MyChat() {
   const [convGroupForm , setConvGroupForm] = useState({})
   const [popupQuestion , setPopupQuestion] = useState({
     title:'',
-    message:'',
+    mes:'',
     isLoading: false
   })
   const [popupQuestionOutGroup , setPopupQuestionOutGroup] = useState({
     title:'',
-    message:'',
+    mes:'',
     isLoading: false
   })
   const [popupNotify , setPopupNotify] = useState({
     title:'',
-    message:'',
+    mes:'',
     isLoading: false
   })
 
@@ -177,7 +177,7 @@ const handleSubmit = async (e) => {
  function DisbandGroup(){
     setPopupQuestion({
       title: 'Giải tán nhóm',
-      message: 'Bạn có chắc chắn muốn giải tán nhóm?',
+      mes: 'Bạn có chắc chắn muốn giải tán nhóm?',
       isLoading:true
     });
   }
@@ -195,7 +195,7 @@ const handleSubmit = async (e) => {
 
         setPopupQuestion({
           title: '',
-          message: '',
+          mes: '',
           isLoading:false
         });
       }
@@ -205,7 +205,7 @@ const handleSubmit = async (e) => {
     }else{
       setPopupQuestion({
         title: '',
-        message: '',
+        mes: '',
         isLoading:false
       });
     }
@@ -214,7 +214,7 @@ const handleSubmit = async (e) => {
   async function HandleOutGroup(){
    setPopupQuestionOutGroup({
       title: 'Rời nhóm',
-      message: 'Bạn có chắc chắn muốn rời nhóm?',
+      mes: 'Bạn có chắc chắn muốn rời nhóm?',
       isLoading:true
    })
   }
@@ -226,12 +226,12 @@ const handleSubmit = async (e) => {
         if(authorize.length == 1 && authorize[0] === _id){
           setPopupQuestionOutGroup({
             title: '',
-            message: '',
+            mes: '',
             isLoading:false
           });
           setPopupNotify({
             title: 'Thông báo',
-            message: 'Cần chỉ định thêm quản trị viên trước khi rời nhóm',
+            mes: 'Cần chỉ định thêm quản trị viên trước khi rời nhóm',
             isLoading:true
           });
           
@@ -249,7 +249,7 @@ const handleSubmit = async (e) => {
           setAuthorize([])
           setPopupQuestionOutGroup({
             title: '',
-            message: '',
+            mes: '',
             isLoading:false
           });
         }
@@ -262,7 +262,7 @@ const handleSubmit = async (e) => {
     }else{
       setPopupQuestionOutGroup({
         title: '',
-        message: '',
+        mes: '',
         isLoading:false
       });
     }
@@ -272,7 +272,7 @@ const handleSubmit = async (e) => {
     if(choose){
       setPopupNotify({
         title: '',
-        message: '',
+        mes: '',
         isLoading:false
       });
     }
@@ -335,6 +335,7 @@ const handleSubmit = async (e) => {
         conversationId: data.conversationId,
         createdAt: data.date,
         username: data.username,
+        avt: data.avt
       });
       
     });
@@ -421,10 +422,6 @@ const handleSubmit = async (e) => {
           }
           
         }
-
-        for(let i =0; i< res.data.length;i++) {
-          
-        }
         setMessages(messageList);
       } catch (err) {
         console.log(err);
@@ -463,7 +460,9 @@ const handleSubmit = async (e) => {
       conversationId: currentChat._id,
       reCall: false,
       delUser:"",
-      date: Date.now(), 
+      date: Date.now(),
+      username: username,
+      avt: avt, 
     };  
 
     
@@ -489,7 +488,8 @@ const handleSubmit = async (e) => {
       conversationId: currentChat._id,
       delUser:"",
       date: Date.now(),
-      username: username
+      username: username,
+      avt: avt,
     });
 
     socket.current.emit("sendStatus", {
@@ -542,6 +542,8 @@ const handleSubmit = async (e) => {
       senderId: _id,
       receiverIds,
       text: "tin nhắn đã được thu hồi",
+      username: username,
+      avt: avt,
     });
 
     socket.current.emit("recallMessageStatus", {
@@ -885,11 +887,11 @@ const handleSubmit = async (e) => {
                 <ul className="list-user">
                   {userCons.map( (user)=>(
                     <li>
-                            <div className="avt"><img src={user.avt ? user.avt : "data:image/jpeg;base64,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"} /></div>
+                            <div className="avt"><img src={user.avt ? user.avt : ""} /></div>
                           
                           
                           <div className="text">
-                            <p className="">{user.username}</p>
+                            <p className="text-name">{user.username}</p>
                             <p className="auth">
                             {authorize.map( (auth)=>(
                               auth===user._id ? "Quản trị viên" : ""
@@ -1119,9 +1121,9 @@ const handleSubmit = async (e) => {
 			</form>
 		</div>
         </PopupAvartar>
-        {popupQuestion.isLoading &&  <PopupQuestion onDialog={disbandGroupSure} title={popupQuestion.title} message={popupQuestion.message} />}
-        {popupQuestionOutGroup.isLoading &&  <PopupQuestionOutGroup onDialog={outGroupSure} title={popupQuestionOutGroup.title} message={popupQuestionOutGroup.message} />}
-        {popupNotify.isLoading &&  <PopupNotify onDialog={handleNotify} title={popupNotify.title} message={popupNotify.message} />}
+        {popupQuestion.isLoading &&  <PopupQuestion onDialog={disbandGroupSure} title={popupQuestion.title} mes={popupQuestion.mes} />}
+        {popupQuestionOutGroup.isLoading &&  <PopupQuestionOutGroup onDialog={outGroupSure} title={popupQuestionOutGroup.title} mes={popupQuestionOutGroup.mes} />}
+        {popupNotify.isLoading &&  <PopupNotify onDialog={handleNotify} title={popupNotify.title} mes={popupNotify.mes} />}
     </div>
   );
 }
