@@ -126,17 +126,19 @@ export default function Conversation({ conversation, currentUser, timeM, myMes,r
               (
                 myMes.conversationId === conversation._id ? 
                 <>
-                  {myMes.sender === currentUser? "Bạn": myMes.username} : {myMes.text}
+                  {myMes.sender === currentUser? "Bạn": myMes.username} : {(myMes.type==0?myMes.tex:(myMes.type == 1 ? "img" :"file"))}
                 </>
                 : 
                 <>
-                  {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {newMes !== null ? newMes.text : "vừa tham gia nhóm"} 
+                  {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} 
+                  : {(newMes !== null && newMes.type==0 ? newMes.text : (newMes.type == 1 ? "img" :"file"))} 
                 </>     
               )
               :
               (    
                 <>
-                  {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {newMes !== null ? newMes.text : "vừa tham gia nhóm"} 
+                  {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} 
+                  : {(newMes !== null && newMes.type==0 ? newMes.text : (newMes.type == 1 ? "img" :"file"))} 
                 </>     
               )       
             }

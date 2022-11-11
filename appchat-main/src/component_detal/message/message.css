@@ -13,8 +13,19 @@
   height: 32px;
   border-radius: 50%;
   object-fit: cover;
+  
   margin-right: 10px;
+  transform: translate(10px, -30px)
 }
+
+.messageImgSend{
+  width: 350px;
+  height: 500px;
+  
+  object-fit: cover;
+  
+}
+
 
 
 .messageText .owner{
@@ -26,6 +37,7 @@
 .messageBottom{
     font-size: 12px;
     margin-bottom: 10px;  
+    transform: translate(10px, -30px)
 }
 
 .message.own{
@@ -75,7 +87,7 @@
     border-radius: 20px;
     background-color: var(--bg-message);
     color: var(--white);
-    max-width: 300px;
+    max-width: 450px;
     position: relative;
 }
 
