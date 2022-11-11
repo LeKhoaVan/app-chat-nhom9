@@ -82,7 +82,7 @@ export default function MyChat() {
   const socket = useRef();
 
   const [openPopup, setOpenPopup] = useState(false);
-
+  const [openPopup2, setOpenPopup2] = useState(false);
 
 
 
@@ -116,6 +116,10 @@ const handleSubmit = async (e) => {
   }
   
 };
+
+const [stateDis, setStateDis] = useState({
+  disabled: true
+});
 
 
 
@@ -171,6 +175,26 @@ const handleSubmit = async (e) => {
     
     
    
+  }
+
+  function AddUserCon(conId){
+    let userId =
+    listUserGroupNew.map((userGr)=>{
+      return userGr._id
+    })
+    
+    const article = { conId,userId };
+    
+    const con = axios.put('http://localhost:8800/api/conversations/addMember', article)
+    
+    con.then(async value => {
+      let list = [];
+      for (let index = 0; index < value.data.length; index++) {
+          const res = await axios.get("http://localhost:8800/api/users?userId="+ value.data[index]); 
+          list.push(res.data)  
+      }
+      setUserCons(list);
+    })
   }
  
 
@@ -655,7 +679,20 @@ const handleSubmit = async (e) => {
     setListUserGroupNew([...listUserGroupNew,userSearch])
     setUserSearch(null)
     document.querySelector('#search-group').value = ""
-  
+    let countMem = 0;
+    listUserGroupNew.map((userGr)=>{
+      countMem++;
+      return countMem;
+    })
+    if (countMem > 0) {
+      setStateDis({
+        disabled:false
+      })
+    } else {
+      setStateDis({
+        disabled:true
+      })
+    }
   }
 
  
@@ -690,7 +727,10 @@ const handleSubmit = async (e) => {
     } catch (err) {
       console.log(err.message);
     }
-  
+    setStateDis({
+      disabled:true
+    })
+    
   }
   
   return (
@@ -770,6 +810,9 @@ const handleSubmit = async (e) => {
                 </div>
                 <div>
                     <div className="user-fet">
+                    <Tooltip  placement="bottom-end" title="Thêm bạn vào nhóm">
+          <IconButton onClick={() => { setOpenPopup2(true);  }}><GroupAddIcon /></IconButton>
+          </Tooltip>
                         <Tooltip
                             title="Tìm kiếm tin nhắn"
                             placement="bottom-end">
@@ -1045,7 +1088,79 @@ const handleSubmit = async (e) => {
 </div>
 
 <div><p>____________________________________________________________________________</p></div>
-<p className="title-Add">Đã thêm</p>
+<p className="title-Add">Danh sách cần thêm</p>
+<ul className="listAdd">
+{listUserGroupNew.map( (user_gr)=>( 
+      <li className="itemAdd">
+          <Avatar src={user_gr.avt}></Avatar>
+          <p>{user_gr.username}</p>
+          <button onClick={(e)=>{
+            e.preventDefault()
+            const members = listUserGroupNew.filter(
+              (u) => u._id !== user_gr._id
+            )
+            setListUserGroupNew(members)
+            let countMem = listUserGroupNew.length - 1;
+            
+            if (countMem < 2) {
+              setStateDis({
+                disabled:true
+              })
+            } else {
+              setStateDis({
+                disabled:false
+              })
+            }
+          }} className="remove">xóa</button>
+      </li>                                           
+  ))}
+
+                        
+     
+</ul>
+
+
+<br></br>
+<div className="GroupAddButton">
+  <button type="button" className="btn-addGr btn-primary"  id="createGroup"
+  disabled={stateDis.disabled}
+  onClick={(e)=>{
+    e.preventDefault()
+    createNewConvGroup()
+    setListUserGroupNew([])
+    setOpenPopup(false)
+    }}>Tạo nhóm</button>
+  <button type="button" className="btn-addGr btn-secondary" onClick={() => { 
+          setOpenPopup(false)
+           }}>Huỷ</button>
+</div>
+  
+</form>
+
+        </Popup>
+        <Popup
+                title="Thêm thành viên"
+                openPopup={openPopup2}
+                setOpenPopup={setOpenPopup2}
+            >
+
+            <form>
+  
+<div className="input-group">
+  <input className="form-control rounded ip-addGr" type="text" onKeyUp={handleTextSearch} id="search-group" placeholder="Tìm kiếm bằng email" />
+  <div className="model-search">
+    {userSearch ? 
+    <div className="item">
+      <Avatar src={userSearch.avt}></Avatar>
+      <p>{userSearch.username}</p>
+      {userSearch._id === _id ? <div className="add">bạn</div> :<button onClick={clickButtonAdd} className="add">Thêm</button>}
+    </div> : <div className="nullUser">Không thấy user</div>}
+    
+  </div>  
+</div>
+
+<div><p>____________________________________________________________________________</p></div>
+<p className="title-Add">Danh sách cần thêm</p>
 <ul className="listAdd">
 {listUserGroupNew.map( (user_gr)=>( 
       <li className="itemAdd">
@@ -1067,15 +1182,18 @@ const handleSubmit = async (e) => {
 
 
 <br></br>
+
 <div className="GroupAddButton">
-  <button type="button" className="btn-addGr btn-primary"  onClick={(e)=>{
+  
+<button type="button" className="btn-addGr btn-primary"  onClick={(e)=>{
     e.preventDefault()
-    createNewConvGroup()
-    setListUserGroupNew([])
-    setOpenPopup(false)
-    }}>Tạo nhóm</button>
+    //setListUserGroupNew([])
+    setOpenPopup2(false)
+    AddUserCon(currentChat._id)
+    }}>Xác nhận</button>
+
   <button type="button" className="btn-addGr btn-secondary" onClick={() => { 
-          setOpenPopup(false)
+          setOpenPopup2(false)
            }}>Huỷ</button>
 </div>
   

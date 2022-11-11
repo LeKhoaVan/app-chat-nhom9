@@ -973,3 +973,7 @@ body{
   font-size : 50px;
   color: var(--bd-01);
 }
+button:disabled{
+  background-color: #495057;
+  pointer-events: none;
+}
