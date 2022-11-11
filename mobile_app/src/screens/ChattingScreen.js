@@ -15,113 +15,246 @@ export default function ChattingScreen({navigation}) {
     const scrollView_ref = useRef();
     const [messages, setMessages] = useState([]);
     const [user, setUser] = useState([]);
-    const {userInfo,currentChat,socket} = useContext(AuthContext);
+    const {userInfo,currentChat,socket,setSenderMessage,setRecallStatus} = useContext(AuthContext);
     const [arrivalMessage, setArrivalMessages] = useState(null);
     const [Nmember,setNMember]= useState(0);
-    useEffect(() => {
-        const friendId = currentChat.members.find((m) => m !== userInfo._id);
-        const getUser = async () => {
-            try {
-                const res = await axios(`${Url}/api/users?userId=${friendId}`);  
-                setUser(res.data);
-            } catch (err) {
-                console.log(err); 
-            }
-        };
-        getUser();
-        const getMessages = async () => {
-          let messageList =[];
-          try {
-            const res = await axios.get(`${Url}/api/messages/${currentChat._id}`); 
-            for(let i =0; i< res.data.length;i++) {
-              if(res.data[i].delUser[0] !== userInfo._id) {
-                if(res.data[i].reCall === true){
-                  res.data[i].text = "tin nhắn đã được thu hồi"
-                  messageList.push(res.data[i]);
-                }
-                else{
-                  messageList.push(res.data[i]);
-                }
-              }
-              
-            }
-            setMessages(messageList);
-          } catch (err) {
-            console.log(err);
-          }
-        };
-        getMessages();
-        
-      }, [currentChat]);
-      useEffect(() =>{
-        socket.current = io(`${UrlSK}`,{
-          transports:['websocket'],
-        }); 
-        socket.current.on("getMessage",(data) =>{
-          setArrivalMessages({
-            _id:Math.random(),
-            sender: data.senderId,
-            text: data.text,
-            type: data.type,
-            delUser: data.delUser,
-            conversationId: data.conversationId,
-            createdAt: Date.now(),
-          })
-          console.log("text:",data.text);
-        });  
-        setNMember(currentChat.members.length)
-      },[currentChat]);
-      useEffect(() => {
-        socket.current.emit("addUser",userInfo._id);
-        socket.current.on("getUsers", (users) => {
-          console.log(users)
-        })
-      },[userInfo]);
-      useEffect(() =>{
-        arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) &&
-        currentChat?._id === arrivalMessage.conversationId && 
-        setMessages((prev)=>[...prev, arrivalMessage])
-        console.log("arrivalMessage:",arrivalMessage)
-      },[arrivalMessage])
-      
-      const sendSubmit = async () => {
-        if(newMessage!==""){
-        const message = {
-          sender: userInfo._id,
-          text: newMessage,
-          type:0,
-          conversationId: currentChat._id,
-          reCall: false,
-          delUser:""
-        };
-    
-        // const receiverId = currentChat.members.find(
-        //   (member) => member !== _id
-        // );
-        const receiverIds = [];
-        
-        for (let index = 0; index < currentChat.members.length; index++) {
-          if (currentChat.members[index] !== userInfo._id) {
-            receiverIds.push(currentChat.members[index]);
-          }
-        }
-        socket.current.emit("sendMessage", {
-          senderId: userInfo._id,
-          receiverIds,
-          text: newMessage,
-          type:0,
-          conversationId: currentChat._id,
-          delUser:""
-        });
-        try {
-          const res = await axios.post(`${Url}/api/messages`,message);
-          setMessages([...messages, res.data]);
-          setNewMessage("");
-        } catch (err) {
-          console.log(err);
-        }
+  
+  useEffect(() => {
+    const friendId = currentChat.members.find((m) => m !== userInfo._id);
+    const getUser = async () => {
+      try {
+        const res = await axios(`${Url}/api/users?userId=${friendId}`);  
+        setUser(res.data);
+      } catch (err) {
+            console.log(err); 
       }
-      };
+    }
+    getUser();
+  },[userInfo._id,currentChat]);
+  useEffect(() => {
+    const getMessages = async () => {
+      let messageList =[];
+      try {
+        const res = await axios.get(`${Url}/api/messages/${currentChat._id}`); 
+
+        for(let i =0; i< res.data.length;i++) {
+          if(res.data[i].delUser[0] !== userInfo._id) {
+            if(res.data[i].reCall === true){
+              res.data[i].text = "tin nhắn đã được thu hồi"
+              messageList.push(res.data[i]);
+            }
+            else{
+              messageList.push(res.data[i]);
+            }
+          }
+          
+        }
+
+        for(let i =0; i< res.data.length;i++) {
+          
+        }
+        setMessages(messageList);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    getMessages();
+    setNMember(currentChat.members.length)
+  }, [currentChat]);
+  useEffect(() =>{
+    socket.current = io(`${UrlSK}`);
+    socket.current.on("getMessage",(data) =>{
+      setArrivalMessages({
+        _id:Math.random(),
+        sender: data.senderId,
+        text: data.text,
+        type:0,
+        delUser: data.delUser,
+        conversationId: data.conversationId,
+        createdAt: data.date,
+        username: data.username,
+      });
+      
+    });
+    socket.current.on("getStatus",(data) =>{
+      setSenderMessage({
+        _id:Math.random(),
+        sender: data.senderId,
+        text: data.text,
+        type:0,
+        delUser: data.delUser,
+        conversationId: data.conversationId,
+        createdAt: data.date,
+        username: data.username,
+      });
+      setRecallStatus(null)
+    });
+
+    socket.current.on("recallMgsStatus",(data) =>{
+      setRecallStatus({
+        _id:Math.random(),
+        sender: data.senderId,
+        text: data.text,
+        type:0,
+        delUser: data.delUser,
+        conversationId: data.conversationId,
+        createdAt: data.date,
+        username: data.username,
+      })
+    });
+   
+  },[currentChat]);
+
+  useEffect(() =>{
+    arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) &&
+    currentChat?._id === arrivalMessage.conversationId && 
+    setMessages((prev)=>[...prev, arrivalMessage])
+    console.log("arrivalMessage:",arrivalMessage)
+  },[arrivalMessage, currentChat])
+
+  useEffect(() => {
+    socket.current.emit("addUser", userInfo._id);
+    socket.current.on("getUsers", (users) => {
+      console.log(users)
+    })},[userInfo._id]);
+  const onClickDeleteMgs = (id) => {
+    setRecallMessages(id);
+    // const mgsdelete = messages.filter(
+    //   (message) => message._id !== id
+    // );
+    // messages.find((message) => message._id !== id).text = "tin nhắn đã được bạn xóa";
+    // setMessages(messages);
+   
+    const receiverIds = [];
+    
+    for (let index = 0; index < currentChat.members.length; index++) {
+      if (currentChat.members[index] !== userInfo._id) {
+        receiverIds.push(currentChat.members[index]);
+      }
+    }
+
+    //gửi tin nhắn thu hồi
+    socket.current.emit("deleteMessage", {
+      _id:Math.random(),
+      messagesCurrent: messages,
+      messageId: id,
+      senderId: userInfo._id,
+      receiverIds,
+      text: "tin nhắn đã được thu hồi",
+    });
+
+    socket.current.emit("recallMessageStatus", {
+      senderId: userInfo._id,
+      username: userInfo.username,
+      receiverIds: currentChat.members,
+      type:0,
+      text: "tin nhắn đã được thu hồi",
+      conversationId: currentChat._id,
+      delUser:"",
+      date: Date.now(),
+    });
+  }
+  //nhận tin nhắn thu hồi
+  useEffect(() =>{
+    
+    socket.current.on("delMgs", (data) =>{
+      console.log(data.messageId)
+      
+      setMessages(data.messagesCurrent)
+      
+      
+      //nhận vào và đưa vào Mess
+      // setArrivalMessages({
+      //   sender: data.senderId,
+      //   text: data.text,
+      //   createdAt: Date.now(),
+      // })
+      
+    });
+
+    
+  },[]);  
+  //xóa tin nhắn phía tôi (tin nhắn của tôi)
+  const onClickDeleteMgsMy = (id) => {
+    
+    const mgsdelete = messages.filter(
+      (message) => message._id !== id
+    );
+
+    setMessages(mgsdelete);
+  }
+
+   //xóa tin nhắn phía tôi (tin nhắn của bạn)
+   const onClickDeleteMgsOfFri =  async (id) => {
+    const mgsList = messages.filter(
+      (mes) => mes.delUser !== id
+    )
+    setMessages(mgsList)
+    
+  }
+  const sendSubmit = async () => {
+    
+    if(newMessage.trim()  !=="" ){
+    const message = {
+      sender: userInfo._id,
+      text: newMessage,
+      type:0,
+      conversationId: currentChat._id,
+      reCall: false,
+      delUser:"",
+      date: Date.now(), 
+    };  
+
+    
+    
+  
+    // const receiverId = currentChat.members.find(
+    //   (member) => member !== _id
+    // );
+    const receiverIds = [];
+    
+    for (let index = 0; index < currentChat.members.length; index++) {
+      if (currentChat.members[index] !== userInfo._id) {
+        receiverIds.push(currentChat.members[index]);
+      }
+    }
+
+
+    socket.current.emit("sendMessage", {
+      senderId: userInfo._id,
+      receiverIds,
+      type:0,
+      text: newMessage,
+      conversationId: currentChat._id,
+      delUser:"",
+      date: Date.now(),
+      username: userInfo.username
+    });
+
+    socket.current.emit("sendStatus", {
+      senderId: userInfo._id,
+      username: userInfo.username,
+      receiverIds: currentChat.members,
+      type:0,
+      text: newMessage,
+      conversationId: currentChat._id,
+      delUser:"",
+      date: Date.now(),
+      
+    })
+
+
+    try {
+      const res = await axios.post(`${Url}/api/messages`,message);
+      setMessages([...messages, res.data]);      
+      
+    } catch (err) {
+      console.log(err);
+    }
+    
+  }
+  };
+  
   return (
     <SafeAreaView style={{height:'100%'}}>
         <View style={styles.Header}>
@@ -162,8 +295,15 @@ export default function ChattingScreen({navigation}) {
             onContentSizeChange={() => scrollView_ref.current.scrollToEnd({animated: false})}> 
             <KeyboardAwareScrollView  onKeyboardDidShow={()=>scrollView_ref.current.scrollToEnd({animated: false})}>
                 {messages.map((m) => (
-                     <Messager key={m._id} message={m} own={m.sender === userInfo._id} 
-                        userId={userInfo._id}/>))}          
+                     <Messager 
+                        key={m._id} 
+                        message={m} 
+                        own={m.sender === userInfo._id} 
+                        userId={userInfo._id}
+                        onClickDelete = {onClickDeleteMgs} 
+                        onClickDeleteMgsUser={onClickDeleteMgsMy}
+                        onClickDeleteMgsFri = {onClickDeleteMgsOfFri}
+                        />))}          
             </KeyboardAwareScrollView>
         </ScrollView>
         </View>
@@ -182,7 +322,10 @@ export default function ChattingScreen({navigation}) {
             {newMessage? 
                 <View style={{width:'18%',alignItems:'center',}}>
                     <TouchableOpacity
-                        onPress={()=>sendSubmit()}>
+                        onPress={()=>{
+                          sendSubmit();
+                          setNewMessage("");
+                          }}>
                         <Ionicons
                                 name='send'
                                 size={25}

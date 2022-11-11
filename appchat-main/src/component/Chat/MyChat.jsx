@@ -536,6 +536,7 @@ const handleSubmit = async (e) => {
 
     //gửi tin nhắn thu hồi
     socket.current.emit("deleteMessage", {
+      id:Math.random(),
       messagesCurrent: messages,
       messageId: id,
       senderId: _id,

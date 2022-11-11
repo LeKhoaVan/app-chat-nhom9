@@ -70,7 +70,7 @@ app.use("/api/auth", authRoute);
 const server = http.createServer(app);
 const io = socketio(server,{
   cors: {
-    origin: ["http://localhost:9000","exp://192.168.74.90:19000"],
+    origin: ["http://localhost:9000","exp://192.168.1.10:19000"],
   },
 });
 
@@ -110,12 +110,14 @@ io.on("connection", (socket) => {
       //   ds.push(getUser(receiverId).socketId)
       // })
       // ds.push(receiverId)
+
       receiverIds.forEach(function(room){
         if( getUser(room) == undefined){
           console.log("user offline,users online:",users);
         }
         else {
-          io.to(getUser(room).socketId).emit("getMessage", {
+          // io.to(getUser(room).socketId).emit("getMessage", {
+            io.emit("getMessage", {
             senderId,
             text,
             type,
@@ -168,7 +170,8 @@ io.on("connection", (socket) => {
         console.log("user offline,users online:",users);
       }
       else {
-        io.to(getUser(room).socketId).emit("delMgs", {
+        // io.to(getUser(room).socketId).emit("delMgs", {
+        io.emit("delMgs", {
           messagesCurrent,
           messageId,
           senderId,

@@ -14,6 +14,9 @@ export const AuthContextProvider = ({ children }) => {
 	const [isLoading,setIsLoading] = useState(false);
 	const [isRegisterSuccess,setIsRegisterSuccess] = useState(false);
 	const [currentChat,setCurrentChat] = useState("");
+	const [recallStatus,setRecallStatus] = useState(null)
+	const [arrivalMessage, setArrivalMessages] = useState(null);
+	const [senderMessage, setSenderMessage] = useState(null);
 	const socket = useRef();
 	//Login
 	const login = async userForm =>{
@@ -114,7 +117,8 @@ export const AuthContextProvider = ({ children }) => {
 	// Return provider
 	return (
 		<AuthContext.Provider value={{userToken,register,login,logout,userInfo,
-		isLoading,loadUser_Register,setUserToken,currentChat,setCurrentChat,socket}}>
+		isLoading,loadUser_Register,setUserToken,currentChat,setCurrentChat,socket,
+		recallStatus,setRecallStatus,senderMessage, setSenderMessage}}>
 			{children}
 		</AuthContext.Provider>
 	)

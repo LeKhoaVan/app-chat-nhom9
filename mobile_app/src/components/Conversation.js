@@ -6,10 +6,10 @@ import { AuthContext } from '../contexts/AuthContext';
 import { Url } from '../contexts/constants'
 import Ionicons from 'react-native-vector-icons/Ionicons' 
 
-export default function Conversation({ conversation, currentUser,navigation}) {
+export default function Conversation({ conversation, currentUser,navigation,myMes,recall}) {
   const [user, setUser] = useState({});
-  const [lastMess, setLastMess] = useState({});
-  const [name,setName]= useState("");
+  const [newMes, setNewMes] = useState([]);
+  const [userName, setUserName] = useState([]);
   const {currentChat,setCurrentChat,userInfo} = useContext(AuthContext);
   const ref_sw = useRef();
   const CTime = (date) => {
@@ -19,36 +19,60 @@ export default function Conversation({ conversation, currentUser,navigation}) {
     let fDate =tempDate.getHours()+":"+minute;
     return fDate;
   };
-  const friendId = conversation.members.find((m) => m !== userInfo._id);
   const mess=(m)=>{
     if(m.length<=23)
       return m
     else 
       return m.slice(0,19)+'...'
   }
-  const getUser = async () => {
-    try {
-      const res = await axios(`${Url}/api/users?userId=${friendId}`);  
-      setUser(res.data);
-    } catch (err) {
-      // console.log(err); 
-    }
-  };
-  const getLastMess = async () => {
-    try {
-      const res = await axios(`${Url}/api/messages/lastmess/${conversation._id}`);  
-      setLastMess(res.data);
-      const ress = await axios(`${Url}/api/users/name?userId=${res.data.sender}`);  
-      setName(ress.data.username);
-    } catch (err) {
-      // console.log(err); 
-    }
-  };
-  useEffect(() => {
+  useEffect(()=>{
+    const friendId = conversation.members.find((m) => m !== currentUser);
+    const getUser = async () => {
+      try {
+        const res = await axios(`${Url}/api/users?userId=${friendId}`);  
+        setUser(res.data);
+       
+      } catch (err) {
+        console.log(err); 
+      }
+    };
     getUser();
-    getLastMess();
-    // getUsernameSendLastMess();
-  }, []);
+  },[currentUser, conversation])
+  useEffect(() => {
+    const getNewMes = async () => {
+      try {
+        const res = await axios(`${Url}/api/messages/lastmess/${conversation._id}`);
+        const newM = res.data;
+        if(res.data.conversationId === conversation._id){
+          if(newM.reCall){
+            newM.text = "tin nhắn đã thu hồi"
+            setNewMes(newM)
+          }
+          else{
+            setNewMes(newM);
+          }
+        }
+        console.log(newMes)    
+      } catch (err) {
+        console.log(err); 
+      }
+    };
+    getNewMes();
+  }, [conversation]);
+
+  useEffect(() => {
+    const getUserName = async () => {
+      try {
+        const res = await axios(`${Url}/api/users/name?userId=${newMes.sender}`);  
+        setUserName(res.data.username);
+        
+      } catch (err) {
+        console.log(err); 
+      }
+    };
+  
+    getUserName();
+  },[newMes]);
   const rightSwipeActions = () => {
     return (
       <View style={{justifyContent:'center',backgroundColor:'red',paddingHorizontal:20}}>
@@ -86,10 +110,10 @@ export default function Conversation({ conversation, currentUser,navigation}) {
           }}/>
       <View style={styles.center}>
         <Text style={styles.name_user}>{conversation.name? conversation.name : user.username}</Text>
-        <Text style={styles.last_chat}>{lastMess?.text? conversation.name?   mess( name+': '+lastMess?.text) :mess(lastMess?.text): 'Chưa có tin nhắn'}</Text>
-        
+        <Text style={styles.last_chat}>{newMes?.text? conversation.name?   mess( userName+': '+newMes?.text) :mess(newMes?.text): 'Chưa có tin nhắn'}</Text>
       </View>
-      <Text>{lastMess?.text? CTime(lastMess?.createdAt):''}</Text>
+      <Text>{newMes?.text?  CTime( myMes? myMes.conversationId === conversation._id? 
+              myMes.createdAt:newMes.createdAt:newMes.createdAt):""}</Text>
     </View>
     </TouchableOpacity>
     </Swipeable>
