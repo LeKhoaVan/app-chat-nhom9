@@ -1,5 +1,4 @@
-.conversation {
-  display:flex;
+.bodyConversation{
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
@@ -7,16 +6,23 @@
   cursor: pointer;
   margin-top: 10px;
   border-radius: 10px;
-
+}
+.conversation {
+  display:flex;
+  
 }
 
 .conversation:hover {
+  background-color: var(--bg-hover-05);
+}
+
+.bodyConversation:hover {
   background-color: rgb(230, 235, 245);
 }
 
 .conversationImg {
-  width: 40px;
-  height: 40px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   object-fit: cover;
 }
@@ -25,6 +31,11 @@
   font-weight: 500;
   margin-right: auto;
   margin-left: 10px;
+}
+
+.messageConver{
+  font-style:normal;
+  padding-left: 50px;
 }
 
 .time {

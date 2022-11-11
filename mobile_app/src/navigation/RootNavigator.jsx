@@ -1,19 +1,28 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-
-import LoginScreen from '../screens/LoginScreen.js';
-import MessagesScreen from '../screens/MessagesScreen.js';
 import ChattingScreen from '../screens/ChattingScreen';
-import MeScreen from '../screens/MeScreen.js';
 import HomeNavigator from './HomeNavigator';
 import SettingScreen from '../screens/SettingScreen.js';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import { StyleSheet} from 'react-native';
 import AddFriendScreen from '../screens/AddFriendScreen.js';
-
+import MoreInfo from '../screens/MoreInfo';
+import {io} from "socket.io-client";
+import {UrlSK } from '../contexts/constants'
+import { AuthContext} from '../contexts/AuthContext';
+import FriendRequest from '../screens/FriendRequest';
+import SendFR from '../screens/SendFR';
 
 const Stack = createNativeStackNavigator();
 const RootNavigator = () => {
+	// const {socket,userInfo} = useContext(AuthContext)
+	// useEffect(()=>{
+	// 	socket.current = io(`${UrlSK}`);
+	// 	socket.current.emit("addUser", (userInfo?._id));
+	// 	socket.current.on("getUsers", (users) => {
+	// 		console.log('User:',users)
+    // 	}) 
+	// },[userInfo])
+	
 	return (
 		<Stack.Navigator 
 			initialRouteName="HomeNavigator" 
@@ -22,7 +31,6 @@ const RootNavigator = () => {
 				statusBarColor:'#056282',
 			})}
 		>
-			<Stack.Screen name="LoginScreen" component={LoginScreen} />
 			<Stack.Screen name="HomeNavigator" component={HomeNavigator} />
 			<Stack.Screen name="ChattingScreen" component={ChattingScreen}/>
 			<Stack.Screen 
@@ -55,6 +63,35 @@ const RootNavigator = () => {
 					}
 				})}
 			/>
+			<Stack.Screen 
+				name="MoreInfo" 
+				component={MoreInfo}
+				options={()=>({
+					headerShown:true,
+					headerStyle:{
+						backgroundColor:'#056282',
+					},
+					title:'Tùy chọn',
+					headerTintColor:'#fff',
+					headerTitleStyle:{
+						fontSize:17,
+					}
+				})}
+			/>
+			<Stack.Screen 
+				name="FriendRequest"
+				component={FriendRequest} 
+				options={()=>({
+					headerShown:true,
+					headerStyle:{
+						backgroundColor:'#056282',
+					},
+					title:'Lời mời kết bạn',
+					headerTintColor:'#fff',
+					headerTitleStyle:{
+						fontSize:17,
+					}
+				})}/>
 		</Stack.Navigator>
 	)
 }

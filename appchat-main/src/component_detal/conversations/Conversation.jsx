@@ -4,44 +4,13 @@ import "./conversation.css"
 import moment from "moment";
 
 
-import Popup from "./Popup";
-import FileInput from "./FileInput";
-import styles from "./styles.module.css";
 
 
-export default function Conversation({ conversation, currentUser}) {
+
+export default function Conversation({ conversation, currentUser, timeM, myMes,recall}) {
   const [user, setUser] = useState([]);
-
-// poppu onpen form
-const [openPopup, setOpenPopup] = useState(false);
-
- 
-
-const [data, setData] = useState({
-  name: conversation.name,
-  img: conversation.img,
-});
-
-const handleChange = ({ currentTarget: input }) => {
-  setData({ ...data, [input.name]: input.value });
-};
-
-const handleInputState = (name, value) => {
-  setData((prev) => ({ ...prev, [name]: value }));
-};
-
-const handleSubmit = async (e) => {
-  e.preventDefault()
-  try {
-    const url = "http://localhost:8800/api/conversations/"+conversation._id;
-    const { data : res } = await axios.put(url,data);
-    console.log(res)
-    
-  } catch (error) {
-    console.log(error)
-  }
-  
-};
+  const [newMes, setNewMes] = useState([]);
+  const [userName, setUserName] = useState([]);
 
 
   useEffect(() => {
@@ -50,7 +19,7 @@ const handleSubmit = async (e) => {
       try {
         const res = await axios("http://localhost:8800/api/users?userId="+friendId);  
         setUser(res.data);
-        
+       
       } catch (err) {
         console.log(err); 
       }
@@ -59,47 +28,129 @@ const handleSubmit = async (e) => {
   }, [currentUser, conversation]);
 
 
-  return (
-    <div className='conversation'>
-      <img className='conversationImg' src={conversation.name? conversation.img: user.username  } alt='avarta' onClick={() => { setOpenPopup(true);  }} />
-       <span className='conversationName'>{conversation.name? conversation.name : user.username  }</span>
-      <span className='time'>09:00</span>
+  useEffect(() => {
+    const getNewMes = async () => {
+      //http://localhost:8800/api/messages/lastmess/63681efaf338cdd7632c04f1
+      try {
+        const res = await axios("http://localhost:8800/api/messages/lastmess/"+conversation._id);
+        const newM = res.data;
 
+        
+        if(res.data.conversationId === conversation._id){
+          if(newM.reCall){
+            newM.text = "tin nhắn đã thu hồi"
+            setNewMes(newM)
+          }
+          else{
+            setNewMes(newM);
+          }
+        }
 
-      <Popup
-                title="Thông tin nhóm"
-                openPopup={openPopup}
-                setOpenPopup={setOpenPopup}>
+        
 
-              <h1 >{conversation.name? conversation.name : user.username  }</h1>
+        console.log(newMes)
+          
+      } catch (err) {
+        console.log(err); 
+      }
+    };
+    getNewMes();
+  }, [conversation]);
+
+  useEffect(() => {
+    const getUserName = async () => {
+      try {
+        const res = await axios("http://localhost:8800/api/users?userId="+newMes.sender);  
+        setUserName(res.data.username);
+        
+      } catch (err) {
+        console.log(err); 
+      }
+    };
+  
+    getUserName();
+  },[newMes]);
+
+  
+    return (
+      <div className="bodyConversation">
+        <div className='conversation'>
+          <img className='conversationImg' src={conversation.name? conversation.img: user.avt  } alt='avarta'  />
+          <span className='conversationName'>{conversation.name? conversation.name : user.username  }</span>
+          <span className='time'>
+            {myMes? 
+              <>
+                {myMes.conversationId === conversation._id? moment(myMes.createdAt).format("LT"): moment(newMes.createdAt).format("LT")}
+              </>
+              :
+              <>
+                {moment(newMes.createdAt).format("LT")}
+                
+              </>
+              }
               
-              <div className={styles.container}>
-			<form className={styles.form} onSubmit={handleSubmit} >
-				
-				<input
-					type="text"
-					className={styles.input}
-					placeholder="Ten nhom"
-					name="name"
-					onChange={handleChange}
-					value={data.name}
-				/>
-				
-				<FileInput
-					name="img"
-					label="Chọn hình ảnh"
-					handleInputState={handleInputState}
-					type="image"
-					value={data.img}
-				/>
-				
-				<button type="submit"  className={styles.submit_btn} onClick={() => { setOpenPopup(false); window.location.reload(false) }}>
-					Xác nhận
-				</button>
-			</form>
-		</div>
-        </Popup>
+             
+          </span>
+        </div>
+      
+        <div>
+            <span className="messageConver">
+             {recall? recall.conversationId === conversation._id?
+            <>
+              {myMes.sender === currentUser? "Bạn": myMes.username} : {recall.text}
+            </> 
+            :
+            <>
+               {myMes ? 
+              (
+                myMes.conversationId === conversation._id ? 
+                <>
+                  {myMes.sender === currentUser? "Bạn": myMes.username} : {myMes.text}
+                </>
+                : 
+                <>
+                  {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {newMes !== null ? newMes.text : "vừa tham gia nhóm"} 
+                </>     
+              )
+              :
+              (    
+                <>
+                  {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {newMes !== null ? newMes.text : "vừa tham gia nhóm"} 
+                </>     
+              )       
+            }
+            </>
+            :
+            <>
+               {myMes ? 
+              (
+                myMes.conversationId === conversation._id ? 
+                <>
+                  {myMes.sender === currentUser? "Bạn": myMes.username} : {(myMes.type==0?myMes.tex:(myMes.type == 1 ? "img" :"file"))}
+                </>
+                : 
+                <>
+                  {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} 
+                  : {(newMes !== null && newMes.type==0 ? newMes.text : (newMes.type == 1 ? "img" :"file"))} 
+                </>     
+              )
+              :
+              (    
+                <>
+                  {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} 
+                  : {(newMes !== null && newMes.type==0 ? newMes.text : (newMes.type == 1 ? "img" :"file"))} 
+                </>     
+              )       
+            }
+            </>
+            }
+          </span>
+  
+        </div>
+      </div>
+      
+    )
+  
 
-    </div>
-  )
+  
 }

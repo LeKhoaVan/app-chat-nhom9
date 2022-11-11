@@ -1,10 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 
-export default function FriendsScreen() {
+export default function FriendsScreen({navigation}) {
   return (
     <View>
-      <Text>FriendsScreen</Text>
+      <TouchableOpacity onPress={()=>navigation.navigate("FriendRequest")}>
+        <Text>FriendsScreen</Text>
+        <Text>FriendsScreen</Text>
+      </TouchableOpacity>
     </View>
   )
 }

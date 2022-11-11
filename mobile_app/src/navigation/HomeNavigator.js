@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import ContactsScreen from '../screens/ContactsScreen';
 import MessagesScreen from '../screens/MessagesScreen';
 import MeScreen from '../screens/MeScreen';
@@ -20,31 +20,33 @@ export default function HomeScreen({navigation}) {
             tabBarIcon:({ focused, size, color }) => {
                 let iconName;
                 if(route.name ==="Messages"){
-                    iconName = focused ? 'message-text' : 'message-text-outline';
+                    iconName = focused ? require('../image/chat.png') : require('../image/chat_outline.png');
                 } else if(route.name ==="Contacts"){
-                        iconName = focused ? 'contacts' : 'contacts-outline';
+                        iconName = focused ? require('../image/contact.png') : require('../image/contact_outline.png');
                 }else
                     if(route.name ==="Me"){
-                        iconName = focused ? 'account-wrench' : 'account-wrench-outline';
+                        iconName = focused ? require('../image/user.png') : require('../image/user_outline.png');
                 }
                 size = focused ? size+5 : size+2;
-                return <MaterialCommunityIcons name={iconName} size={size} color={color}/>
+                // return <MaterialCommunityIcons name={iconName} size={size} color={color}/>
+                return <Image source={iconName} style={{width:30,height:30}}/>
             },
+            tabBarStyle:{padding:10, height:60,},
+            tabBarLabelStyle:{fontSize:15},
             tabBarActiveTintColor:'#056282',
-            tabBarStyle:{padding:10, height:60},
             headerShown:true,
             headerTitle:()=>{
                 let iconHeader ;
                 let navName;
                 if(route.name ==="Messages"){
-                    iconHeader = 'add-outline';
+                    iconHeader = 'add';
                 }
                 else if(route.name ==="Contacts"){
-                    iconHeader = 'person-add-outline';
+                    iconHeader = 'person-add';
                     navName = 'AddFriendScreen';
                 }else
                 if(route.name ==="Me"){
-                    iconHeader = 'ios-pencil';
+                    iconHeader = 'edit';
                     navName = 'SettingScreen';
                 }
                 return <View style={styles.search_nav}> 
@@ -58,7 +60,7 @@ export default function HomeScreen({navigation}) {
                             </TouchableOpacity>
                             <TouchableOpacity
                                 onPress={()=>navigation.navigate(navName)}>
-                            <Ionicons 
+                            <MaterialIcons
                                 name={iconHeader}
                                 size={25}
                                 color={'#fff'}/>

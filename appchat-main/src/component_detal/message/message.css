@@ -13,26 +13,31 @@
   height: 32px;
   border-radius: 50%;
   object-fit: cover;
+  
   margin-right: 10px;
+  transform: translate(10px, -30px)
 }
 
-.messageText{
-    padding: 10px;
-    border-radius: 20px;
-    background-color: #1877f2;
-    color: white;
-    max-width: 300px;
+.messageImgSend{
+  width: 350px;
+  height: 500px;
+  
+  object-fit: cover;
+  
 }
+
+
 
 .messageText .owner{
     font-weight: bold;
     font-size: 12px;
-    color: rgb(230, 233, 50);
+    color: var(--cl-message-own);
 }
 
 .messageBottom{
     font-size: 12px;
     margin-bottom: 10px;  
+    transform: translate(10px, -30px)
 }
 
 .message.own{
@@ -40,8 +45,8 @@
 }
 
 .message.own .messageText{
-    background-color: rgb(245, 241, 241);
-    color: black;
+    background-color: var(--bg-08);
+    color: var(--black);
 }
 
 .message.own .messageText .owner{
@@ -49,10 +54,74 @@
     overflow: hidden;
 }
 
-.noChat{
+
+  #fname{
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid var(--bd-01);
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+   #huyTao{
+    background-color:var(--bg-033);
+    color:var(--black);
+    padding:7px;
+    border-radius:2px;
+    font-family:sans-serif;
+    margin-left: 0px;
+  }
+  #taoNhom{
+    margin-right:10px;
+    font-family:sans-serif;
+    color:var(--white);
+    background-color:var(--bg-06); 
+    border-radius:2px;
+    padding:6px;
+    margin-left:405px;
+  }
+
+  .messageText{
+    padding: 10px;
+    border-radius: 20px;
+    background-color: var(--bg-message);
+    color: var(--white);
+    max-width: 450px;
+    position: relative;
+}
+
+ .dropdown-content{
+    width: 140px;
+    box-shadow: 0 0 10px var(--boxshadow-022);
+    
+    display: none;
     position: absolute;
-    top : 10%;
-    left: 50%;
-    font-size : 50px;
-    color: darkgrey;
+    background-color: var(--white);
+    z-index: 1;
+    list-style: none;
+    top: 62px;
+ }
+ 
+ .dropdown-content.own{
+    right: 15px;
+    top: 40px;
+    width: 193px;
+ }
+
+ .messageText:hover .dropdown-content{
+    display: block;
+   
+ }
+
+
+ .sendbutton{
+  cursor: pointer;
+  font-size: 14px;
+  padding: 5px;
+  color: var(--black);
+  display: inline-block;
+}
+.sendbutton:hover{
+  background-color: var(--bg-hover-06);
 }
