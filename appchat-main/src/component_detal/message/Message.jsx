@@ -11,17 +11,17 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
   const [messageDelete, setMessageDelete] = useState(null);
 
 
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const res = await axios("http://localhost:8800/api/users/name?userId=" + message.sender);
-        setUser(res.data);
-      } catch (err) {
-        console.log(err);
-      }
-    };
-    getUser();
-  }, [message]);
+  // useEffect(() => {
+  //   const getUser = async () => {
+  //     try {
+  //       const res = await axios("http://localhost:8800/api/users/name?userId="+message.sender);  
+  //       setUser(res.data);
+  //     } catch (err) {
+  //       console.log(err); 
+  //     }
+  //   };
+  //   getUser();
+  // }, [message]);
 
 
 
@@ -73,15 +73,14 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
   if (own) {
     return (
       <ul class="dropdown-own">
-        <div className={own ? "message own" : "message"}>
-
+      <div className={own ? "message own" : "message"}>
+        
           <div className="messageTop">
-            <div className="messageText">
-
-
+              <div className="messageText">
+               
               {message.type === 0 ? <p>{message.text}</p> : ''}
               {message.type === 1 ? <img src={message.text} className="messageImgSend"></img> : ''}
-              {message.type === 2 ? <video id="my_video_1" className="messageImgSend" class="video-js vjs-default-skin"
+              {message.type === 2 ? <video id="my_video_1" width="100%" class="video-js vjs-default-skin"
                 controls
               >
                 <source src={message.text} type='video/mp4' />
@@ -91,26 +90,22 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
               {message.type === 3 ? <iframe src={message.text} width="100%" height="500px">
               </iframe> : ''}
 
+                <div class="dropdown-content own">
+             
+                    <li className="sendbutton" onClick={handleDeleteMessage}>
+                     thu hồi
+                    </li> 
 
-
-
-              <div class="dropdown-content own">
-                <li>
-                  <span className="sendbutton" onClick={handleDeleteMessage}>
-                    thu hồi
-                  </span>
-
-                  <span className="sendbutton" onClick={handleDeleteMgsUser} >
-                    xóa phía mình
-                  </span>
-                  <span className="sendbutton" >
-                    ghim
-                  </span>
-                </li>
+                    <li className="sendbutton" onClick={handleDeleteMgsUser} >
+                      xóa phía mình
+                    </li> 
+                    <li className="sendbutton" >
+                      ghim
+                    </li> 
+      
+                </div>
               </div>
-            </div>
-           <div className="messageImg"></div>
-
+              <div className="messageImg"></div>
           </div>
           <img
               className="messageImg"
@@ -129,33 +124,24 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
         <ul class="dropdown">
           <div className="messageTop">
             <img
-              className="messageImg"
-              src={user.avt}
-              alt=""
-            />
-            <span className="messageImg">{user.username}</span>
-            
-            <div className="messageText">
-             
-
-
-
+                className="messageImg"
+                src={message.avt}
+                alt=""
+              />
+              <div className="messageText">
+              <span className="owner">{message.username}</span>
               {message.type === 0 ? <p>{message.text}</p> : ''}
               {message.type === 1 ? <img src={message.text} className="messageImgSend"></img> : ''}
-              {message.type === 2 ? <video id="my_video_1" className="messageImgSend" class="video-js vjs-default-skin"
-                controls preload="none"
-                data-setup='{ "aspectRatio":"640:267", "playbackRates": [1, 1.5, 2] }'>
+              {message.type === 2 ? <video id="my_video_1" width="100%" class="video-js vjs-default-skin"
+                controls
+              >
                 <source src={message.text} type='video/mp4' />
 
               </video> : ''}
 
               {message.type === 3 ? <iframe src={message.text} width="100%" height="500px">
               </iframe> : ''}
-
-
-
-
-              <div class="dropdown-content">
+                <div class="dropdown-content">
                 <li>
                   <span className="sendbutton" onClick={handleDeleteMgsFri}>
                     xóa phía mình
@@ -169,10 +155,6 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
             </div>
 
           </div>
-
-
-         
-        
           
         </ul>
         ---------

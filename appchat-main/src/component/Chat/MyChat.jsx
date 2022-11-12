@@ -66,19 +66,20 @@ export default function MyChat() {
   const [userSearch, setUserSearch] = useState(null);
   const [userSearchCon, setUserSearchCon] = useState(null);
   const [convGroupForm, setConvGroupForm] = useState({})
+  const [conActive, setConActive] = useState(null)
   const [popupQuestion, setPopupQuestion] = useState({
     title: '',
-    message: '',
+    mes: '',
     isLoading: false
   })
   const [popupQuestionOutGroup, setPopupQuestionOutGroup] = useState({
     title: '',
-    message: '',
+    mes: '',
     isLoading: false
   })
   const [popupNotify, setPopupNotify] = useState({
     title: '',
-    message: '',
+    mes: '',
     isLoading: false
   })
 
@@ -87,7 +88,7 @@ export default function MyChat() {
   const socket = useRef();
 
   const [openPopup, setOpenPopup] = useState(false);
-
+  const [openPopup2, setOpenPopup2] = useState(false);
 
 
 
@@ -122,10 +123,15 @@ export default function MyChat() {
 
   };
 
+  const [stateDis, setStateDis] = useState({
+    disabled: true
+  });
+
+
 
 
   //send image
-  const handleImageChange =  (e) => {
+  const handleImageChange = (e) => {
     const messageimage = {
       sender: _id,
       text: '',
@@ -134,6 +140,8 @@ export default function MyChat() {
       reCall: false,
       delUser: "",
       date: Date.now(),
+      username: username,
+      avt: avt,
     };
 
 
@@ -167,7 +175,8 @@ export default function MyChat() {
               conversationId: currentChat._id,
               delUser: "",
               date: Date.now(),
-              username: username
+              username: username,
+              avt: avt,
             });
 
             socket.current.emit("sendStatus", {
@@ -175,7 +184,7 @@ export default function MyChat() {
               username: username,
               receiverIds: currentChat.members,
               type: 1,
-              text:  messageimage.text,
+              text: messageimage.text,
               conversationId: currentChat._id,
               delUser: "",
               date: Date.now(),
@@ -203,17 +212,11 @@ export default function MyChat() {
         console.log(error.message);
       });
 
-
-
-
-
   };
 
- 
 
-
-  // send all file
-  const handleFileChange = async (e) => {
+   // send all file
+   const handleFileChange = async (e) => {
     const messageFile = {
       sender: _id,
       text: '',
@@ -222,6 +225,8 @@ export default function MyChat() {
       reCall: false,
       delUser: "",
       date: Date.now(),
+      username: username,
+      avt: avt,
     };
 
      // Max= 1 GB
@@ -262,7 +267,8 @@ export default function MyChat() {
               conversationId: currentChat._id,
               delUser: "",
               date: Date.now(),
-              username: username
+              username: username,
+              avt: avt,
             });
 
             socket.current.emit("sendStatus", {
@@ -270,7 +276,7 @@ export default function MyChat() {
               username: username,
               receiverIds: currentChat.members,
               type: e.target.files[0].type.match('video.*')? 2:3,
-              text:  messageFile.text,
+              text: messageFile.text,
               conversationId: currentChat._id,
               delUser: "",
               date: Date.now(),
@@ -297,7 +303,6 @@ export default function MyChat() {
       .catch((error) => {
         console.log(error.message);
       });
-   
   };
 
 
@@ -356,11 +361,31 @@ export default function MyChat() {
 
   }
 
+  function AddUserCon(conId) {
+    let userId =
+      listUserGroupNew.map((userGr) => {
+        return userGr._id
+      })
+
+    const article = { conId, userId };
+
+    const con = axios.put('http://localhost:8800/api/conversations/addMember', article)
+
+    con.then(async value => {
+      let list = [];
+      for (let index = 0; index < value.data.length; index++) {
+        const res = await axios.get("http://localhost:8800/api/users?userId=" + value.data[index]);
+        list.push(res.data)
+      }
+      setUserCons(list);
+    })
+  }
+
 
   function DisbandGroup() {
     setPopupQuestion({
       title: 'Giải tán nhóm',
-      message: 'Bạn có chắc chắn muốn giải tán nhóm?',
+      mes: 'Bạn có chắc chắn muốn giải tán nhóm?',
       isLoading: true
     });
   }
@@ -378,7 +403,7 @@ export default function MyChat() {
 
         setPopupQuestion({
           title: '',
-          message: '',
+          mes: '',
           isLoading: false
         });
       }
@@ -388,7 +413,7 @@ export default function MyChat() {
     } else {
       setPopupQuestion({
         title: '',
-        message: '',
+        mes: '',
         isLoading: false
       });
     }
@@ -397,7 +422,7 @@ export default function MyChat() {
   async function HandleOutGroup() {
     setPopupQuestionOutGroup({
       title: 'Rời nhóm',
-      message: 'Bạn có chắc chắn muốn rời nhóm?',
+      mes: 'Bạn có chắc chắn muốn rời nhóm?',
       isLoading: true
     })
   }
@@ -409,12 +434,12 @@ export default function MyChat() {
         if (authorize.length == 1 && authorize[0] === _id) {
           setPopupQuestionOutGroup({
             title: '',
-            message: '',
+            mes: '',
             isLoading: false
           });
           setPopupNotify({
             title: 'Thông báo',
-            message: 'Cần chỉ định thêm quản trị viên trước khi rời nhóm',
+            mes: 'Cần chỉ định thêm quản trị viên trước khi rời nhóm',
             isLoading: true
           });
 
@@ -432,7 +457,7 @@ export default function MyChat() {
           setAuthorize([])
           setPopupQuestionOutGroup({
             title: '',
-            message: '',
+            mes: '',
             isLoading: false
           });
         }
@@ -445,7 +470,7 @@ export default function MyChat() {
     } else {
       setPopupQuestionOutGroup({
         title: '',
-        message: '',
+        mes: '',
         isLoading: false
       });
     }
@@ -455,7 +480,7 @@ export default function MyChat() {
     if (choose) {
       setPopupNotify({
         title: '',
-        message: '',
+        mes: '',
         isLoading: false
       });
     }
@@ -478,16 +503,18 @@ export default function MyChat() {
     if (checkCon) {
       setCurrentChat(conv);
       setAuthorize(conv.authorization)
+      setConActive(conversations.indexOf(conv))
     }
     else {
       const args = { senderId, receiverId }
       try {
         const res = await axios.post("http://localhost:8800/api/conversations", args);
 
-        const con = await axios.get("http://localhost:8800/api/conversations/" + _id);
-        setConversation(con.data);
+        //const con = await axios.get("http://localhost:8800/api/conversations/" + _id);
+        //setConversation(con.data);
         setCurrentChat(res.data);
         setAuthorize(res.data.authorization)
+        setConActive(conversations.length)
       } catch (err) {
         console.log(err)
       }
@@ -518,6 +545,7 @@ export default function MyChat() {
         conversationId: data.conversationId,
         createdAt: data.date,
         username: data.username,
+        avt: data.avt
       });
 
     });
@@ -602,11 +630,6 @@ export default function MyChat() {
               messageList.push(res.data[i]);
             }
           }
-
-        }
-
-        for (let i = 0; i < res.data.length; i++) {
-
         }
         setMessages(messageList);
       } catch (err) {
@@ -647,6 +670,8 @@ export default function MyChat() {
         reCall: false,
         delUser: "",
         date: Date.now(),
+        username: username,
+        avt: avt,
       };
 
 
@@ -672,7 +697,8 @@ export default function MyChat() {
         conversationId: currentChat._id,
         delUser: "",
         date: Date.now(),
-        username: username
+        username: username,
+        avt: avt,
       });
 
       socket.current.emit("sendStatus", {
@@ -724,6 +750,8 @@ export default function MyChat() {
       senderId: _id,
       receiverIds,
       text: "tin nhắn đã được thu hồi",
+      username: username,
+      avt: avt,
     });
 
     socket.current.emit("recallMessageStatus", {
@@ -836,7 +864,20 @@ export default function MyChat() {
     setListUserGroupNew([...listUserGroupNew, userSearch])
     setUserSearch(null)
     document.querySelector('#search-group').value = ""
-
+    let countMem = 0;
+    listUserGroupNew.map((userGr) => {
+      countMem++;
+      return countMem;
+    })
+    if (countMem > 0) {
+      setStateDis({
+        disabled: false
+      })
+    } else {
+      setStateDis({
+        disabled: true
+      })
+    }
   }
 
 
@@ -851,7 +892,7 @@ export default function MyChat() {
 
 
 
-  const createNewConvGroup = () => {
+  const createNewConvGroup = async () => {
 
     let listMemberId =
       listUserGroupNew.map((userGr) => {
@@ -867,10 +908,16 @@ export default function MyChat() {
       img: 'https://cdn-icons-png.flaticon.com/512/1057/1057089.png?w=360'
     })
     try {
-      const res = axios.post("http://localhost:8800/api/conversations/newConvGroup", conv);
+      const res = await axios.post("http://localhost:8800/api/conversations/newConvGroup", conv);
+      setCurrentChat(res.data);
+      setAuthorize(res.data.authorization)
+      setConActive(conversations.length)
     } catch (err) {
       console.log(err.message);
     }
+    setStateDis({
+      disabled: true
+    })
 
   }
 
@@ -902,13 +949,15 @@ export default function MyChat() {
             <SearchIcon />
             <input type="text" placeholder="Tìm kiếm" id="search-user" onKeyUp={handleTextSearchUser} />
             <div className="model-usersearch">
-              {userSearchCon ?
+              {userSearchCon ? (userSearchCon._id == _id ?
+                <div className="nullUser">Đây là email của bạn</div> :
                 <div className="item" onClick={() => {
                   handleChatOne(_id, userSearchCon._id)
                 }}>
                   <Avatar src={userSearchCon.avt}></Avatar>
                   <p>{userSearchCon.username}</p>
-                </div> : <div className="nullUser">Không thấy user</div>}
+                </div>) : <div className="nullUser">Không tìm thấy tài khoản</div>}
+
             </div>
           </div>
           {/* <Tooltip placement="bottom-end"  title="Thêm bạn"> 
@@ -923,12 +972,17 @@ export default function MyChat() {
           <p className="Recent"></p>
           <div className="recent-user">
 
-            {conversations.map((c) => (
+            {conversations.map((c, index) => (
               <div onClick={() => {
                 setCurrentChat(c)
                 setAuthorize(c.authorization)
+                setConActive(index)
               }}>
-                <Conversation conversation={c} currentUser={_id} timeM={arrivalMessage} myMes={senderMessage} recall={recallStatus} />
+
+                <Conversation conversation={c} currentUser={_id} timeM={arrivalMessage} myMes={senderMessage}
+                  recall={recallStatus} active={conActive == index ? true : false} />
+
+
               </div>
             ))}
 
@@ -951,6 +1005,9 @@ export default function MyChat() {
                 </div>
                 <div>
                   <div className="user-fet">
+                    <Tooltip placement="bottom-end" title="Thêm bạn vào nhóm">
+                      <IconButton onClick={() => { setOpenPopup2(true); }}><GroupAddIcon /></IconButton>
+                    </Tooltip>
                     <Tooltip
                       title="Tìm kiếm tin nhắn"
                       placement="bottom-end">
@@ -1001,9 +1058,8 @@ export default function MyChat() {
                     value={newMessage}
                     placeholder="Nhập tin nhắn"
                     onEnter={() => sendSubmit()}
-                    cleanOnEnter />
-
-
+                    cleanOnEnter
+                  />
 
                   {/* <Tooltip
                   title="Gửi hình ảnh"
@@ -1013,8 +1069,6 @@ export default function MyChat() {
 
                   <label for="myfile"><ImageIcon /></label>
                   <input type="file" accept="image/png, image/jpeg" id="myfile" name="myfile" style={{ display: 'none' }} onChange={handleImageChange} />
-
-
 
 
                   {/* <Tooltip
@@ -1082,11 +1136,11 @@ export default function MyChat() {
                 <ul className="list-user">
                   {userCons.map((user) => (
                     <li>
-                      <div className="avt"><img src={user.avt ? user.avt : "data:image/jpeg;base64,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"} /></div>
+                      <div className="avt"><img src={user.avt ? user.avt : ""} /></div>
 
 
                       <div className="text">
-                        <p className="">{user.username}</p>
+                        <p className="text-name">{user.username}</p>
                         <p className="auth">
                           {authorize.map((auth) => (
                             auth === user._id ? "Quản trị viên" : ""
@@ -1242,7 +1296,79 @@ export default function MyChat() {
           </div>
 
           <div><p>____________________________________________________________________________</p></div>
-          <p className="title-Add">Đã thêm</p>
+          <p className="title-Add">Danh sách cần thêm</p>
+          <ul className="listAdd">
+            {listUserGroupNew.map((user_gr) => (
+              <li className="itemAdd">
+                <Avatar src={user_gr.avt}></Avatar>
+                <p>{user_gr.username}</p>
+                <button onClick={(e) => {
+                  e.preventDefault()
+                  const members = listUserGroupNew.filter(
+                    (u) => u._id !== user_gr._id
+                  )
+                  setListUserGroupNew(members)
+                  let countMem = listUserGroupNew.length - 1;
+
+                  if (countMem < 2) {
+                    setStateDis({
+                      disabled: true
+                    })
+                  } else {
+                    setStateDis({
+                      disabled: false
+                    })
+                  }
+                }} className="remove">xóa</button>
+              </li>
+            ))}
+
+
+
+          </ul>
+
+
+          <br></br>
+          <div className="GroupAddButton">
+            <button type="button" className="btn-addGr btn-primary" id="createGroup"
+              disabled={stateDis.disabled}
+              onClick={(e) => {
+                e.preventDefault()
+                createNewConvGroup()
+                setListUserGroupNew([])
+                setOpenPopup(false)
+              }}>Tạo nhóm</button>
+            <button type="button" className="btn-addGr btn-secondary" onClick={() => {
+              setOpenPopup(false)
+            }}>Huỷ</button>
+          </div>
+
+        </form>
+
+      </Popup>
+      <Popup
+        title="Thêm thành viên"
+        openPopup={openPopup2}
+        setOpenPopup={setOpenPopup2}
+      >
+
+        <form>
+
+          <div className="input-group">
+            <input className="form-control rounded ip-addGr" type="text" onKeyUp={handleTextSearch} id="search-group" placeholder="Tìm kiếm bằng email" />
+            <div className="model-search">
+              {userSearch ?
+                <div className="item">
+                  <Avatar src={userSearch.avt}></Avatar>
+                  <p>{userSearch.username}</p>
+                  {userSearch._id === _id ? <div className="add">bạn</div> : <button onClick={clickButtonAdd} className="add">Thêm</button>}
+                </div> : <div className="nullUser">Không thấy user</div>}
+
+            </div>
+          </div>
+
+          <div><p>____________________________________________________________________________</p></div>
+          <p className="title-Add">Danh sách cần thêm</p>
           <ul className="listAdd">
             {listUserGroupNew.map((user_gr) => (
               <li className="itemAdd">
@@ -1264,15 +1390,18 @@ export default function MyChat() {
 
 
           <br></br>
+
           <div className="GroupAddButton">
+
             <button type="button" className="btn-addGr btn-primary" onClick={(e) => {
               e.preventDefault()
-              createNewConvGroup()
-              setListUserGroupNew([])
-              setOpenPopup(false)
-            }}>Tạo nhóm</button>
+              //setListUserGroupNew([])
+              setOpenPopup2(false)
+              AddUserCon(currentChat._id)
+            }}>Xác nhận</button>
+
             <button type="button" className="btn-addGr btn-secondary" onClick={() => {
-              setOpenPopup(false)
+              setOpenPopup2(false)
             }}>Huỷ</button>
           </div>
 
@@ -1317,9 +1446,9 @@ export default function MyChat() {
           </form>
         </div>
       </PopupAvartar>
-      {popupQuestion.isLoading && <PopupQuestion onDialog={disbandGroupSure} title={popupQuestion.title} message={popupQuestion.message} />}
-      {popupQuestionOutGroup.isLoading && <PopupQuestionOutGroup onDialog={outGroupSure} title={popupQuestionOutGroup.title} message={popupQuestionOutGroup.message} />}
-      {popupNotify.isLoading && <PopupNotify onDialog={handleNotify} title={popupNotify.title} message={popupNotify.message} />}
+      {popupQuestion.isLoading && <PopupQuestion onDialog={disbandGroupSure} title={popupQuestion.title} mes={popupQuestion.mes} />}
+      {popupQuestionOutGroup.isLoading && <PopupQuestionOutGroup onDialog={outGroupSure} title={popupQuestionOutGroup.title} mes={popupQuestionOutGroup.mes} />}
+      {popupNotify.isLoading && <PopupNotify onDialog={handleNotify} title={popupNotify.title} mes={popupNotify.mes} />}
     </div>
   );
 }
