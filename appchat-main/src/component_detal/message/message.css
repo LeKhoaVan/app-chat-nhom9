@@ -13,7 +13,17 @@
   height: 32px;
   border-radius: 50%;
   object-fit: cover;
+  
   margin-right: 10px;
+  transform: translate(10px, -30px)
+}
+
+.messageImgSend{
+  width: 100%;
+  height: 450px;
+  
+  object-fit: cover;
+  
 }
 
 
@@ -24,8 +34,9 @@
 }
 
 .messageBottom{
-    font-size: 12px;
-    margin-bottom: 10px;  
+  font-size: 12px;
+  margin-bottom: 10px;  
+  transform: translate(10px, -30px)
 }
 
 .message.own{

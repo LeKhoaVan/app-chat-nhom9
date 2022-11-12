@@ -78,7 +78,19 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
         
           <div className="messageTop">
               <div className="messageText">
-                {message.type === 0 ? <p>{message.text}</p> : <div></div>}
+               
+              {message.type === 0 ? <p>{message.text}</p> : ''}
+              {message.type === 1 ? <img src={message.text} className="messageImgSend"></img> : ''}
+              {message.type === 2 ? <video id="my_video_1" width="100%" class="video-js vjs-default-skin"
+                controls
+              >
+                <source src={message.text} type='video/mp4' />
+
+              </video> : ''}
+
+              {message.type === 3 ? <iframe src={message.text} width="100%" height="500px">
+              </iframe> : ''}
+
                 <div class="dropdown-content own">
              
                     <li className="sendbutton" onClick={handleDeleteMessage}>
@@ -94,12 +106,13 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
       
                 </div>
               </div>
-              <img
-                className="messageImg"
-                src={avatar}
-                alt=""
-              />
+              <div className="messageImg"></div>
           </div>
+          <img
+              className="messageImg"
+              src={avatar}
+              alt=""
+            />
           <div className="messageBottom">{moment(message.createdAt).format("LT")}</div>
         
       </div>
@@ -118,7 +131,17 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
               />
               <div className="messageText">
               <span className="owner">{message.username}</span>
-              {message.type === 0 ? <p>{message.text}</p> : <div></div>}
+              {message.type === 0 ? <p>{message.text}</p> : ''}
+              {message.type === 1 ? <img src={message.text} className="messageImgSend"></img> : ''}
+              {message.type === 2 ? <video id="my_video_1" width="100%" class="video-js vjs-default-skin"
+                controls
+              >
+                <source src={message.text} type='video/mp4' />
+
+              </video> : ''}
+
+              {message.type === 3 ? <iframe src={message.text} width="100%" height="500px">
+              </iframe> : ''}
                 <div class="dropdown-content">
                 <li>
                     <span className="sendbutton" onClick={handleDeleteMgsFri}>
@@ -133,8 +156,10 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
             </div>
             
           </div>
-          <div className="messageBottom">{moment(message.createdAt).format("LT")}</div>
+          
         </ul>
+        ---------
+        <div className="messageBottom">{moment(message.createdAt).format("LT")} </div>
       </div>
     );
   }
