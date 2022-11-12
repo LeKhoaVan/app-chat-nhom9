@@ -7,7 +7,7 @@ import moment from "moment";
 
 
 
-export default function Conversation({ conversation, currentUser, timeM, myMes,recall}) {
+export default function Conversation({ conversation, currentUser, timeM, myMes,recall , active}) {
   const [user, setUser] = useState([]);
   const [newMes, setNewMes] = useState([]);
   const [userName, setUserName] = useState([]);
@@ -74,7 +74,7 @@ export default function Conversation({ conversation, currentUser, timeM, myMes,r
 
   
     return (
-      <div className="bodyConversation">
+      <div className={active ? "bodyConversation active" : "bodyConversation"}>
         <div className='conversation'>
           <img className='conversationImg' src={conversation.name? conversation.img: user.avt  } alt='avarta'  />
           <div className="conversationGrMess">
@@ -111,7 +111,7 @@ export default function Conversation({ conversation, currentUser, timeM, myMes,r
                   (
                     myMes.conversationId === conversation._id ? 
                     <>
-                      {myMes.sender === currentUser? "Bạn": myMes.username} : {myMes.text}
+                      {myMes.sender === currentUser? "Bạn": myMes.username} : { myMes.text}
                     </>
                     : 
                     <>

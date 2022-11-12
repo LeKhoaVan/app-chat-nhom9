@@ -150,4 +150,35 @@ router.put("/:id/unfollow", async (req, res) => {
   }
 });
 
+
+router.put('/update', async (req, res) => {
+
+  // const {  _id , email  , username , birthday , gender , avt} = req.body
+	// try{
+
+
+  //   const user = await User.findOne({ email })
+  //   if(user){
+  //       return res.status(400).json({ success: false, message: 'Email đã tồn tại' });
+  //   }
+  //   const userName = await User.findOne({ username })
+  //   if(userName){
+  //       return res.status(400).json({ success: false, message: 'Username đã tồn tại' });
+  //   }
+
+	// 	const postUpdateCondition = {_id}
+
+	// 	const userUpdate = await User.findOneAndUpdate(postUpdateCondition, { 
+	// 		$set:{"username": username , "email":email,"avt":avt , "birthday":birthday , "gender": gender}
+	// 	}
+	// 	, { new: true })
+
+	// 	res.json({success: true, message: 'Thành công'})
+	// }
+	// catch (error) {
+	// 	console.log(error)
+	// 	res.status(500).json({ success: false, message: 'Internal server error' })
+	// }
+})
+
 module.exports = router;

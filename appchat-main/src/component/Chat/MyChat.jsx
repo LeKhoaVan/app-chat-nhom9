@@ -61,6 +61,7 @@ export default function MyChat() {
   const [userSearch, setUserSearch] = useState(null);
   const [userSearchCon, setUserSearchCon] = useState(null);
   const [convGroupForm , setConvGroupForm] = useState({})
+  const [conActive , setConActive] = useState(null)
   const [popupQuestion , setPopupQuestion] = useState({
     title:'',
     mes:'',
@@ -295,22 +296,24 @@ const handleSubmit = async (e) => {
     if(checkCon) {
       setCurrentChat(conv);
       setAuthorize(conv.authorization)
+      setConActive(conversations.indexOf(conv))
     }
     else{
       const args = {senderId,receiverId}
       try { 
         const res = await axios.post("http://localhost:8800/api/conversations" ,args);
         
-        const con = await axios.get("http://localhost:8800/api/conversations/" + _id);
-        setConversation(con.data);
+        //const con = await axios.get("http://localhost:8800/api/conversations/" + _id);
+        //setConversation(con.data);
         setCurrentChat(res.data);
         setAuthorize(res.data.authorization)
+        setConActive(conversations.length)
       } catch (err) {
         console.log(err)
-      }
+      } 
     
     }
-
+    
     setUserSearchCon(null)
     document.querySelector('#search-user').value = ""
 
@@ -670,7 +673,7 @@ const handleSubmit = async (e) => {
 
 
 
-  const createNewConvGroup =  () =>{
+  const createNewConvGroup =  async () =>{
 
     let listMemberId =
     listUserGroupNew.map((userGr)=>{
@@ -686,7 +689,10 @@ const handleSubmit = async (e) => {
       img:'https://cdn-icons-png.flaticon.com/512/1057/1057089.png?w=360'
     })
     try {
-      const res = axios.post("http://localhost:8800/api/conversations/newConvGroup", conv);
+      const res = await axios.post("http://localhost:8800/api/conversations/newConvGroup", conv);
+      setCurrentChat(res.data);
+      setAuthorize(res.data.authorization)
+      setConActive(conversations.length)
     } catch (err) {
       console.log(err.message);
     }
@@ -721,13 +727,15 @@ const handleSubmit = async (e) => {
             <SearchIcon />
             <input type="text"placeholder="Tìm kiếm" id="search-user"  onKeyUp={handleTextSearchUser} />
             <div className="model-usersearch">
-            {userSearchCon ? 
-              <div className="item" onClick={()=>{
-                handleChatOne(_id,userSearchCon._id)
-              }}>
-                <Avatar src={userSearchCon.avt}></Avatar>
-                <p>{userSearchCon.username}</p>
-              </div> : <div className="nullUser">Không thấy user</div>}
+              {userSearchCon ? ( userSearchCon._id == _id ? 
+              <div className="nullUser">Đây là email của bạn</div> :
+                <div className="item" onClick={()=>{
+                  handleChatOne(_id,userSearchCon._id)
+                }}>
+                  <Avatar src={userSearchCon.avt}></Avatar>
+                  <p>{userSearchCon.username}</p>
+                </div>) : <div className="nullUser">Không tìm thấy tài khoản</div>}
+                
             </div>
           </div>
           {/* <Tooltip placement="bottom-end"  title="Thêm bạn"> 
@@ -742,12 +750,17 @@ const handleSubmit = async (e) => {
           <p className="Recent"></p>
           <div className="recent-user">
 
-          {conversations.map((c) => (
+          {conversations.map((c,index) => (
               <div onClick={() => {
                 setCurrentChat(c)
                 setAuthorize(c.authorization)
+                setConActive(index)
               }}>
-                <Conversation conversation={c} currentUser={_id} timeM={arrivalMessage} myMes={senderMessage} recall={recallStatus}/>
+               
+                <Conversation conversation={c} currentUser={_id} timeM={arrivalMessage} myMes={senderMessage} 
+                  recall={recallStatus} active= {conActive == index ? true : false }/>
+                  
+                
               </div>
             ))}
             
@@ -820,7 +833,8 @@ const handleSubmit = async (e) => {
                       value={newMessage}
                       placeholder="Nhập tin nhắn"
                       onEnter={()=>sendSubmit()}
-                      cleanOnEnter/>
+                      cleanOnEnter
+                     />
                   <Tooltip
                   title="Gửi hình ảnh"
                   placement="bottom-end">
