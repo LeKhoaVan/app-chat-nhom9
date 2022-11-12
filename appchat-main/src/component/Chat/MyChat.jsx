@@ -369,11 +369,18 @@ const handleSubmit = async (e) => {
 
 
   
-
+  const ktt=(messages)=>{
+    if(messages.length==0) 
+      return true;
+    else
+      if(messages[messages.length-1]._id != arrivalMessage._id)
+        return true;
+      else return false;
+  }
   useEffect(() =>{
     arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) &&
-    currentChat?._id === arrivalMessage.conversationId && 
-    messages[messages.length-1]._id != arrivalMessage._id &&
+    currentChat?._id === arrivalMessage.conversationId && ktt(messages) &&
+    // messages[messages.length-1]._id != arrivalMessage._id &&
     setMessages((prev)=>[...prev, arrivalMessage])
     console.log(arrivalMessage)
   },[arrivalMessage, currentChat])
@@ -464,7 +471,7 @@ const handleSubmit = async (e) => {
       delUser:"",
       date: Date.now(),
       username: username,
-      avt: messages[messages.length-1].sender != _id? avt:null, 
+      avt:avt, 
     };  
 
     
@@ -495,7 +502,7 @@ const handleSubmit = async (e) => {
         delUser:"",
         date: Date.now(),
         username: username,
-        avt: messages[messages.length-1].sender != _id? avt:null,
+        avt: avt,
       });
   
       socket.current.emit("sendStatus", {

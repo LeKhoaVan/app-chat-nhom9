@@ -105,11 +105,18 @@ export default function ChattingScreen({navigation}) {
     });
    
   },[currentChat]);
-
+  const ktt=(messages)=>{
+    if(messages.length==0) 
+      return true;
+    else
+      if(messages[messages.length-1]._id != arrivalMessage._id)
+        return true;
+      else return false;
+  }
   useEffect(() =>{
     arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) &&
-    currentChat?._id === arrivalMessage.conversationId 
-    && messages[messages.length-1]._id != arrivalMessage._id &&
+    currentChat?._id === arrivalMessage.conversationId && ktt(messages) &&
+    // messages[messages.length-1]._id != arrivalMessage._id &&
     setMessages((prev)=>[...prev, arrivalMessage])
     // console.log("arrivalMessage:",arrivalMessage)
   },[arrivalMessage, currentChat])
@@ -205,7 +212,7 @@ export default function ChattingScreen({navigation}) {
       delUser:"",
       date: Date.now(),
       username: userInfo.username,
-      avt: messages[messages.length-1].sender != userInfo._id? userInfo.avt:null,  
+      avt: userInfo.avt,  
     };  
 
     
@@ -236,7 +243,7 @@ export default function ChattingScreen({navigation}) {
         delUser:"",
         date: Date.now(),
         username: userInfo.username,
-        avt:messages[messages.length-1].sender != userInfo._id? userInfo.avt:null,
+        avt: userInfo.avt,
       });
   
       socket.current.emit("sendStatus", {
