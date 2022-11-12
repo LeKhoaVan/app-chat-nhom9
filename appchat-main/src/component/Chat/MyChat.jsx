@@ -328,6 +328,7 @@ const handleSubmit = async (e) => {
     socket.current = io("ws://localhost:8800");
     socket.current.on("getMessage",(data) =>{
       setArrivalMessages({
+        _id:data._id,
         sender: data.senderId,
         text: data.text,
         type:0,
@@ -372,6 +373,7 @@ const handleSubmit = async (e) => {
   useEffect(() =>{
     arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) &&
     currentChat?._id === arrivalMessage.conversationId && 
+    messages[messages.length-1]._id != arrivalMessage._id &&
     setMessages((prev)=>[...prev, arrivalMessage])
     console.log(arrivalMessage)
   },[arrivalMessage, currentChat])
@@ -462,7 +464,7 @@ const handleSubmit = async (e) => {
       delUser:"",
       date: Date.now(),
       username: username,
-      avt: avt, 
+      avt: messages[messages.length-1].sender != _id? avt:null, 
     };  
 
     
@@ -479,36 +481,34 @@ const handleSubmit = async (e) => {
       }
     }
 
-
-    socket.current.emit("sendMessage", {
-      senderId: _id,
-      receiverIds,
-      type:0,
-      text: newMessage,
-      conversationId: currentChat._id,
-      delUser:"",
-      date: Date.now(),
-      username: username,
-      avt: avt,
-    });
-
-    socket.current.emit("sendStatus", {
-      senderId: _id,
-      username: username,
-      receiverIds: currentChat.members,
-      type:0,
-      text: newMessage,
-      conversationId: currentChat._id,
-      delUser:"",
-      date: Date.now(),
-      
-    })
-
-
     try {
       const res = await axios.post("http://localhost:8800/api/messages", message);
-      setMessages([...messages, res.data]);      
+      // setMessages([...messages, res.data]);      
       setNewMessages("");
+      socket.current.emit("sendMessage", {
+        _id:res.data._id,
+        senderId: _id,
+        receiverIds,
+        type:0,
+        text: newMessage,
+        conversationId: currentChat._id,
+        delUser:"",
+        date: Date.now(),
+        username: username,
+        avt: messages[messages.length-1].sender != _id? avt:null,
+      });
+  
+      socket.current.emit("sendStatus", {
+        senderId: _id,
+        username: username,
+        receiverIds: currentChat.members,
+        type:0,
+        text: newMessage,
+        conversationId: currentChat._id,
+        delUser:"",
+        date: Date.now(),
+        
+      })
      
     } catch (err) {
       console.log(err);

@@ -102,7 +102,7 @@ io.on("connection", (socket) => {
   });
 
   //send and get message
-  socket.on("sendMessage", function({ senderId, receiverIds, text,type, conversationId,delUser,date,username, avt }) {
+  socket.on("sendMessage", function({_id, senderId, receiverIds, text,type, conversationId,delUser,date,username, avt }) {
 
       // const ds = []
       
@@ -118,6 +118,7 @@ io.on("connection", (socket) => {
         else {
           // io.to(getUser(room).socketId).emit("getMessage", {
             io.emit("getMessage", {
+            _id,
             senderId,
             text,
             type,
@@ -164,7 +165,7 @@ io.on("connection", (socket) => {
 
 
   //delete message
-  socket.on("deleteMessage", function({messagesCurrent, messageId, senderId, receiverIds, text,username, avt }) {
+  socket.on("deleteMessage", function({_id,messagesCurrent, messageId, senderId, receiverIds, text,username, avt }) {
 
     receiverIds.forEach(function(room){
       if( getUser(room) == undefined){
@@ -173,6 +174,7 @@ io.on("connection", (socket) => {
       else {
         // io.to(getUser(room).socketId).emit("delMgs", {
         io.emit("delMgs", {
+          _id,
           messagesCurrent,
           messageId,
           senderId,

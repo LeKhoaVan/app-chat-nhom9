@@ -18,6 +18,7 @@ export default function ChattingScreen({navigation}) {
     const {userInfo,currentChat,socket,setSenderMessage,setRecallStatus} = useContext(AuthContext);
     const [arrivalMessage, setArrivalMessages] = useState(null);
     const [Nmember,setNMember]= useState(0);
+    const [recallMessage, setRecallMessages] = useState(null);
   
   useEffect(() => {
     const friendId = currentChat.members.find((m) => m !== userInfo._id);
@@ -65,7 +66,7 @@ export default function ChattingScreen({navigation}) {
     socket.current = io(`${UrlSK}`);
     socket.current.on("getMessage",(data) =>{
       setArrivalMessages({
-        _id:Math.random(),
+        _id:data._id,
         sender: data.senderId,
         text: data.text,
         type:0,
@@ -73,8 +74,8 @@ export default function ChattingScreen({navigation}) {
         conversationId: data.conversationId,
         createdAt: data.date,
         username: data.username,
+        avt: data.avt,
       });
-      
     });
     socket.current.on("getStatus",(data) =>{
       setSenderMessage({
@@ -107,9 +108,10 @@ export default function ChattingScreen({navigation}) {
 
   useEffect(() =>{
     arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) &&
-    currentChat?._id === arrivalMessage.conversationId && 
+    currentChat?._id === arrivalMessage.conversationId 
+    && messages[messages.length-1]._id != arrivalMessage._id &&
     setMessages((prev)=>[...prev, arrivalMessage])
-    console.log("arrivalMessage:",arrivalMessage)
+    // console.log("arrivalMessage:",arrivalMessage)
   },[arrivalMessage, currentChat])
 
   useEffect(() => {
@@ -132,7 +134,6 @@ export default function ChattingScreen({navigation}) {
         receiverIds.push(currentChat.members[index]);
       }
     }
-
     //gửi tin nhắn thu hồi
     socket.current.emit("deleteMessage", {
       _id:Math.random(),
@@ -202,7 +203,9 @@ export default function ChattingScreen({navigation}) {
       conversationId: currentChat._id,
       reCall: false,
       delUser:"",
-      date: Date.now(), 
+      date: Date.now(),
+      username: userInfo.username,
+      avt: messages[messages.length-1].sender != userInfo._id? userInfo.avt:null,  
     };  
 
     
@@ -220,33 +223,33 @@ export default function ChattingScreen({navigation}) {
     }
 
 
-    socket.current.emit("sendMessage", {
-      senderId: userInfo._id,
-      receiverIds,
-      type:0,
-      text: newMessage,
-      conversationId: currentChat._id,
-      delUser:"",
-      date: Date.now(),
-      username: userInfo.username
-    });
-
-    socket.current.emit("sendStatus", {
-      senderId: userInfo._id,
-      username: userInfo.username,
-      receiverIds: currentChat.members,
-      type:0,
-      text: newMessage,
-      conversationId: currentChat._id,
-      delUser:"",
-      date: Date.now(),
-      
-    })
-
-
     try {
       const res = await axios.post(`${Url}/api/messages`,message);
-      setMessages([...messages, res.data]);      
+      // setMessages([...messages, res.data]);  
+      socket.current.emit("sendMessage", {
+        _id:res.data._id,
+        senderId: userInfo._id,
+        receiverIds,
+        type:0,
+        text: newMessage,
+        conversationId: currentChat._id,
+        delUser:"",
+        date: Date.now(),
+        username: userInfo.username,
+        avt:messages[messages.length-1].sender != userInfo._id? userInfo.avt:null,
+      });
+  
+      socket.current.emit("sendStatus", {
+        senderId: userInfo._id,
+        username: userInfo.username,
+        receiverIds: currentChat.members,
+        type:0,
+        text: newMessage,
+        conversationId: currentChat._id,
+        delUser:"",
+        date: Date.now(),
+        
+      })    
       
     } catch (err) {
       console.log(err);

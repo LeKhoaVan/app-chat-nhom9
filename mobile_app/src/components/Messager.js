@@ -6,8 +6,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { AuthContext } from '../contexts/AuthContext';
 
-const Messager=({ message, own,onClickDeleteMgsUser, onClickDeleteMgsFri,onClickDelete})=> {
-    const [user, setUser] = useState([]);
+const Messager=({ message, own, onClickDeleteMgsUser, onClickDeleteMgsFri, onClickDelete})=> {
+    // const [user, setUser] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const {userInfo} = useContext(AuthContext);
     const CTime = (date) => {
@@ -17,17 +17,17 @@ const Messager=({ message, own,onClickDeleteMgsUser, onClickDeleteMgsFri,onClick
     let fDate =tempDate.getHours()+":"+minute;
     return fDate;
   };
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const res = await axios(`${Url}/api/users/name?userId=${message.sender}`); 
-        setUser(res.data);
-      } catch (err) {
-        console.log(err); 
-      }
-    };
-    getUser();
-  }, [message]);
+  // useEffect(() => {
+  //   const getUser = async () => {
+  //     try {
+  //       const res = await axios(`${Url}/api/users/name?userId=${message.sender}`); 
+  //       setUser(res.data);
+  //     } catch (err) {
+  //       console.log(err); 
+  //     }
+  //   };
+  //   getUser();
+  // }, [message]);
   const handleDeleteMessage = async () => {
     try {
         const res = await axios.put(`${Url}/api/messages/recall`, {"id": message._id} );
@@ -82,7 +82,7 @@ const Messager=({ message, own,onClickDeleteMgsUser, onClickDeleteMgsFri,onClick
         alignItems:'flex-start'},own ? styles.me_c : styles.notMe_co]}>
       {!own?   
       <Image 
-            source={{uri :user.avt}}
+            source={{uri :message?.avt}}
             style={{
                 width:40,
                 height:40,
@@ -110,15 +110,15 @@ const Messager=({ message, own,onClickDeleteMgsUser, onClickDeleteMgsFri,onClick
                                   marginVertical:5,
                                   justifyContent:'flex-start',
                                   alignItems:'flex-start'},own ? styles.me_c : styles.notMe_co]}>
-                                {!own?   
+                                {/* {!own?   
                                 <Image 
-                                      source={{uri :user.avt}}
+                                      source={{uri :messages.avt}}
                                       style={{
                                           width:40,
                                           height:40,
                                           marginRight:5,
                                           borderRadius:100,
-                                      }}/>:<></>}
+                                      }}/>:<></>} */}
                                 <TouchableOpacity style={[
                                     styles.container, own? styles.me_container : styles.notMe_container]}
                                     onLongPress={()=>setModalVisible(true)}> 
