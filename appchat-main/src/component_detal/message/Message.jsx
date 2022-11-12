@@ -131,7 +131,7 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
               <div className="messageText">
               <span className="owner">{message.username}</span>
               {message.type === 0 ? <p>{message.text}</p> : ''}
-              {message.type === 1 ? <img src={message.text} className="messageImgSend"></img> : ''}
+              {message.type === 1 ? <img src={message.text} width="100%" height="450px"></img> : ''}
               {message.type === 2 ? <video id="my_video_1" width="100%" class="video-js vjs-default-skin"
                 controls
               >
