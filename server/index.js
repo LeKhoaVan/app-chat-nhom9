@@ -102,7 +102,7 @@ io.on("connection", (socket) => {
   });
 
   //send and get message
-  socket.on("sendMessage", function({_id, senderId, receiverIds, text,type, conversationId,delUser,date,username, avt }) {
+  socket.on("sendMessage", function({_id, senderId, receiverIds, text,type, conversationId,reCall,delUser,date,username, avt }) {
 
       // const ds = []
       
@@ -123,6 +123,7 @@ io.on("connection", (socket) => {
             text,
             type,
             conversationId,
+            reCall,
             delUser,
             date,
             username,
