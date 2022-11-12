@@ -132,7 +132,7 @@ router.put('/addMember', async (req, res) => {
 		const postUpdateCondition = { _id: req.body.conId }
 
     const conversation = await Conversation.findOneAndUpdate(postUpdateCondition,
-      { $push: { "members": req.body.userId } }
+      { $push: { "members": {$each: req.body.userId }} }
       , { new: true })
 
     res.status(200).json(conversation.members)
