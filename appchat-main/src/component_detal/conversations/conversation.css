@@ -13,12 +13,12 @@
   align-items: center;
 }
 
-.conversation:hover {
+.bodyConversation:hover {
   background-color: var(--bg-hover-05);
 }
 
-.bodyConversation:hover {
-  background-color: var(--bg-con-005);
+.bodyConversation.active {
+ background-color: var(--bg-con-active);
 }
 
 .conversationImg {

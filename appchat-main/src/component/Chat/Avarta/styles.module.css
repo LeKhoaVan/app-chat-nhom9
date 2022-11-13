@@ -33,7 +33,7 @@
 	outline: none;
 	font-size: 14px;
 	font-weight: bold;
-	background: transparent;
+	background: rgb(158, 148, 148);
 	padding: 10px 20px;
 	border: 1px solid var(--black);
 	border-radius: 2px;
@@ -43,3 +43,5 @@
 h1, h3 {
 	text-align: center;
   }
+
+  

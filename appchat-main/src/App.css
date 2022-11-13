@@ -32,7 +32,6 @@
   --cl-warning:#DB342E;
   --cl-send-svg:#858585;
   --bg-05:#E5E7EB;
-  --bg-con-005:rgb(230, 235, 245);
 
   --red: red;
   --blue:blue;
@@ -44,6 +43,7 @@
   --bg-hover-02:rgba(0, 0, 0, 0.096);
   --bg-hover-03:rgba(0, 0, 0, 0.144);
   --bg-hover-04:rgba(0, 0, 0, 0.178);
+  --bg-con-active:rgb(159, 190, 253);
 
   --bg-033:#bbb;
   --bg-06:#4267B2;
@@ -972,4 +972,8 @@ body{
   left: 50%;
   font-size : 50px;
   color: var(--bd-01);
+}
+button:disabled{
+  background-color: #495057;
+  pointer-events: none;
 }

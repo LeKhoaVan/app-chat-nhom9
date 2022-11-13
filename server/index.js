@@ -102,7 +102,7 @@ io.on("connection", (socket) => {
   });
 
   //send and get message
-  socket.on("sendMessage", function({_id, senderId, receiverIds, text,type, conversationId,reCall,delUser,date,username, avt }) {
+  socket.on("sendMessage", function({ _id,senderId, receiverIds, text,type, conversationId,reCall,delUser,date,username, avt }) {
 
       // const ds = []
       
@@ -116,7 +116,7 @@ io.on("connection", (socket) => {
       //     console.log("user offline,users online:",users);
       //   }
       //   else {
-          // io.to(getUser(room).socketId).emit("getMessage", {
+      //     io.to(getUser(room).socketId).emit("getMessage", {
             io.emit("getMessage", {
             _id,
             senderId,
@@ -144,14 +144,13 @@ io.on("connection", (socket) => {
     //   ds.push(getUser(receiverId).socketId)
     // })
     // ds.push(receiverId)
-
     // receiverIds.forEach(function(room){
     //   if( getUser(room) == undefined){
     //     console.log("user offline");
     //   }
     //   else {
-        // io.to(getUser(room).socketId).emit("getStatus", {
-          io.emit("getStatus", {
+    //     io.to(getUser(room).socketId).emit("getStatus", {
+      io.emit("getStatus", {
           senderId,
           text,
           type,
@@ -175,8 +174,8 @@ io.on("connection", (socket) => {
     //     console.log("user offline,users online:",users);
     //   }
     //   else {
-        // io.to(getUser(room).socketId).emit("delMgs", {
-        io.emit("delMgs", {
+    //     io.to(getUser(room).socketId).emit("delMgs", {
+      io.emit("delMgs", {
           _id,
           messagesCurrent,
           messageId,

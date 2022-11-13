@@ -7,7 +7,7 @@ import moment from "moment";
 
 
 
-export default function Conversation({ conversation, currentUser, timeM, myMes,recall}) {
+export default function Conversation({ conversation, currentUser, timeM, myMes,recall , active}) {
   const [user, setUser] = useState([]);
   const [newMes, setNewMes] = useState([]);
   const [userName, setUserName] = useState([]);
@@ -74,7 +74,7 @@ export default function Conversation({ conversation, currentUser, timeM, myMes,r
 
   
     return (
-      <div className="bodyConversation">
+      <div className={active ? "bodyConversation active" : "bodyConversation"}>
         <div className='conversation'>
           <img className='conversationImg' src={conversation.name? conversation.img: user.avt  } alt='avarta'  />
           <div className="conversationGrMess">
@@ -111,17 +111,19 @@ export default function Conversation({ conversation, currentUser, timeM, myMes,r
                   (
                     myMes.conversationId === conversation._id ? 
                     <>
-                      {myMes.sender === currentUser? "Bạn": myMes.username} : {myMes.text}
+                      {myMes.sender === currentUser? "Bạn": myMes.username} : {(myMes.type==0? myMes.text:( myMes.type == 1 ? "img" :"file"))}
                     </>
                     : 
                     <>
-                      {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {newMes !== null ? newMes.text : "vừa tham gia nhóm"} 
+                      {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} 
+                  : {(newMes !== null && newMes.type==0 ? newMes.text : (newMes.type == 1 ? "img" :"file"))} 
                     </>     
                   )
                   :
                   (    
                     <>
-                      {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {newMes !== null ? newMes.text : "vừa tham gia nhóm"} 
+                     {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} 
+                  : {(newMes !== null && newMes.type==0 ? newMes.text : (newMes.type == 1 ? "img" :""))} 
                     </>     
                   )       
                 }
