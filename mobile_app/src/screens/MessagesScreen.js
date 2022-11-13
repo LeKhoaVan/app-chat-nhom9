@@ -28,7 +28,6 @@ export default function MessagesScreen({navigation}) {
                 <Conversation 
                   key={c._id} 
                   conversation={c} 
-                  currentUser={userInfo._id}
                   myMes={senderMessage}
                   recall={recallStatus} 
                   navigation={navigation}/>

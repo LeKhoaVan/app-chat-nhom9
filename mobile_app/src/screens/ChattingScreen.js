@@ -63,7 +63,7 @@ export default function ChattingScreen({navigation}) {
     setNMember(currentChat.members.length)
   }, [currentChat]);
   useEffect(() =>{
-    socket.current = io(`${UrlSK}`);
+    // socket.current = io(`${UrlSK}`);
     socket.current.on("getMessage",(data) =>{
       setArrivalMessages({
         _id:data._id,
@@ -122,11 +122,11 @@ export default function ChattingScreen({navigation}) {
     // console.log("arrivalMessage:",arrivalMessage)
   },[arrivalMessage, currentChat])
 
-  useEffect(() => {
-    socket.current.emit("addUser", userInfo._id);
-    socket.current.on("getUsers", (users) => {
-      console.log(users)
-    })},[userInfo._id]);
+  // useEffect(() => {
+  //   socket.current.emit("addUser", userInfo._id);
+  //   socket.current.on("getUsers", (users) => {
+  //     console.log(users)
+  //   })},[userInfo._id]);
   const onClickDeleteMgs = (id) => {
     setRecallMessages(id);
     // const mgsdelete = messages.filter(

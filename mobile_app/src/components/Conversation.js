@@ -10,7 +10,7 @@ export default function Conversation({ conversation, currentUser,navigation,myMe
   const [user, setUser] = useState({});
   const [newMes, setNewMes] = useState([]);
   const [userName, setUserName] = useState([]);
-  const {currentChat,setCurrentChat,userInfo} = useContext(AuthContext);
+  const {currentChat,setCurrentChat,userInfo, setAuthorize} = useContext(AuthContext);
   const ref_sw = useRef();
   const CTime = (date) => {
     let tempDate = new Date(date);
@@ -98,6 +98,7 @@ export default function Conversation({ conversation, currentUser,navigation,myMe
       onPress={()=>{
         navigation.navigate('ChattingScreen')
         setCurrentChat(conversation)
+        setAuthorize(conversation.authorization)
         }}>
     <View style={styles.container}>
       <Image 
