@@ -102,7 +102,7 @@ io.on("connection", (socket) => {
   });
 
   //send and get message
-  socket.on("sendMessage", function({ senderId, receiverIds, text,type, conversationId,delUser,date,username, avt }) {
+  socket.on("sendMessage", function({ _id,senderId, receiverIds, text,type, conversationId,reCall,delUser,date,username, avt }) {
 
       // const ds = []
       
@@ -110,24 +110,28 @@ io.on("connection", (socket) => {
       //   ds.push(getUser(receiverId).socketId)
       // })
       // ds.push(receiverId)
-      receiverIds.forEach(function(room){
-        if( getUser(room) == undefined){
-          console.log("user offline,users online:",users);
-        }
-        else {
-          io.to(getUser(room).socketId).emit("getMessage", {
+
+      // receiverIds.forEach(function(room){
+      //   if( getUser(room) == undefined){
+      //     console.log("user offline,users online:",users);
+      //   }
+      //   else {
+      //     io.to(getUser(room).socketId).emit("getMessage", {
+            io.emit("getMessage", {
+            _id,
             senderId,
             text,
             type,
             conversationId,
+            reCall,
             delUser,
             date,
             username,
             avt
           });
-          console.log('Sento:',getUser(room).userId,'conten:',text);
-        }
-      });
+          console.log('Sent content:',text);
+      //   }
+      // });
     
   });
 
@@ -140,12 +144,13 @@ io.on("connection", (socket) => {
     //   ds.push(getUser(receiverId).socketId)
     // })
     // ds.push(receiverId)
-    receiverIds.forEach(function(room){
-      if( getUser(room) == undefined){
-        console.log("user offline");
-      }
-      else {
-        io.to(getUser(room).socketId).emit("getStatus", {
+    // receiverIds.forEach(function(room){
+    //   if( getUser(room) == undefined){
+    //     console.log("user offline");
+    //   }
+    //   else {
+    //     io.to(getUser(room).socketId).emit("getStatus", {
+      io.emit("getStatus", {
           senderId,
           text,
           type,
@@ -154,22 +159,24 @@ io.on("connection", (socket) => {
           date,
           username,
         });
-      }
-    });
+    //   }
+    // });
   
 });
 
 
 
   //delete message
-  socket.on("deleteMessage", function({messagesCurrent, messageId, senderId, receiverIds, text,username, avt }) {
+  socket.on("deleteMessage", function({_id,messagesCurrent, messageId, senderId, receiverIds, text,username, avt }) {
 
-    receiverIds.forEach(function(room){
-      if( getUser(room) == undefined){
-        console.log("user offline,users online:",users);
-      }
-      else {
-        io.to(getUser(room).socketId).emit("delMgs", {
+    // receiverIds.forEach(function(room){
+    //   if( getUser(room) == undefined){
+    //     console.log("user offline,users online:",users);
+    //   }
+    //   else {
+    //     io.to(getUser(room).socketId).emit("delMgs", {
+      io.emit("delMgs", {
+          _id,
           messagesCurrent,
           messageId,
           senderId,
@@ -177,19 +184,20 @@ io.on("connection", (socket) => {
           username,
           avt,
         });
-      }
-    });
+    //   }
+    // });
   
   });
 
   socket.on("recallMessageStatus", function({senderId,username,receiverIds,type,text,conversationId,delUser,date}) {
 
-    receiverIds.forEach(function(room){
-      if( getUser(room) == undefined){
-        console.log("user offline");
-      }
-      else {
-        io.to(getUser(room).socketId).emit("recallMgsStatus", {
+    // receiverIds.forEach(function(room){
+    //   if( getUser(room) == undefined){
+    //     console.log("user offline");
+    //   }
+    //   else {
+    //     io.to(getUser(room).socketId).emit("recallMgsStatus", {
+      io.emit("recallMgsStatus", {
           senderId,
           text,
           type,
@@ -198,8 +206,8 @@ io.on("connection", (socket) => {
           date,
           username,
         });
-      }
-    });
+    //   }
+    // });
   
   });
 

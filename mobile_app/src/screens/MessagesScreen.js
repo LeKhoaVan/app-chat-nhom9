@@ -8,7 +8,7 @@ import { Url } from '../contexts/constants';
 export default function MessagesScreen({navigation}) {
   const [modalVisible, setModalVisible] = useState(false);
   const [conversations, setConversation] = useState([]);
-  const {userInfo} = useContext(AuthContext)
+  const {userInfo,senderMessage,recallStatus} = useContext(AuthContext)
   useEffect(() => {
     const getConversations = async () => {
       try {
@@ -19,13 +19,18 @@ export default function MessagesScreen({navigation}) {
       }
     };
     getConversations();
-  }, []);
+  }, [userInfo._id]);
   return (
       <View style={styles.container}>
         <ScrollView>
          {conversations.map((c) => (
 
-                <Conversation key={c._id} conversation={c} currentUser={userInfo._id} navigation={navigation}/>
+                <Conversation 
+                  key={c._id} 
+                  conversation={c} 
+                  myMes={senderMessage}
+                  recall={recallStatus} 
+                  navigation={navigation}/>
             ))}
         </ScrollView>
       </View>

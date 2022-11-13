@@ -7,7 +7,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import Entypo from 'react-native-vector-icons/Entypo'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 
-export default function MoreInfo() {
+export default function MoreInfo({navigation}) {
     const {userInfo,currentChat,socket} = useContext(AuthContext);
     const[avt,setAvt] = useState(null);
     const[user,SetUser] = useState({});
@@ -87,7 +87,8 @@ export default function MoreInfo() {
               Ảnh, file, link đã gửi</Text>
         </TouchableOpacity>
         {currentChat.name?
-        <TouchableOpacity style={{flexDirection:'row',alignItems:'center',paddingVertical:10,}}> 
+        <TouchableOpacity style={{flexDirection:'row',alignItems:'center',paddingVertical:10,}}
+        onPress={()=>navigation.navigate('ManageMember')}> 
             <Ionicons
                 name='people-outline' size={23} color={'#7E7E7E'} style={{marginLeft:10,paddingBottom:15}}/>
             <Text style={{fontSize:16,marginLeft:15,borderBottomWidth:1,borderBottomColor:'#DEDEDE',width:'100%',paddingBottom:15}}>

@@ -4,10 +4,12 @@ import axios from 'axios';
 import { Url } from '../contexts/constants';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
+import { AuthContext } from '../contexts/AuthContext';
 
-const Messager=({ message, own, userId})=> {
-    const [user, setUser] = useState([]);
+const Messager=({ message, own, onClickDeleteMgsUser, onClickDeleteMgsFri, onClickDelete})=> {
+    // const [user, setUser] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
+    const {userInfo} = useContext(AuthContext);
     const CTime = (date) => {
     let tempDate = new Date(date);
     let minute = tempDate.getMinutes();
@@ -15,17 +17,59 @@ const Messager=({ message, own, userId})=> {
     let fDate =tempDate.getHours()+":"+minute;
     return fDate;
   };
-  useEffect(() => {
-    const getUser = async () => {
-      try {
-        const res = await axios(`${Url}/api/users/name?userId=${message.sender}`); 
-        setUser(res.data);
+  // useEffect(() => {
+  //   const getUser = async () => {
+  //     try {
+  //       const res = await axios(`${Url}/api/users/name?userId=${message.sender}`); 
+  //       setUser(res.data);
+  //     } catch (err) {
+  //       console.log(err); 
+  //     }
+  //   };
+  //   getUser();
+  // }, [message]);
+  const handleDeleteMessage = async () => {
+    try {
+        const res = await axios.put(`${Url}/api/messages/recall`, {"id": message._id} );
+        console.log(res.data);
+        message.text = "tin nhắn đã được thu hồi"
+        onClickDelete(message._id);
+        (message._id);
       } catch (err) {
-        console.log(err); 
-      }
+        console.log(err);
+      };
+  };
+
+  const handleDeleteMgsUser = async () =>{
+    try {
+      const data = {
+        id: message._id,
+        delUser : userInfo._id,
+      };
+
+      const res = await axios.put(`${Url}/api/messages/del`,data );
+      console.log(res.data);
+      onClickDeleteMgsUser(message._id);
+    } catch (err) {
+      console.log(err);
     };
-    getUser();
-  }, [message]);
+  };
+
+  const handleDeleteMgsFri = async() => {
+    try {
+      const data = {
+        id: message._id,
+        delUser : userInfo._id,
+      };
+  
+      await axios.put(`${Url}/api/messages/del`,data );
+      message.delUser =  "OneNexius209"
+      onClickDeleteMgsFri("OneNexius209");
+      console.log(message._id)
+    } catch (err) {
+      console.log(err);
+    };
+  };
  
   return (
     
@@ -38,7 +82,7 @@ const Messager=({ message, own, userId})=> {
         alignItems:'flex-start'},own ? styles.me_c : styles.notMe_co]}>
       {!own?   
       <Image 
-            source={{uri :user.avt}}
+            source={{uri :message?.avt}}
             style={{
                 width:40,
                 height:40,
@@ -66,15 +110,15 @@ const Messager=({ message, own, userId})=> {
                                   marginVertical:5,
                                   justifyContent:'flex-start',
                                   alignItems:'flex-start'},own ? styles.me_c : styles.notMe_co]}>
-                                {!own?   
+                                {/* {!own?   
                                 <Image 
-                                      source={{uri :user.avt}}
+                                      source={{uri :messages.avt}}
                                       style={{
                                           width:40,
                                           height:40,
                                           marginRight:5,
                                           borderRadius:100,
-                                      }}/>:<></>}
+                                      }}/>:<></>} */}
                                 <TouchableOpacity style={[
                                     styles.container, own? styles.me_container : styles.notMe_container]}
                                     onLongPress={()=>setModalVisible(true)}> 
@@ -107,18 +151,31 @@ const Messager=({ message, own, userId})=> {
                                     </View>
                                 </View>
                                 <View style={styles.modal_cont}>
-                                    <TouchableOpacity style={{alignItems:'center'}}>
+                                    <TouchableOpacity 
+                                      style={{alignItems:'center'}}
+                                      onPress={()=>setModalVisible(false)}>
                                       <Ionicons name='arrow-undo-outline' size={30} color={'#C954EE'}/>
                                       <Text>Trả lời</Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity style={{alignItems:'center'}}>
+                                    <TouchableOpacity 
+                                      style={{alignItems:'center'}}
+                                      onPress={()=>{
+                                        setModalVisible(false)
+                                        {own? handleDeleteMgsUser():handleDeleteMgsFri()}
+                                        }}>
                                       <Ionicons name='trash-outline' size={30} color={'#FE5755'}/>
                                       <Text>Xóa</Text>
                                     </TouchableOpacity>
-                                    <TouchableOpacity style={{alignItems:'center'}}>
+                                    {own? message.reCall===false?
+                                    <TouchableOpacity 
+                                      style={{alignItems:'center'}}
+                                      onPress={()=>{
+                                          setModalVisible(false)
+                                          handleDeleteMessage()
+                                          }}>
                                       <Ionicons name='refresh' size={30} color={'#FD9B73'}/>
                                       <Text>Thu hồi</Text>
-                                    </TouchableOpacity>
+                                    </TouchableOpacity>:<></>:<></>}
                                 </View>
                             </View>
                         </TouchableWithoutFeedback>
@@ -164,7 +221,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#fff',
       borderRadius: 5,
       flexDirection:'row',
-      justifyContent:'space-between',
+      justifyContent:'space-around',
       padding:20,
     },
     modal_cont_mess: {
