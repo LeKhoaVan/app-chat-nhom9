@@ -160,7 +160,6 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
           </div>
           
         </ul>
-        ---------
         <div className="messageBottom">{moment(message.createdAt).format("LT")} </div>
       </div>
     );

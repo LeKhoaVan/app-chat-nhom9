@@ -140,7 +140,20 @@ const Messager=({ message, own, onClickDeleteMgsUser, onClickDeleteMgsFri, onCli
                                 <TouchableOpacity style={[
                                     styles.container, own? styles.me_container : styles.notMe_container]}
                                     onLongPress={()=>setModalVisible(true)}> 
-                                  <Text style={[styles.text,{color: own? '#fff' : '#000' }]}>{message.text}</Text>
+                                  {message.type ==0?
+          <Text style={[styles.text,{color: own? '#fff' : '#000' }]}>{message.text}</Text>:<></>}
+        {message.type ==1?
+          <Image source={{uri:message.text}} 
+                style={{width:200,height:300}}
+                resizeMode={'contain'}/>:<></>}
+        {message.type ==2? 
+          <Video
+            source={{uri:message.text}}
+            style={{width:200,height:300}}
+            resizeMode={'contain'}
+            isLooping
+            useNativeControls/>
+          :<></>}      
                                   <Text style={{color:'#939393',fontSize:13}}>{CTime(message.createdAt)}</Text>
                                 </TouchableOpacity>
                                 </View>
