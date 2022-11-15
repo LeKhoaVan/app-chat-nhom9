@@ -80,17 +80,29 @@ export default function Conversation({ conversation, currentUser, timeM, myMes,r
           <div className="conversationGrMess">
             <span className='conversationName'>{conversation.name? conversation.name : user.username  }</span>
             <span className="messageConver">
-                {recall? recall.conversationId === conversation._id?
+                
+                  {recall? recall.conversationId === conversation._id?
                 <>
+                 {myMes ?
+                  <>
                   {myMes.sender === currentUser? "Bạn": myMes.username} : {recall.text}
-                </> 
+                  </> 
+
+                  :
+
+                  <>
+                  {newMes.sender === currentUser? "Bạn": newMes.username} : tin nhắn đã được thu hồi
+                  </>
+
+                  }
+                </>
                 :
                 <>
                   {myMes ? 
                   (
                     myMes.conversationId === conversation._id ? 
                     <>
-                      {myMes.sender === currentUser? "Bạn": myMes.username} : {myMes.text}
+                      {myMes.sender === currentUser? "Bạn": myMes.username} : {(myMes.type==0? myMes.text:( myMes.type == 1 ? "img" :"file"))}
                     </>
                     : 
                     <>
@@ -100,7 +112,7 @@ export default function Conversation({ conversation, currentUser, timeM, myMes,r
                   :
                   (    
                     <>
-                      {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {newMes !== null ? newMes.text : "vừa tham gia nhóm"} 
+                      {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {newMes !== null ? (newMes !== null && newMes.type==0 ? newMes.text : (newMes.type == 1 ? "img" :"file")) : "vừa tham gia nhóm"} 
                     </>     
                   )       
                 }
