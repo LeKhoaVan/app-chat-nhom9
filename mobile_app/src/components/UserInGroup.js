@@ -26,7 +26,6 @@ export default function UserInGroup({user}) {
                         transparent={true}
                         onRequestClose={() => setModalVisible(false)}
                         animationType='slide'
-                        key={user._id}
                         hardwareAccelerated>
                         <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
                             <View style={styles.centered_view} >
@@ -54,12 +53,12 @@ export default function UserInGroup({user}) {
                                         {authorize.map( (auth)=>(
                                             auth != userInfo._id || user._id == userInfo._id ?  
                                             <></> :
-                                            <View key={user._id}> 
+                                            <View> 
                                                 {authorize.some( (auth1)=>( 
                                                     auth1 === user._id)) ? 
                                                     <></> : 
                                                     <TouchableOpacity
-                                                        key={Math.random()}
+                                                        key={user._id}
                                                         style={styles.choose}>
                                                         <Text style={styles.text_choose}>Chỉ định quản trị viên</Text>
                                                     </TouchableOpacity>
@@ -68,7 +67,7 @@ export default function UserInGroup({user}) {
                                                 {authorize.map( (auth1)=>( 
                                                     auth1 === user._id ?
                                                     <TouchableOpacity
-                                                        key={Math.random()}
+                                                        key={user._id}
                                                         style={styles.choose}>
                                                         <Text style={styles.text_choose}>Gỡ quyền quản trị viên</Text>
                                                     </TouchableOpacity>:<></>

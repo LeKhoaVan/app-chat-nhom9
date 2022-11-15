@@ -167,7 +167,7 @@ io.on("connection", (socket) => {
 
 
   //delete message
-  socket.on("deleteMessage", function({_id,messagesCurrent, messageId, senderId, receiverIds, text,username, avt }) {
+  socket.on("deleteMessage", function({_id,messagesCurrent, messageId, senderId, receiverIds,reCall, text,username, avt }) {
 
     // receiverIds.forEach(function(room){
     //   if( getUser(room) == undefined){
@@ -181,6 +181,7 @@ io.on("connection", (socket) => {
           messageId,
           senderId,
           text,
+          reCall,
           username,
           avt,
         });

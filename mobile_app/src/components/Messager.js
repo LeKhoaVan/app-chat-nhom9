@@ -1,4 +1,4 @@
-import { Image, Modal, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Dimensions, Image, Modal, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useContext, useEffect, useState} from 'react'
 import axios from 'axios';
 import { Url } from '../contexts/constants';
@@ -11,12 +11,14 @@ const Messager=({ message, own, onClickDeleteMgsUser, onClickDeleteMgsFri, onCli
     const [modalVisible, setModalVisible] = useState(false);
     const {userInfo} = useContext(AuthContext);
     const CTime = (date) => {
-    let tempDate = new Date(date);
-    let minute = tempDate.getMinutes();
-    {minute<10? minute='0'+minute:minute=minute}
-    let fDate =tempDate.getHours()+":"+minute;
-    return fDate;
-  };
+      let tempDate = new Date(date);
+      let minute = tempDate.getMinutes();
+      {minute<10? minute='0'+minute:minute=minute}
+      let fDate =tempDate.getHours()+":"+minute;
+      return fDate;
+    };
+    const win = Dimensions.get('window');
+    
   // useEffect(() => {
   //   const getUser = async () => {
   //     try {
@@ -33,6 +35,8 @@ const Messager=({ message, own, onClickDeleteMgsUser, onClickDeleteMgsFri, onCli
         const res = await axios.put(`${Url}/api/messages/recall`, {"id": message._id} );
         console.log(res.data);
         message.text = "tin nhắn đã được thu hồi"
+        message.reCall= true
+        message.type=0
         onClickDelete(message._id);
         (message._id);
       } catch (err) {
@@ -92,7 +96,11 @@ const Messager=({ message, own, onClickDeleteMgsUser, onClickDeleteMgsFri, onCli
       <TouchableOpacity style={[
           styles.container, own? styles.me_container : styles.notMe_container]}
           onLongPress={()=>setModalVisible(true)}> 
-        <Text style={[styles.text,{color: own? '#fff' : '#000' }]}>{message.text}</Text>
+        {message.type ==0?
+          <Text style={[styles.text,{color: own? '#fff' : '#000' }]}>{message.text}</Text>:
+          <Image source={{uri:message.text}} 
+                style={{width:200,height:300}}
+                resizeMode={'contain'}/>}
         <Text style={{color:'#939393',fontSize:13}}>{CTime(message.createdAt)}</Text>
       </TouchableOpacity>
       <Modal

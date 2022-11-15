@@ -31,6 +31,8 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
       const res = await axios.put("http://localhost:8800/api/messages/recall", { "id": message._id });
       console.log(res.data);
       message.text = "tin nhắn đã được thu hồi"
+      message.reCall=true
+      message.type=0
       onClickDelete(message._id);
     } catch (err) {
       console.log(err);
