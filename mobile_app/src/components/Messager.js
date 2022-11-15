@@ -5,6 +5,7 @@ import { Url } from '../contexts/constants';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5'
 import { AuthContext } from '../contexts/AuthContext';
+import { Audio, Video } from 'expo-av';
 
 const Messager=({ message, own, onClickDeleteMgsUser, onClickDeleteMgsFri, onClickDelete})=> {
     // const [user, setUser] = useState([]);
@@ -97,10 +98,19 @@ const Messager=({ message, own, onClickDeleteMgsUser, onClickDeleteMgsFri, onCli
           styles.container, own? styles.me_container : styles.notMe_container]}
           onLongPress={()=>setModalVisible(true)}> 
         {message.type ==0?
-          <Text style={[styles.text,{color: own? '#fff' : '#000' }]}>{message.text}</Text>:
+          <Text style={[styles.text,{color: own? '#fff' : '#000' }]}>{message.text}</Text>:<></>}
+        {message.type ==1?
           <Image source={{uri:message.text}} 
                 style={{width:200,height:300}}
-                resizeMode={'contain'}/>}
+                resizeMode={'contain'}/>:<></>}
+        {message.type ==2? 
+          <Video
+            source={{uri:message.text}}
+            style={{width:200,height:300}}
+            resizeMode={'contain'}
+            isLooping
+            useNativeControls/>
+          :<></>}        
         <Text style={{color:'#939393',fontSize:13}}>{CTime(message.createdAt)}</Text>
       </TouchableOpacity>
       <Modal
