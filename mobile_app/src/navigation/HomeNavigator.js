@@ -1,18 +1,17 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, Alert, Modal, TouchableWithoutFeedback } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons'
-import { NavigationContainer } from '@react-navigation/native';
+import AntDesign from 'react-native-vector-icons/AntDesign'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import ContactsScreen from '../screens/ContactsScreen';
 import MessagesScreen from '../screens/MessagesScreen';
 import MeScreen from '../screens/MeScreen';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { ScreenStackHeaderSearchBarView } from 'react-native-screens';
 
 const Tab = createBottomTabNavigator();
 export default function HomeScreen({navigation}) {
+    const [modalVisible, setModalVisible] = useState(false);
   return (
       <Tab.Navigator
         initialRouteName={"Messages"}
@@ -40,6 +39,7 @@ export default function HomeScreen({navigation}) {
                 let navName;
                 if(route.name ==="Messages"){
                     iconHeader = 'add';
+                    navName = 'add';
                 }
                 else if(route.name ==="Contacts"){
                     iconHeader = 'person-add';
@@ -59,12 +59,47 @@ export default function HomeScreen({navigation}) {
                                 <Text style={styles.search_text}>Tìm kiếm</Text>
                             </TouchableOpacity>
                             <TouchableOpacity
-                                onPress={()=>navigation.navigate(navName)}>
+                                onPress={()=>{ navName !='add'? 
+                                    navigation.navigate(navName):
+                                    setModalVisible(true) }}>
                             <MaterialIcons
                                 name={iconHeader}
                                 size={25}
                                 color={'#fff'}/>
                             </TouchableOpacity>
+                            <Modal
+                                visible={modalVisible}
+                                transparent={true}
+                                onRequestClose={() => setModalVisible(false)}
+                                animationType='fade'
+                                hardwareAccelerated>
+                                <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+                                    <View style={styles.centered_view} >
+                                        <View style={styles.modal_cont}>
+                                            <View style={styles.modal_body}>
+                                                <TouchableOpacity
+                                                    onPress={() =>{ 
+                                                        navigation.navigate('AddFriendScreen')
+                                                        setModalVisible(false)
+                                                    }}
+                                                    style={styles.choose}>
+                                                    <Ionicons name='person-add-outline' size={23} color={'#7E7E7E'}/>
+                                                    <Text style={styles.text_choose}>Thêm bạn</Text>
+                                                </TouchableOpacity>
+                                                <TouchableOpacity
+                                                    onPress={() => { 
+                                                        navigation.navigate('CreateGroup')
+                                                        setModalVisible(false)
+                                                    }}
+                                                    style={styles.choose}>
+                                                    <AntDesign name='addusergroup' size={23} color={'#7E7E7E'}/>
+                                                    <Text style={styles.text_choose}>Tạo nhóm</Text>
+                                                </TouchableOpacity>
+                                            </View>
+                                        </View>
+                                    </View>
+                                </TouchableWithoutFeedback>
+                            </Modal>
                         </View>
             },
             headerStyle:{
@@ -111,4 +146,29 @@ const styles = StyleSheet.create({
     width:300,
     padding:10,
   },
+  centered_view: {
+    flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-end',
+    margin:10,
+    // backgroundColor: '#00000099',
+  },
+  modal_cont: {
+    width: 200,
+    backgroundColor: '#ffffff',
+    borderRadius: 5,
+  },
+  modal_body:{
+    padding:10,
+  },
+  choose:{
+    height:50,
+    justifyContent:'flex-start',
+    alignItems:'center',
+    flexDirection:'row',
+  },
+  text_choose:{
+        marginLeft:15,
+        fontSize:16,
+  }
 });

@@ -666,7 +666,7 @@ const handleFileChange = async (file) => {
                         visible={modalVisible}
                         transparent={true}
                         onRequestClose={() => setModalVisible(false)}
-                        animationType='slide'
+                        animationType='fade'
                         hardwareAccelerated>
                         <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
                             <View style={styles.centered_view} >

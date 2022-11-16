@@ -12,6 +12,7 @@ import { AuthContext} from '../contexts/AuthContext';
 import FriendRequest from '../screens/FriendRequest';
 import SendFR from '../screens/SendFR';
 import ManageMember from '../screens/ManageMember';
+import CreateGroup from '../screens/CreateGroup';
 
 const Stack = createNativeStackNavigator();
 const RootNavigator = () => {
@@ -108,6 +109,7 @@ const RootNavigator = () => {
 						fontSize:17,
 					}
 				})}/>
+			<Stack.Screen name="CreateGroup" component={CreateGroup}/>
 		</Stack.Navigator>
 	)
 }
