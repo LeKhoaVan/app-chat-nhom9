@@ -2,10 +2,48 @@ import { Image, Modal, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedb
 import React, { useContext, useState } from 'react'
 import { AuthContext } from '../contexts/AuthContext';
 import Ionicons  from 'react-native-vector-icons/Ionicons'
+import { Url } from '../contexts/constants';
+import axios from 'axios';
 
 export default function UserInGroup({user}) {
-    const {userInfo,currentChat,authorize} = useContext(AuthContext);
+    const {userInfo,currentChat,authorize,setAuthorize,setUserCons} = useContext(AuthContext);
     const [modalVisible, setModalVisible] = useState(false);
+    function RemoveAuth(conId, userId) {
+        const article = { conId, userId };
+        const con = axios.put(`${Url}/api/conversations/removeAuthorize`, article)
+        con.then(value => {
+          setAuthorize(value.data)
+        })
+      }
+      function SetAuth(conId, userId) {
+
+        const article = { conId, userId };
+        const con = axios.put(`${Url}/api/conversations/setAuthorize`, article)
+        con.then(value => {
+          setAuthorize(value.data)
+        })
+    
+      }
+      function RemoveUserCon(conId, userId) {
+
+        const article = { conId, userId };
+        const con = axios.put(`${Url}/api/conversations/removeMember`, article)
+    
+        con.then(async value => {
+          let list = [];
+          let listmember=[];
+          for (let index = 0; index < value.data.length; index++) {
+            const res = await axios.get(`${Url}/api/users?userId=` + value.data[index]);
+            list.push(res.data)
+            listmember.push(res.data._id);
+          }
+          setUserCons(list);
+          currentChat.members=listmember;
+        })
+    
+    
+    
+      }
   return (
     <TouchableOpacity 
         style={{flexDirection:'row',alignItems:'center',paddingHorizontal:20,paddingVertical:10}}
@@ -20,7 +58,7 @@ export default function UserInGroup({user}) {
         </View>
         {user._id!=userInfo._id?
             <Ionicons name='person-add-outline' size={20} color={'#056282'} style={{marginLeft:'auto'}}/>
-            :<></>}
+            :<View key={Math.random()}></View>}
         <Modal
                         visible={modalVisible}
                         transparent={true}
@@ -52,14 +90,17 @@ export default function UserInGroup({user}) {
                                         </TouchableOpacity>
                                         {authorize.map( (auth)=>(
                                             auth != userInfo._id || user._id == userInfo._id ?  
-                                            <></> :
-                                            <View> 
+                                            <View key={Math.random()}></View> :
+                                            <View key={Math.random()}> 
                                                 {authorize.some( (auth1)=>( 
                                                     auth1 === user._id)) ? 
-                                                    <></> : 
+                                                    <View key={Math.random()}></View> : 
                                                     <TouchableOpacity
                                                         key={user._id}
-                                                        style={styles.choose}>
+                                                        style={styles.choose}
+                                                        onPress={()=>{
+                                                            SetAuth(currentChat._id, user._id)
+                                                            setModalVisible(false)}}>
                                                         <Text style={styles.text_choose}>Chỉ định quản trị viên</Text>
                                                     </TouchableOpacity>
                                                 } 
@@ -68,13 +109,19 @@ export default function UserInGroup({user}) {
                                                     auth1 === user._id ?
                                                     <TouchableOpacity
                                                         key={user._id}
-                                                        style={styles.choose}>
+                                                        style={styles.choose}
+                                                        onPress={()=>{
+                                                            RemoveAuth(currentChat._id, user._id)
+                                                            setModalVisible(false)}}>
                                                         <Text style={styles.text_choose}>Gỡ quyền quản trị viên</Text>
-                                                    </TouchableOpacity>:<></>
+                                                    </TouchableOpacity>:<View key={Math.random()}></View>
                                                 ))}
                                         
                                                 <TouchableOpacity
-                                                    style={styles.choose}>
+                                                    style={styles.choose}
+                                                    onPress={()=> {
+                                                        RemoveUserCon(currentChat._id, user._id)
+                                                        setModalVisible(false)}}>
                                                     <Text style={[styles.text_choose,{color:'#FD2828'}]}>Xóa khỏi nhóm</Text>
                                                 </TouchableOpacity>
                                             </View>

@@ -255,36 +255,34 @@ export default function MyChat() {
               }
             }
 
-
-            socket.current.emit("sendMessage", {
-              senderId: _id,
-              receiverIds,
-              type: e.target.files[0].type.match('video.*')? 2:3,
-              text: messageFile.text,
-              conversationId: currentChat._id,
-              delUser: "",
-              date: Date.now(),
-              username: username,
-              avt: avt,
-            });
-
-            socket.current.emit("sendStatus", {
-              senderId: _id,
-              username: username,
-              receiverIds: currentChat.members,
-              type: e.target.files[0].type.match('video.*')? 2:3,
-              text: messageFile.text,
-              conversationId: currentChat._id,
-              delUser: "",
-              date: Date.now(),
-
-            })
-
-
             try {
               const res = await axios.post("http://localhost:8800/api/messages", messageFile);
-              setMessages([...messages, res.data]);
-
+              // setMessages([...messages, res.data]);
+              socket.current.emit("sendMessage", {
+                _id:res.data._id,
+                senderId: _id,
+                receiverIds,
+                type: e.target.files[0].type.match('video.*')? 2:3,
+                text: messageFile.text,
+                conversationId: currentChat._id,
+                reCall: false,
+                delUser: "",
+                date: Date.now(),
+                username: username,
+                avt: avt,
+              });
+  
+              socket.current.emit("sendStatus", {
+                senderId: _id,
+                username: username,
+                receiverIds: currentChat.members,
+                type: e.target.files[0].type.match('video.*')? 2:3,
+                text: messageFile.text,
+                conversationId: currentChat._id,
+                delUser: "",
+                date: Date.now(),
+  
+              })
 
             } catch (err) {
               console.log(err);
