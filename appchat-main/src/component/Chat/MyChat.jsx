@@ -165,37 +165,34 @@ export default function MyChat() {
                 receiverIds.push(currentChat.members[index]);
               }
             }
-
-
-            socket.current.emit("sendMessage", {
-              senderId: _id,
-              receiverIds,
-              type: 1,
-              text: messageimage.text,
-              conversationId: currentChat._id,
-              delUser: "",
-              date: Date.now(),
-              username: username,
-              avt: avt,
-            });
-
-            socket.current.emit("sendStatus", {
-              senderId: _id,
-              username: username,
-              receiverIds: currentChat.members,
-              type: 1,
-              text: messageimage.text,
-              conversationId: currentChat._id,
-              delUser: "",
-              date: Date.now(),
-
-            })
-
-
-
             try {
               const res = await axios.post("http://localhost:8800/api/messages", messageimage);
-              setMessages([...messages, res.data]);
+              //setMessages([...messages, res.data]);
+              socket.current.emit("sendMessage", {
+                _id:res.data._id,
+                senderId:_id,
+                receiverIds,
+                type: 1,
+                text: messageimage.text,
+                conversationId: currentChat._id,
+                reCall: false,
+                delUser: "",
+                date: Date.now(),
+                username: username,
+                avt: avt,
+              });
+  
+              socket.current.emit("sendStatus", {
+                senderId: _id,
+                username: username,
+                receiverIds: currentChat.members,
+                type: 1,
+                text: messageimage.text,
+                conversationId: currentChat._id,
+                delUser: "",
+                date: Date.now(),
+    
+              });
 
             } catch (err) {
               console.log(err);
@@ -538,9 +535,11 @@ export default function MyChat() {
     socket.current = io("ws://localhost:8800");
     socket.current.on("getMessage", (data) => {
       setArrivalMessages({
+        _id:data._id,
         sender: data.senderId,
         text: data.text,
         type: data.type,
+        reCall: data.reCall,
         delUser: data.delUser,
         conversationId: data.conversationId,
         createdAt: data.date,
@@ -577,11 +576,18 @@ export default function MyChat() {
   }, [currentChat]);
 
 
-
+  const ktt=(messages)=>{
+    if(messages.length==0) 
+      return true;
+    else
+      if(messages[messages.length-1]._id != arrivalMessage._id)
+        return true;
+      else return false;
+  }
 
   useEffect(() => {
     arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) &&
-      currentChat?._id === arrivalMessage.conversationId &&
+      currentChat?._id === arrivalMessage.conversationId && ktt(messages) &&
       setMessages((prev) => [...prev, arrivalMessage])
     console.log(arrivalMessage)
   }, [arrivalMessage, currentChat])
@@ -689,35 +695,38 @@ export default function MyChat() {
       }
 
 
-      socket.current.emit("sendMessage", {
-        senderId: _id,
-        receiverIds,
-        type: 0,
-        text: newMessage,
-        conversationId: currentChat._id,
-        delUser: "",
-        date: Date.now(),
-        username: username,
-        avt: avt,
-      });
-
-      socket.current.emit("sendStatus", {
-        senderId: _id,
-        username: username,
-        receiverIds: currentChat.members,
-        type: 0,
-        text: newMessage,
-        conversationId: currentChat._id,
-        delUser: "",
-        date: Date.now(),
-
-      })
+      
 
 
       try {
         const res = await axios.post("http://localhost:8800/api/messages", message);
-        setMessages([...messages, res.data]);
+        // setMessages([...messages, res.data]);
         setNewMessages("");
+        socket.current.emit("sendMessage", {
+          _id:res.data._id,
+          senderId: _id,
+          receiverIds,
+          type: 0,
+          text: newMessage,
+          conversationId: currentChat._id,
+          reCall: false,
+          delUser: "",
+          date: Date.now(),
+          username: username,
+          avt: avt,
+        });
+  
+        socket.current.emit("sendStatus", {
+          senderId: _id,
+          username: username,
+          receiverIds: currentChat.members,
+          type: 0,
+          text: newMessage,
+          conversationId: currentChat._id,
+          delUser: "",
+          date: Date.now(),
+  
+        })
 
       } catch (err) {
         console.log(err);
@@ -745,6 +754,7 @@ export default function MyChat() {
 
     //gửi tin nhắn thu hồi
     socket.current.emit("deleteMessage", {
+      id:Math.random(),
       messagesCurrent: messages,
       messageId: id,
       senderId: _id,

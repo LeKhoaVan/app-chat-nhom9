@@ -80,8 +80,7 @@ export default function Conversation({ conversation, currentUser, timeM, myMes,r
           <div className="conversationGrMess">
             <span className='conversationName'>{conversation.name? conversation.name : user.username  }</span>
             <span className="messageConver">
-                
-                  {recall? recall.conversationId === conversation._id?
+            {recall? recall.conversationId === conversation._id?
                 <>
                  {myMes ?
                   <>
@@ -141,6 +140,7 @@ export default function Conversation({ conversation, currentUser, timeM, myMes,r
                 }
                 </>
                 }
+
             </span>
           </div>
           <span className='time'>

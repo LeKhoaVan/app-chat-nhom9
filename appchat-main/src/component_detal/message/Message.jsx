@@ -31,6 +31,8 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
       const res = await axios.put("http://localhost:8800/api/messages/recall", { "id": message._id });
       console.log(res.data);
       message.text = "tin nhắn đã được thu hồi"
+      message.reCall=true
+      message.type=0
       onClickDelete(message._id);
     } catch (err) {
       console.log(err);
@@ -123,11 +125,12 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
       <div className={own ? "message own" : "message"}>
         <ul class="dropdown">
           <div className="messageTop">
+            {message.avt?
             <img
                 className="messageImg"
                 src={message.avt}
                 alt=""
-              />
+              />:<view className="messageImg"></view>}
               <div className="messageText">
               <span className="owner">{message.username}</span>
               {message.type === 0 ? <p>{message.text}</p> : ''}
@@ -157,7 +160,6 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
           </div>
           
         </ul>
-        ---------
         <div className="messageBottom">{moment(message.createdAt).format("LT")} </div>
       </div>
     );
