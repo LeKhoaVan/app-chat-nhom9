@@ -13,6 +13,7 @@ import FriendRequest from '../screens/FriendRequest';
 import SendFR from '../screens/SendFR';
 import ManageMember from '../screens/ManageMember';
 import CreateGroup from '../screens/CreateGroup';
+import UserInfoScreen from '../screens/UserInfoScreen';
 
 const Stack = createNativeStackNavigator();
 const RootNavigator = () => {
@@ -110,6 +111,10 @@ const RootNavigator = () => {
 					}
 				})}/>
 			<Stack.Screen name="CreateGroup" component={CreateGroup}/>
+			<Stack.Screen 
+				name="UserInfoScreen" 
+				component={UserInfoScreen}
+			/>
 		</Stack.Navigator>
 	)
 }

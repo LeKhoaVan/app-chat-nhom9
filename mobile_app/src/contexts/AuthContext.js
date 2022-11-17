@@ -19,6 +19,8 @@ export const AuthContextProvider = ({ children }) => {
 	const [senderMessage, setSenderMessage] = useState(null);
 	const [authorize, setAuthorize] = useState([]);
 	const [userCons, setUserCons] = useState([]);
+	const [listUserGroupNew, setListUserGroupNew] = useState([]);
+	const [conversations, setConversation] = useState([]);
 	const socket = useRef();
 	//Login
 	const login = async userForm =>{
@@ -121,7 +123,7 @@ export const AuthContextProvider = ({ children }) => {
 		<AuthContext.Provider value={{userToken,register,login,logout,userInfo,
 		isLoading,loadUser_Register,setUserToken,currentChat,setCurrentChat,socket,
 		recallStatus,setRecallStatus,senderMessage, setSenderMessage,authorize,setAuthorize,
-		userCons, setUserCons}}>
+		userCons, setUserCons,listUserGroupNew, setListUserGroupNew,conversations, setConversation}}>
 			{children}
 		</AuthContext.Provider>
 	)

@@ -576,7 +576,7 @@ const handleFileChange = async (file) => {
     <SafeAreaView style={{height:'100%'}}>
         <View style={styles.Header}>
             <TouchableOpacity 
-                onPress={()=> navigation.goBack()}>
+                onPress={()=> navigation.navigate('HomeNavigator')}>
                 <Ionicons 
                     name='arrow-back'
                     size={25}

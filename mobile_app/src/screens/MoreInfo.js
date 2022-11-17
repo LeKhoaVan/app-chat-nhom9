@@ -8,7 +8,8 @@ import Entypo from 'react-native-vector-icons/Entypo'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 
 export default function MoreInfo({navigation}) {
-    const {userInfo,currentChat,authorize,setCurrentChat,setAuthorize} = useContext(AuthContext);
+    const {userInfo,currentChat,authorize,setCurrentChat,
+      setAuthorize,listUserGroupNew, setListUserGroupNew,} = useContext(AuthContext);
     const[avt,setAvt] = useState(null);
     const[user,SetUser] = useState({});
     const getUser = async () => {
@@ -22,7 +23,6 @@ export default function MoreInfo({navigation}) {
         }
       };
       useEffect(()=>{
-        console.log(currentChat);
         if(!currentChat.name)
             getUser();
         else
@@ -95,7 +95,11 @@ export default function MoreInfo({navigation}) {
               Xem thành viên</Text>
         </TouchableOpacity>:<></>}
         {!currentChat.name?
-        <TouchableOpacity style={{flexDirection:'row',alignItems:'center',paddingVertical:10,}}> 
+        <TouchableOpacity style={{flexDirection:'row',alignItems:'center',paddingVertical:10,}}
+        onPress={()=>{navigation.navigate('CreateGroup')
+                      setListUserGroupNew([])
+                      setListUserGroupNew([...listUserGroupNew, user])
+                      }}> 
             <AntDesign
                 name='addusergroup' size={23} color={'#7E7E7E'} style={{marginLeft:10,paddingBottom:15}}/>
             <Text style={{fontSize:16,marginLeft:15,borderBottomWidth:1,borderBottomColor:'#DEDEDE',width:'100%',paddingBottom:15}}>

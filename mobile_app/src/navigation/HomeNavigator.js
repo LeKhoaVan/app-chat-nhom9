@@ -8,10 +8,12 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
 import ContactsScreen from '../screens/ContactsScreen';
 import MessagesScreen from '../screens/MessagesScreen';
 import MeScreen from '../screens/MeScreen';
+import { AuthContext } from '../contexts/AuthContext';
 
 const Tab = createBottomTabNavigator();
 export default function HomeScreen({navigation}) {
     const [modalVisible, setModalVisible] = useState(false);
+    const { setListUserGroupNew } = useContext(AuthContext);
   return (
       <Tab.Navigator
         initialRouteName={"Messages"}
@@ -90,6 +92,7 @@ export default function HomeScreen({navigation}) {
                                                     onPress={() => { 
                                                         navigation.navigate('CreateGroup')
                                                         setModalVisible(false)
+                                                        setListUserGroupNew([]);
                                                     }}
                                                     style={styles.choose}>
                                                     <AntDesign name='addusergroup' size={23} color={'#7E7E7E'}/>

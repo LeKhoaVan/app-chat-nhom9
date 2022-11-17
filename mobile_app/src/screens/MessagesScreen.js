@@ -7,8 +7,7 @@ import { Url } from '../contexts/constants';
 
 export default function MessagesScreen({navigation}) {
   const [modalVisible, setModalVisible] = useState(false);
-  const [conversations, setConversation] = useState([]);
-  const {userInfo,senderMessage,recallStatus,authorize} = useContext(AuthContext)
+  const {userInfo,senderMessage,recallStatus,authorize,conversations, setConversation} = useContext(AuthContext)
   useEffect(() => {
     const getConversations = async () => {
       try {
