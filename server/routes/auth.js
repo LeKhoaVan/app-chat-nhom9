@@ -3,7 +3,22 @@ const router = express.Router()
 const argon2 = require('argon2')
 const jwt = require('jsonwebtoken')
 const User = require('../models/User')
+const Otp = require('../models/Otp')
 const verifyToken = require('../middleware/auth');
+const nodemailer = require('nodemailer');
+
+const dotenv = require("dotenv");
+ 
+dotenv.config();
+
+var transporter = nodemailer.createTransport({
+	service: 'gmail',
+	auth: {
+	  user: process.env.GMAIL,
+	  pass: process.env.PASSWORD_APP
+	}
+  });
+
 
 router.get('/', verifyToken, async (req, res) => {
 	try {
@@ -18,6 +33,8 @@ router.get('/', verifyToken, async (req, res) => {
 })
 
 
+
+
 router.post('/register', async (req, res) => {
 
     const {   emailRe  ,
@@ -25,6 +42,7 @@ router.post('/register', async (req, res) => {
 		 username , birthday , gender , avt} = req.body
 	const email = emailRe
 	const password = passwordRe
+	const status = 1
 
     if(  !email || !password ||  !username || !birthday  || !gender ) 
         return res
@@ -42,13 +60,41 @@ router.post('/register', async (req, res) => {
         }
 		
 		
-        const hashedPassword = await argon2.hash(password);
-        const newUser = new User({ email, password: hashedPassword ,username,birthday,gender , avt})
-        await newUser.save();
+    
 
-        const accessToken = jwt.sign({ userId: newUser._id},process.env.ACCESS_TOKEN_SECRET_KEY)
 
-        res.json({success: true, message: 'User saved successfully', accessToken})
+
+
+		const otp = Math.floor(Math.random() * 9000 + 1000) + "";
+		
+
+		var mailOptions = {
+			from: process.env.GMAIL,
+			to: emailRe,
+			subject: 'Xác thực tài khoản CynoChat',
+			html: '<p>Không cung cấp mã xác thực cho bất cứ ai</p><h4>Mã xác thực: '+ otp + '</h4>'
+		  };
+		
+
+
+		transporter.sendMail(mailOptions,async function(error, info){
+			if (error) {
+				return res.status(400).json({ success: false, message: error });
+			} else {
+				const hashedOtp = await argon2.hash(otp);
+				const newOtp = new Otp({email,otp:hashedOtp})
+				newOtp.save();
+
+				const hashedPassword = await argon2.hash(password);
+				const newUser = new User({ email, password: hashedPassword ,username,birthday,gender , avt,status})
+				await newUser.save();
+
+		
+				res.json({success: true, message: 'Tạo tài khoản thành công'})
+			}
+		  });
+
+       
     }
     catch(err){
         console.log(err)
@@ -56,7 +102,35 @@ router.post('/register', async (req, res) => {
     }
 })
 
+router.put('/verifyOtp',async (req,res) => {
+	const {  email , otp } = req.body
+	try{
+		const getotp = await Otp.findOne({email:email})
+		if(!getotp) {
+			return res
+				.status(400)
+				.json({ success: false, message: 'OTP hết hạn' })
+		}
+		const otpValid = await argon2.verify(getotp.otp, otp)
+		if (!otpValid)
+				return res
+					.status(400)
+					.json({ success: false, message: 'OTP không chính xác' })
+		
 
+		const postUpdateCondition = {email}
+		const userUpdate = await User.findOneAndUpdate(postUpdateCondition, { 
+			$set:{"status": 0}
+		}
+		, { new: true })
+		const accessToken = jwt.sign({ userId: userUpdate._id},process.env.ACCESS_TOKEN_SECRET_KEY)
+
+		res.json({success: true, message: 'Xác thực tài khoản thành công', accessToken})
+	}
+	catch(error) {
+		res.status(500).json({ success: false, message: 'Internal server error' })
+	}
+})
 
 router.post('/login', async (req, res) => {
 	const {  email , password } = req.body
@@ -74,6 +148,10 @@ router.post('/login', async (req, res) => {
 			return res
 				.status(400)
 				.json({ success: false, message: 'Sai tài khoản hoặc mật khẩu' })
+		if (user.status === 1)
+			return res
+				.status(400)
+				.json({ success: false, message: 'Tài khoản chưa được xác thực' })
 
 		// Username found
 		const passwordValid = await argon2.verify(user.password, password)

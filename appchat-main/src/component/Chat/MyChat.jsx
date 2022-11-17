@@ -869,24 +869,36 @@ export default function MyChat() {
       setUserSearch(null)
     }
   }
+  function checkAddUserNewGroup(){
+    return listUserGroupNew.some((userN)=>
+      userN._id == userSearch._id
+    )
+  }
   function clickButtonAdd(e) {
     e.preventDefault()
-    setListUserGroupNew([...listUserGroupNew, userSearch])
-    setUserSearch(null)
-    document.querySelector('#search-group').value = ""
-    let countMem = 0;
-    listUserGroupNew.map((userGr) => {
-      countMem++;
-      return countMem;
-    })
-    if (countMem > 0) {
-      setStateDis({
-        disabled: false
+    let check = checkAddUserNewGroup()
+    if(check){
+      setUserSearch(null)
+      document.querySelector('#search-group').value = ""
+    }
+    else{
+      setListUserGroupNew([...listUserGroupNew, userSearch])
+      setUserSearch(null)
+      document.querySelector('#search-group').value = ""
+      let countMem = 0;
+      listUserGroupNew.map((userGr) => {
+        countMem++;
+        return countMem;
       })
-    } else {
-      setStateDis({
-        disabled: true
-      })
+      if (countMem > 0) {
+        setStateDis({
+          disabled: false
+        })
+      } else {
+        setStateDis({
+          disabled: true
+        })
+      }
     }
   }
 
@@ -1015,9 +1027,7 @@ export default function MyChat() {
                 </div>
                 <div>
                   <div className="user-fet">
-                    <Tooltip placement="bottom-end" title="Thêm bạn vào nhóm">
-                      <IconButton onClick={() => { setOpenPopup2(true); }}><GroupAddIcon /></IconButton>
-                    </Tooltip>
+                 
                     <Tooltip
                       title="Tìm kiếm tin nhắn"
                       placement="bottom-end">
@@ -1128,6 +1138,14 @@ export default function MyChat() {
                   </IconButton>
                 </Tooltip> : <div></div>}
 
+            </div>
+            <div>
+            {currentChat?.authorization.length > 0 ?
+            <div className="edit_button">
+              <IconButton onClick={() => { setOpenPopup2(true); }}><GroupAddIcon /></IconButton>
+              <p className="title_edit_button">Thêm thành viên</p>
+            </div>      
+                  : <div></div>}
             </div>
             {/* <div className="edit_button">
                 <IconButton>

@@ -603,7 +603,6 @@ body{
   justify-content: center;
 }
 .title_edit_button{
-  width: 72px;
   font-size: 15px;
   color: var(--cl-title);
 }
