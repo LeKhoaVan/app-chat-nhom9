@@ -1379,9 +1379,7 @@ export default function MyChat() {
         openPopup={openPopup2}
         setOpenPopup={setOpenPopup2}
       >
-
         <form>
-
           <div className="input-group">
             <input className="form-control rounded ip-addGr" type="text" onKeyUp={handleTextSearch} id="search-group" placeholder="Tìm kiếm bằng email" />
             <div className="model-search">
