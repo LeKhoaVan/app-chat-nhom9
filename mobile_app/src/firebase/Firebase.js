@@ -1,14 +1,13 @@
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 
-const firebaseConfig = {
-  apiKey: "AIzaSyCXDIVFHFJo3azaU3TRBE92PJd_z00oScs",
-  authDomain: "fir-dd703.firebaseapp.com",
-  projectId: "fir-dd703",
-  storageBucket: "fir-dd703.appspot.com",
-  messagingSenderId: "67283041908",
-  appId: "1:67283041908:web:b643cc4c4f825bade01b21",
-  measurementId: "G-S7ZTDPXLY5"
+export const firebaseConfig = {
+  apiKey: "AIzaSyC-SvFb4gP8TJDjn-tht_85KXKJIf8hnPw",
+  authDomain: "appchatmobile-group9.firebaseapp.com",
+  projectId: "appchatmobile-group9",
+  storageBucket: "appchatmobile-group9.appspot.com",
+  messagingSenderId: "1068794345387",
+  appId: "1:1068794345387:web:a379bfcfb3a740730d84ee"
 };
 
 const app = initializeApp(firebaseConfig);

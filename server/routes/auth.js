@@ -22,7 +22,7 @@ router.post('/register', async (req, res) => {
 
     const {   emailRe  ,
 			passwordRe  ,
-		 username , birthday , gender } = req.body
+		 username , birthday , gender , avt} = req.body
 	const email = emailRe
 	const password = passwordRe
 
@@ -43,7 +43,7 @@ router.post('/register', async (req, res) => {
 		
 		
         const hashedPassword = await argon2.hash(password);
-        const newUser = new User({ email, password: hashedPassword ,username,birthday,gender})
+        const newUser = new User({ email, password: hashedPassword ,username,birthday,gender , avt})
         await newUser.save();
 
         const accessToken = jwt.sign({ userId: newUser._id},process.env.ACCESS_TOKEN_SECRET_KEY)
@@ -73,14 +73,14 @@ router.post('/login', async (req, res) => {
 		if (!user)
 			return res
 				.status(400)
-				.json({ success: false, message: 'Incorrect email' })
+				.json({ success: false, message: 'Sai tài khoản hoặc mật khẩu' })
 
 		// Username found
 		const passwordValid = await argon2.verify(user.password, password)
 		if (!passwordValid)
 			return res
 				.status(400)
-				.json({ success: false, message: 'Incorrect password' })
+				.json({ success: false, message: 'Sai tài khoản hoặc mật khẩu' })
 
 		// All good
 		// Return token
@@ -95,6 +95,35 @@ router.post('/login', async (req, res) => {
 			accessToken
 		})
 	} catch (error) {
+		console.log(error)
+		res.status(500).json({ success: false, message: 'Internal server error' })
+	}
+})
+
+router.put('/changePassword', async (req, res) => {
+
+	const {username,passwordOld , passwordNew} = req.body
+
+	try{
+
+        const user = await User.findOne({ username })
+
+		const passwordValid = await argon2.verify(user.password, passwordOld)
+        if(!passwordValid){
+            return res.status(400).json({ success: false, message: 'Mật khẩu không khớp' });
+        }
+
+		const hashedPassword = await argon2.hash(passwordNew);
+
+		const postUpdateCondition = {username: username}
+		const userUpdate = await User.findOneAndUpdate(postUpdateCondition, { 
+			$set:{"password": hashedPassword}
+		}
+		, { new: true })
+
+		res.json({success: true, message: 'Đổi mật khẩu thành công'})
+	}
+	catch (error) {
 		console.log(error)
 		res.status(500).json({ success: false, message: 'Internal server error' })
 	}

@@ -13,8 +13,27 @@
   height: 32px;
   border-radius: 50%;
   object-fit: cover;
+  
   margin-right: 10px;
+  transform: translate(10px, -30px)
 }
+
+.messageImgSend{
+  width: 100%;
+  height: 450px;
+  
+  object-fit: cover;
+  
+}
+
+.messageImgSend{
+  width: 350px;
+  height: 500px;
+  
+  object-fit: cover;
+  
+}
+
 
 
 .messageText .owner{
@@ -24,8 +43,9 @@
 }
 
 .messageBottom{
-    font-size: 12px;
-    margin-bottom: 10px;  
+  font-size: 12px;
+  margin-bottom: 10px;  
+  transform: translate(10px, -30px)
 }
 
 .message.own{
@@ -75,26 +95,29 @@
     border-radius: 20px;
     background-color: var(--bg-message);
     color: var(--white);
-    max-width: 300px;
+    max-width: 450px;
     position: relative;
 }
 
+.messageText p{
+  text-align: justify;
+}
+
+
  .dropdown-content{
-    width: 140px;
     box-shadow: 0 0 10px var(--boxshadow-022);
-    
     display: none;
     position: absolute;
     background-color: var(--white);
     z-index: 1;
     list-style: none;
-    top: 62px;
- }
+    right: -130px;
+    bottom: 0;
+  }
  
  .dropdown-content.own{
-    right: 15px;
-    top: 40px;
-    width: 193px;
+    left: -180px;
+    right: auto;
  }
 
  .messageText:hover .dropdown-content{
@@ -105,7 +128,7 @@
 
  .sendbutton{
   cursor: pointer;
-  font-size: 14px;
+  font-size: 13px;
   padding: 5px;
   color: var(--black);
   display: inline-block;

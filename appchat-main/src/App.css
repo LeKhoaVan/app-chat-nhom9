@@ -11,7 +11,7 @@
   --cl-003:#333;
   --box-shadow-003:rgba(0, 0, 0, 0.2);
 
-  --bg-navbar:#0091FF;
+  --bg-navbar:#08A5DB;
   --bg-navbar-hover:#0091ffc4;
   --white : #fff;
   --nav-item-hover:#0082e5;
@@ -33,7 +33,6 @@
   --cl-send-svg:#858585;
   --bg-05:#E5E7EB;
 
-
   --red: red;
   --blue:blue;
   --bg-hover-btn-red:rgba(255, 0, 0, 0.788);
@@ -44,6 +43,7 @@
   --bg-hover-02:rgba(0, 0, 0, 0.096);
   --bg-hover-03:rgba(0, 0, 0, 0.144);
   --bg-hover-04:rgba(0, 0, 0, 0.178);
+  --bg-con-active:rgb(159, 190, 253);
 
   --bg-033:#bbb;
   --bg-06:#4267B2;
@@ -65,6 +65,8 @@
   --bd-popup-01:rgba(0, 0, 0, 0.274);
   --cl-popup-01:rgba(0, 0, 0, 0.678);
 
+
+  --cl-info-text:#72808e;
 }
 
 
@@ -707,6 +709,14 @@ body{
 .list-user .text .auth{
   font-size: 13px;
 }
+.list-user .text .text-name{
+  font-weight: 500;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
 .list-user .avt{
   height: 46px;
   width: 46px;
@@ -962,4 +972,8 @@ body{
   left: 50%;
   font-size : 50px;
   color: var(--bd-01);
+}
+button:disabled{
+  background-color: #495057;
+  pointer-events: none;
 }

@@ -8,7 +8,7 @@ function PopupQuestionOutGroup({title, mes,onDialog}) {
                     <p className='icon' onClick={()=>onDialog(false)}>&times;</p>
                 </div>
                 <div className="body">
-                <p className="title">{mes}</p>
+                    <p className="title">{mes}</p>
                     <div className='btn-group'>
                         <button onClick={()=>onDialog(false)} className="btn no">Không</button>
                         <button  onClick={()=>onDialog(true)} className="btn yes">{title}</button>

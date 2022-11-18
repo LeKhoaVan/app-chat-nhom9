@@ -7,7 +7,7 @@ function PopupNotify({title, mes,onDialog}) {
                     <p>{title}</p>
                 </div>
                 <div className="body">
-                <p className="title">{mes}</p>
+                    <p className="title">{mes}</p>
                     <div className='btn-group'>
                         <button onClick={()=>onDialog(true)} className="btn no">OK</button>
                     </div>

@@ -11,17 +11,18 @@ import {UrlSK } from '../contexts/constants'
 import { AuthContext} from '../contexts/AuthContext';
 import FriendRequest from '../screens/FriendRequest';
 import SendFR from '../screens/SendFR';
+import ManageMember from '../screens/ManageMember';
 
 const Stack = createNativeStackNavigator();
 const RootNavigator = () => {
-	// const {socket,userInfo} = useContext(AuthContext)
-	// useEffect(()=>{
-	// 	socket.current = io(`${UrlSK}`);
-	// 	socket.current.emit("addUser", (userInfo?._id));
-	// 	socket.current.on("getUsers", (users) => {
-	// 		console.log('User:',users)
-    // 	}) 
-	// },[userInfo])
+	const {socket,userInfo} = useContext(AuthContext)
+	useEffect(()=>{
+		socket.current = io(`${UrlSK}`);
+		socket.current.emit("addUser", userInfo._id);
+		socket.current.on("getUsers", (users) => {
+		  console.log(users)
+    	}) 
+	},[userInfo._id])
 	
 	return (
 		<Stack.Navigator 
@@ -72,6 +73,21 @@ const RootNavigator = () => {
 						backgroundColor:'#056282',
 					},
 					title:'Tùy chọn',
+					headerTintColor:'#fff',
+					headerTitleStyle:{
+						fontSize:17,
+					}
+				})}
+			/>
+			<Stack.Screen 
+				name="ManageMember" 
+				component={ManageMember}
+				options={()=>({
+					headerShown:true,
+					headerStyle:{
+						backgroundColor:'#056282',
+					},
+					title:'Quản lý thành viên',
 					headerTintColor:'#fff',
 					headerTitleStyle:{
 						fontSize:17,

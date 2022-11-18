@@ -62,7 +62,8 @@ router.put("/recall", async (req, res) => {
   try{
     const result = await Message.findByIdAndUpdate(
       req.body.id, 
-      { "reCall": true})
+      { "reCall": true,
+        "type":0,})
 
     res.status(200).json(req.body.id);
   }catch (err) {
