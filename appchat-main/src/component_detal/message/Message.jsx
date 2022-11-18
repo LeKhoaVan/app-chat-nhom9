@@ -74,9 +74,8 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
 
   if (own) {
     return (
-      <ul class="dropdown-own">
       <div className={own ? "message own" : "message"}>
-        
+      <ul class="dropdown">
           <div className="messageTop">
               <div className="messageText">
                
@@ -107,17 +106,19 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
       
                 </div>
               </div>
-              <div className="messageImg"></div>
-          </div>
-          <img
+              <div className="messageImg"> <img
               className="messageImg"
               src={avatar}
               alt=""
-            />
-          <div className="messageBottom">{moment(message.createdAt).format("LT")}</div>
+            /></div>
+          </div>
+         
+       
 
-        </div>
+      
       </ul>
+      <div className="messageBottom">{moment(message.createdAt).format("LT")}</div>
+      </div>
     );
   }
   else {

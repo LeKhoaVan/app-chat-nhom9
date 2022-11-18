@@ -15,7 +15,7 @@
   object-fit: cover;
   
   margin-right: 10px;
-  transform: translate(10px, -30px)
+  /* transform: translate(10px, -30px) */
 }
 
 .messageImgSend{
@@ -45,11 +45,12 @@
 .messageBottom{
   font-size: 12px;
   margin-bottom: 10px;  
-  transform: translate(10px, -30px)
+  /* transform: translate(10px, -30px) */
 }
 
 .message.own{
     align-items: flex-end;
+    position: relative;
 }
 
 .message.own .messageText{
@@ -60,6 +61,10 @@
 .message.own .messageText .owner{
     display: none;
     overflow: hidden;
+}
+
+.message.own .messageImg{
+  margin-left: 5px;
 }
 
 
