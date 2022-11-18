@@ -547,6 +547,18 @@ export default function MyChat() {
         avt: data.avt
       });
 
+
+      data.convs.find(conv => {
+        if(conv._id === data.conversationId){
+          conv.updatedAt = new Date(Date.now()).toISOString();
+        }
+      })
+
+      
+      data.convs.sort((a,b) => b.updatedAt.localeCompare(a.updatedAt))
+
+      setConversation(data.convs);
+
     });
     socket.current.on("getStatus", (data) => {
       setSenderMessage({
@@ -696,10 +708,13 @@ export default function MyChat() {
 
 
       
-
+      const timeUpdate= {
+        "convId" : currentChat._id,
+      }
 
       try {
         const res = await axios.post("http://localhost:8800/api/messages", message);
+        const updateTime = await axios.put("http://localhost:8800/api/conversations/updateAt", timeUpdate);
         // setMessages([...messages, res.data]);
         setNewMessages("");
         socket.current.emit("sendMessage", {
@@ -714,6 +729,7 @@ export default function MyChat() {
           date: Date.now(),
           username: username,
           avt: avt,
+          convs: conversations,
         });
   
         socket.current.emit("sendStatus", {

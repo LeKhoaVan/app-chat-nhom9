@@ -18,18 +18,45 @@ router.post("/", async (req, res) => {
   }
 });
 
-//get conv of a user
+//get conv latest of a user
 
 router.get("/:userId", async (req, res) => {
   try { 
     const conversation = await Conversation.find({
       members: { $in: [req.params.userId] },
-    });
+    }).sort({updatedAt:-1}) ;
     res.status(200).json(conversation);
   } catch (err) {
     res.status(500).json(err);
   }
 });
+
+//update time conv 
+router.put("/updateAt", async (req, res) => {
+ 
+  try{
+    const result = await Conversation.findByIdAndUpdate(
+      req.body.convId, 
+      {"updatedAt": Date.now()})
+
+    res.status(200).json(req.body.id);
+  }catch (err) {
+    res.status(500).json(err);
+  }
+    
+}); 
+
+//get conv lastest 
+// router.get("/lastest/:userId", async (req, res) => {
+//   try {
+//     const conversation = await Conversation.find({
+//       userId: req.params.userId,
+//     }).sort({createdAt:-1}) ;
+//     res.status(200).json(conversation);
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// });
 
 
 router.put('/updateImg/:id', function(req,res){
@@ -68,9 +95,7 @@ router.get("/find/:firstUserId/:secondUserId", async (req, res) => {
   }
 });
 
-router.get("/findMesLatest/", async(req, res) =>{
-  
-});
+
 
 
 
@@ -96,8 +121,7 @@ router.put('/removeAuthorize', async (req, res) => {
   try{
     
 		const postUpdateCondition = { _id: req.body.conId }
-
-    const conversation = await Conversation.findOneAndUpdate(postUpdateCondition,
+const conversation = await Conversation.findOneAndUpdate(postUpdateCondition,
       { $pull: { "authorization": req.body.userId } }
       , { new: true })
 
