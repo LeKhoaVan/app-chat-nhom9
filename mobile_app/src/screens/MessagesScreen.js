@@ -7,8 +7,7 @@ import { Url } from '../contexts/constants';
 
 export default function MessagesScreen({navigation}) {
   const [modalVisible, setModalVisible] = useState(false);
-  const [conversations, setConversation] = useState([]);
-  const {userInfo,senderMessage,recallStatus} = useContext(AuthContext)
+  const {userInfo,senderMessage,recallStatus,authorize,conversations, setConversation,render} = useContext(AuthContext)
   useEffect(() => {
     const getConversations = async () => {
       try {
@@ -19,7 +18,7 @@ export default function MessagesScreen({navigation}) {
       }
     };
     getConversations();
-  }, [userInfo._id]);
+  }, [userInfo._id,authorize,render]);
   return (
       <View style={styles.container}>
         <ScrollView>
