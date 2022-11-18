@@ -14,6 +14,8 @@ import SendFR from '../screens/SendFR';
 import ManageMember from '../screens/ManageMember';
 import CreateGroup from '../screens/CreateGroup';
 import UserInfoScreen from '../screens/UserInfoScreen';
+import AddUserScreen from '../screens/AddUserScreen';
+import SearchScreen from '../screens/SearchScreen';
 
 const Stack = createNativeStackNavigator();
 const RootNavigator = () => {
@@ -111,6 +113,8 @@ const RootNavigator = () => {
 					}
 				})}/>
 			<Stack.Screen name="CreateGroup" component={CreateGroup}/>
+			<Stack.Screen name="AddUserScreen" component={AddUserScreen}/>
+			<Stack.Screen name="SearchScreen" component={SearchScreen}/>
 			<Stack.Screen 
 				name="UserInfoScreen" 
 				component={UserInfoScreen}

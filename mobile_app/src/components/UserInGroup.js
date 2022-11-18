@@ -7,7 +7,7 @@ import axios from 'axios';
 import { useNavigation } from "@react-navigation/native";
 
 export default function UserInGroup({ user }) {
-  const { userInfo, currentChat, authorize, setAuthorize, setUserCons,conversations,setCurrentChat } = useContext(AuthContext);
+  const { userInfo, currentChat, authorize, setAuthorize, setUserCons,conversations,setCurrentChat,setRender } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false);
   const nav = useNavigation();
   function RemoveAuth(conId, userId) {
@@ -41,6 +41,7 @@ export default function UserInGroup({ user }) {
       }
       setUserCons(list);
       currentChat.members = listmember;
+      setRender(Math.random());
     })
   }
   async function handleChatOne(senderId, receiverId) {

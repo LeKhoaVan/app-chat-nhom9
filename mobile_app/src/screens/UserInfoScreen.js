@@ -4,6 +4,8 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import React, { useContext, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { AuthContext } from '../contexts/AuthContext'
+import axios from 'axios'
+import { Url } from '../contexts/constants'
 export default function UserInfoScreen({ route, navigation }) {
   const Cdate = (date) => {
     let tempDate = new Date(date);
