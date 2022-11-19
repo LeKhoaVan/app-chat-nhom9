@@ -547,17 +547,32 @@ export default function MyChat() {
         avt: data.avt
       });
 
+      //load conversation latest
+      conversations.find((conv) => {
 
-      data.convs.find(conv => {
-        if(conv._id === data.conversationId){
-          conv.updatedAt = new Date(Date.now()).toISOString();
-        }
+          if(conv._id === data.conversationId){
+            conv.updatedAt = new Date(Date.now()).toISOString();
+            for(let index=0; index<conv.members.length; index++){
+              if(conv.members[index] === _id){
+                conversations.sort((a,b) => b.updatedAt.localeCompare(a.updatedAt))
+                  setConversation(conversations);
+              }              
+            }
+          }
       })
 
-      
-      data.convs.sort((a,b) => b.updatedAt.localeCompare(a.updatedAt))
 
-      setConversation(data.convs);
+
+       
+      // data.convs.find(conv => {
+      //   if(conv._id === data.conversationId){
+      //     conv.updatedAt = new Date(Date.now()).toISOString();
+      //   }
+      // })
+
+      
+      
+      
 
     });
     socket.current.on("getStatus", (data) => {

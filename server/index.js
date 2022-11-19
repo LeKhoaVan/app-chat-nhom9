@@ -137,7 +137,7 @@ io.on("connection", (socket) => {
   });
 
   //update status
-  socket.on("sendStatus", function({senderId,username,receiverIds,type,text,conversationId,delUser,date}) {
+  socket.on("sendStatus", function({senderId,username,receiverIds,type,text,conversationId,delUser,date,convs}) {
 
     // const ds = []
     
@@ -159,6 +159,7 @@ io.on("connection", (socket) => {
           delUser,
           date,
           username,
+          convs,
         });
     //   }
     // });
