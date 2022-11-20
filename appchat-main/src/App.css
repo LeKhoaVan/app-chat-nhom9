@@ -11,7 +11,7 @@
   --cl-003:#333;
   --box-shadow-003:rgba(0, 0, 0, 0.2);
 
-  --bg-navbar:#0091FF;
+  --bg-navbar:#08A5DB;
   --bg-navbar-hover:#0091ffc4;
   --white : #fff;
   --nav-item-hover:#0082e5;
@@ -64,6 +64,7 @@
   --bg-popup-05:rgba(0, 0, 0, 0.432);
   --bd-popup-01:rgba(0, 0, 0, 0.274);
   --cl-popup-01:rgba(0, 0, 0, 0.678);
+  --bd-popup-otp:rgba(155, 155, 155, 0.27);
 
 
   --cl-info-text:#72808e;
@@ -603,7 +604,6 @@ body{
   justify-content: center;
 }
 .title_edit_button{
-  width: 72px;
   font-size: 15px;
   color: var(--cl-title);
 }

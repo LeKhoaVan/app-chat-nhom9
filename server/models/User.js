@@ -30,6 +30,9 @@ const UserSchema = new mongoose.Schema(
     },
     avt:{
       type: String
+    },
+    status:{
+      type: Number,
     }
   },
   { timestamps: true }

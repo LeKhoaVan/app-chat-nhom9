@@ -8,6 +8,8 @@ import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
 import LockIcon from '@mui/icons-material/Lock';
 import PersonIcon from '@mui/icons-material/Person';
 import CakeIcon from '@mui/icons-material/Cake';
+import PopupVertìyOTP from "../PopupQuestion/PopupVertifyOTP";
+
 
 function OnclickTitle(){
     const $ = document.querySelector.bind(document);
@@ -54,6 +56,22 @@ function OneClickRegister(){
 
 
 export default function Login() {
+    const [popupOTP, setPopupOTP] = useState({
+        title: 'Nhập mã xác thực',
+        gmail: '',
+        isLoading: false
+      })
+
+
+     function handleOTP(choose){
+        if(choose){
+            setPopupOTP({
+                title: '',
+                gmail: '',
+                isLoading: false
+              });
+        }
+     }
 
    
     //Login
@@ -85,7 +103,7 @@ export default function Login() {
     }
 
 
-
+  
     //register
     const {registerUser} = useContext(AuthContext)
 
@@ -115,8 +133,15 @@ export default function Login() {
                     setAlertRe({ type: 'danger', message: registerData.message })
                     setTimeout(() => setAlertRe(null), 5000)
                 }else{
-                    setAlertRe({ type: 'danger', message: "Thành công đăng ký tài khoản" })
+                    setAlertRe({ type: 'danger', message: "Xác thực tài khoản" })
                     setTimeout(() => setAlertRe(null), 10000)
+
+                    setPopupOTP({
+                        title: 'Nhập mã xác thực',
+                        gmail: emailRe,
+                        isLoading: true
+                      });
+
                 }
             } catch (error) {
                 console.log(error)
@@ -130,6 +155,8 @@ export default function Login() {
         
     }
 
+
+   
 
 
     return ( 
@@ -228,7 +255,7 @@ export default function Login() {
                 </div>
             </div>
         </div>
-        
+        {popupOTP.isLoading && <PopupVertìyOTP onDialog={handleOTP} title={popupOTP.title} gmail={popupOTP.gmail} />}
       </>
     );
 }
