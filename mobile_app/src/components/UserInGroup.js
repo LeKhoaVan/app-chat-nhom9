@@ -7,7 +7,7 @@ import axios from 'axios';
 import { useNavigation } from "@react-navigation/native";
 
 export default function UserInGroup({ user }) {
-  const { userInfo, currentChat, authorize, setAuthorize, setUserCons,conversations,setCurrentChat,setRender } = useContext(AuthContext);
+  const { userInfo, currentChat, authorize, setAuthorize, setUserCons, conversations, setCurrentChat, setRender } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false);
   const nav = useNavigation();
   function RemoveAuth(conId, userId) {
@@ -83,8 +83,22 @@ export default function UserInGroup({ user }) {
     <TouchableOpacity
       style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 10 }}
       onLongPress={() => setModalVisible(user._id == userInfo._id ? false : true)}>
-      <Image source={{ uri: user.avt }}
-        style={{ width: 50, height: 50, borderRadius: 100, marginRight: 20 }} />
+      <View>
+        <Image source={{ uri: user.avt }}
+          style={{ width: 60, height: 60, borderRadius: 100, marginRight: 20 }} />
+        {user.isActive ?
+          <View
+            style={{
+              width: 12,
+              height: 12,
+              backgroundColor: '#46AB5E',
+              borderRadius: 100,
+              position: 'absolute',
+              marginTop: 45,
+              marginLeft: 45,
+            }}>
+          </View> : <></>}
+      </View>
       <View>
         <Text style={{ fontSize: 17 }}>{user.username == userInfo.username ? "Bạn" : user.username}</Text>
         <Text>{authorize.map((auth) => (
@@ -110,11 +124,25 @@ export default function UserInGroup({ user }) {
               </View>
               <View
                 style={styles.info}>
-                <Image source={{ uri: user.avt }}
-                  style={{ width: 50, height: 50, borderRadius: 100, marginRight: 20 }} />
-                <Text style={{ fontSize: 17, fontWeight: '500',marginRight:'auto' }}>{user.username == userInfo.username ? "Bạn" : user.username}</Text>
+                <View>
+                  <Image source={{ uri: user.avt }}
+                    style={{ width: 60, height: 60, borderRadius: 100, marginRight: 20 }} />
+                  {user.isActive ?
+                    <View
+                      style={{
+                        width: 12,
+                        height: 12,
+                        backgroundColor: '#46AB5E',
+                        borderRadius: 100,
+                        position: 'absolute',
+                        marginTop: 45,
+                        marginLeft: 45,
+                      }}>
+                    </View> : <></>}
+                </View>
+                <Text style={{ fontSize: 17, fontWeight: '500', marginRight: 'auto' }}>{user.username == userInfo.username ? "Bạn" : user.username}</Text>
                 <TouchableOpacity
-                  onPress={()=>handleChatOne(userInfo._id,user._id)}>
+                  onPress={() => handleChatOne(userInfo._id, user._id)}>
                   <Ionicons name='chatbubble-ellipses-outline' size={26} color={'#056282'}
                     style={{ marginLeft: 'auto', }} />
                 </TouchableOpacity>
@@ -122,7 +150,7 @@ export default function UserInGroup({ user }) {
               <View
                 style={styles.modal_body}>
                 <TouchableOpacity
-                  onPress={()=>nav.navigate({name: 'UserInfoScreen',params: {user}})}
+                  onPress={() => nav.navigate({ name: 'UserInfoScreen', params: { user } })}
                   style={styles.choose}>
                   <Text style={styles.text_choose}>Xem trang cá nhân</Text>
                 </TouchableOpacity>

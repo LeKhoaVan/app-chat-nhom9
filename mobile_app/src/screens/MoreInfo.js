@@ -23,7 +23,7 @@ export default function MoreInfo({ navigation }) {
   const getUser = async () => {
     const friendId = currentChat.members.find((m) => m !== userInfo._id);
     try {
-      const res = await axios(`${Url}/api/users/name?userId=${friendId}`);
+      const res = await axios.get(`${Url}/api/users/name?userId=${friendId}`);
       { res.data.avt === "" ? setAvt("null") : setAvt(res.data.avt) }
       SetUser(res.data);
     } catch (err) {
@@ -323,8 +323,8 @@ const handleImageChange = async (image) => {
           <TouchableOpacity
             style={{ alignItems: 'center', justifyContent: 'center', paddingHorizontal: 20 }} >
             <Ionicons
-              name='search' size={25} style={{ backgroundColor: '#DEDEDE', padding: 10, borderRadius: 100, width: 47 }} />
-            <Text style={{ fontSize: 15, width: 90, textAlign: 'center' }}>Tìm kiếm tin nhắn</Text>
+              name='search' size={20} style={{ backgroundColor: '#DEDEDE', padding: 10, borderRadius: 100, width: 40,height:40 }} />
+            <Text style={{ fontSize: 14, width: 90, textAlign: 'center' }}>Tìm kiếm tin nhắn</Text>
           </TouchableOpacity>
           {currentChat.name ?
             <TouchableOpacity
@@ -334,10 +334,20 @@ const handleImageChange = async (image) => {
               }}
               style={{ alignItems: 'center', justifyContent: 'center', paddingHorizontal: 20 }} >
               <Ionicons
-                name='person-add-outline' size={25} style={{ backgroundColor: '#DEDEDE', padding: 10, borderRadius: 100, width: 47 }} />
-              <Text style={{ fontSize: 15, width: 90, textAlign: 'center' }}>Thêm thành viên</Text>
+                name='person-add-outline' size={20} style={{ backgroundColor: '#DEDEDE', padding: 10, borderRadius: 100, width: 40,height:40 }} />
+              <Text style={{ fontSize: 14, width: 90, textAlign: 'center' }}>Thêm thành viên</Text>
             </TouchableOpacity> : <></>}
-
+            {!currentChat.name ?
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate({ name: 'UserInfoScreen', params: { user } })
+              }}
+              style={{ alignItems: 'center', justifyContent: 'center', paddingHorizontal: 20 }} >
+              <Ionicons
+                name='person-outline' size={20} style={{ backgroundColor: '#DEDEDE', padding: 10, borderRadius: 100, width: 40,height:40 }} />
+              <Text style={{ fontSize: 14, width: 90, textAlign: 'center' }}>Trang cá nhân</Text>
+            </TouchableOpacity> : <></>}
+          
         </View>
 
       </View>

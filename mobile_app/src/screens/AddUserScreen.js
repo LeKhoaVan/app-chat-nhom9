@@ -120,6 +120,7 @@ export default function AddUserScreen({ navigation }) {
                             justifyContent: 'space-between',
                             alignItems: 'center',
                         }}>
+                        <View>
                         <Image
                             source={{ uri: userSearchCon.avt }}
                             style={{
@@ -127,6 +128,19 @@ export default function AddUserScreen({ navigation }) {
                                 height: 60,
                                 borderRadius: 100,
                             }} />
+                            {userSearchCon.isActive ?
+                                <View
+                                    style={{
+                                        width: 12,
+                                        height: 12,
+                                        backgroundColor: '#46AB5E',
+                                        borderRadius: 100,
+                                        position: 'absolute',
+                                        marginTop: 45,
+                                        marginLeft: 45,
+                                    }}>
+                                </View> : <></>}
+                        </View>
                         <Text
                             style={{
                                 fontSize: 16,

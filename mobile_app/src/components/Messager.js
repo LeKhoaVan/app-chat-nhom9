@@ -135,17 +135,17 @@ const Messager = ({ message, own, onClickDeleteMgsUser, onClickDeleteMgsFri, onC
                 flexDirection: 'row',
                 marginVertical: 5,
                 justifyContent: 'flex-start',
-                alignItems: 'flex-start'
+                alignItems: 'flex-start',
               }, own ? styles.me_c : styles.notMe_co]}>
-                {/* {!own?   
-                                <Image 
-                                      source={{uri :messages.avt}}
-                                      style={{
-                                          width:40,
-                                          height:40,
-                                          marginRight:5,
-                                          borderRadius:100,
-                                      }}/>:<></>} */}
+                {!own ?
+                  <Image
+                    source={{ uri: message?.avt }}
+                    style={{
+                      width: 40,
+                      height: 40,
+                      marginRight: 5,
+                      borderRadius: 100,
+                    }} /> : <></>}
                 <TouchableOpacity style={[
                   styles.container, own ? styles.me_container : styles.notMe_container]}
                   onLongPress={() => setModalVisible(true)}>

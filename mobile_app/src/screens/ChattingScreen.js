@@ -27,6 +27,8 @@ export default function ChattingScreen({ navigation }) {
   const [recallMessage, setRecallMessages] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
+  
+  
 
   useEffect(() => {
     const friendId = currentChat.members.find((m) => m !== userInfo._id);
@@ -39,7 +41,44 @@ export default function ChattingScreen({ navigation }) {
       }
     }
     getUser();
+    
   }, [userInfo._id, currentChat]);
+  const getOnline=()=>{
+    if(!currentChat.name)
+    {
+        if(user.isActive)
+          return "Đang hoạt động"
+        else
+        {
+          let dateNow = new Date(Date.now());
+          let yearNow = dateNow.getFullYear();
+          let monthNow = dateNow.getMonth();
+          let dayNow = dateNow.getDate();
+          let hourNow = dateNow.getHours();
+          let minuteNow = dateNow.getMinutes();
+          let dateA = new Date(user.updatedAt);
+          let yearA = dateA.getFullYear();
+          let monthA = dateA.getMonth();
+          let dayA = dateA.getDate();
+          let hourA = dateA.getHours();
+          let minuteA = dateA.getMinutes();
+          //return(hourNow+","+hourA+","+dayNow+","+dayA+","+monthNow+","+monthA+","+yearNow+","+yearA)
+          let resulta;
+          if(hourNow==hourA && dayNow==dayA && monthNow==monthA && yearNow==yearA){
+            resulta = minuteNow-minuteA+ ' phút trước'
+          }
+          else if(hourNow!=hourA && dayNow==dayA && monthNow==monthA && yearNow==yearA){
+            resulta =  hourNow-hourA +' giờ trước'
+          }
+          else if(dayNow-dayA==1 && monthNow==monthA && yearNow==yearA){
+            resulta = '1 ngày trước'
+          } else return ""
+          return 'Hoạt động ' + resulta
+        }         
+    }
+    else
+      return "";
+  }
   useEffect(() => {
     const getMessages = async () => {
       let messageList = [];
@@ -587,7 +626,7 @@ export default function ChattingScreen({ navigation }) {
         </TouchableOpacity>
         <View style={styles.Name}>
           <Text style={styles.text_Name}>{currentChat.name ? currentChat.name : user.username}</Text>
-          <Text style={styles.active}>{currentChat.name ? Nmember + ' thành viên' : 'Đang hoạt động'}</Text>
+          <Text style={styles.active}>{currentChat.name ? Nmember + ' thành viên' : getOnline()}</Text>
         </View>
         <TouchableOpacity>
           <Ionicons

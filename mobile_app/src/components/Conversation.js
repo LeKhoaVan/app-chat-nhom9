@@ -100,6 +100,7 @@ export default function Conversation({ conversation,navigation,myMes,recall}) {
         setAuthorize(conversation.authorization)
         }}>
     <View style={styles.container}>
+      <View>
       <Image 
           source={{uri : conversation.name? conversation.img: user.avt}}
           style={{
@@ -108,6 +109,19 @@ export default function Conversation({ conversation,navigation,myMes,recall}) {
               borderRadius:100,
               backgroundColor:'#008FF3',
           }}/>
+        {!conversation.name && user.isActive?
+        <View
+          style={{
+            width:12,
+            height:12,
+            backgroundColor:'#46AB5E',
+            borderRadius:100,
+            position:'absolute',
+            marginTop:45,
+            marginLeft:45,
+          }}>
+        </View>:<></>}
+      </View>
       <View style={styles.center}>
         <Text style={styles.name_user}>{conversation.name? conversation.name : user.username}</Text>
         <Text style={styles.last_chat}>{newMes?.text? conversation.name?   mess( userName+': '+newMes?.text) :mess(newMes?.text): 'Chưa có tin nhắn'}</Text>

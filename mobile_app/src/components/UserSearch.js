@@ -47,21 +47,35 @@ export default function UserSearch({ item }) {
         <TouchableOpacity
             onPress={() => {
                 userInfo._id != item._id ?
-                handleChatOne(userInfo._id, item._id) :
-                console.log("Đây là tài email của bạn")
+                    handleChatOne(userInfo._id, item._id) :
+                    console.log("Đây là tài email của bạn")
             }}
             style={{
                 flexDirection: 'row',
                 alignItems: 'flex-end',
                 padding: 10,
             }}>
-            <Image
-                source={{ uri: item.avt }}
-                style={{
-                    width: 60,
-                    height: 60,
-                    borderRadius: 100,
-                }} />
+            <View>
+                <Image
+                    source={{ uri: item.avt }}
+                    style={{
+                        width: 60,
+                        height: 60,
+                        borderRadius: 100,
+                    }} />
+                {item.isActive ?
+                    <View
+                        style={{
+                            width: 12,
+                            height: 12,
+                            backgroundColor: '#46AB5E',
+                            borderRadius: 100,
+                            position: 'absolute',
+                            marginTop: 45,
+                            marginLeft: 45,
+                        }}>
+                    </View> : <></>}
+            </View>
             <Text
                 style={{
                     fontSize: 16,
