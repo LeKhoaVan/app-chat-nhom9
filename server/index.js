@@ -65,7 +65,7 @@ app.use("/api/auth", authRoute);
 //socket
 const io = socketio(server,{
   cors: {
-    origin: ["http://localhost:9000"],
+    origin: '*'
   },
 });
 
