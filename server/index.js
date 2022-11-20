@@ -7,7 +7,8 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const multer = require("multer");
 const http = require('http');
-const socketio = require('socket.io');
+const socketio  = require('socket.io');
+const server = http.createServer(app);
 
 const userRoute = require("./routes/user");
 const conversationRoute = require("./routes/conversations");
@@ -62,18 +63,11 @@ app.use("/api/auth", authRoute);
 
 
 //socket
-// const io = require("socket.io")(8900, {
-//   cors: {
-//     origin: "http://localhost:9000",
-//   },
-// });
-const server = http.createServer(app);
 const io = socketio(server,{
   cors: {
-    origin: ["http://localhost:9000","exp://192.168.1.10:19000"],
+    origin: ["http://localhost:9000"],
   },
 });
-
 
 let users = [];
 

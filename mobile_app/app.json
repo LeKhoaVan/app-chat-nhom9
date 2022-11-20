@@ -7,6 +7,7 @@
       "**/*"
     ],
     "android": {
+      "package": "com.tranguyen1610.mobile_app"
     }
   }
 }
