@@ -30,11 +30,13 @@ export default function SideNavbar(){
   })
   const {
     authState:{user:{avt,username,birthday,gender,email}},
-    logoutUser
+    logoutUser,socket
   } = useContext(AuthContext)
 
-  const logout = () => logoutUser()
-
+  const logout = () => {
+    socket.current.emit('onDisconnect')
+    logoutUser()}
+    
   function handleToggle(){
     setIsActive(!isActive);
   };

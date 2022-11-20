@@ -6,6 +6,7 @@ const dotenv = require("dotenv");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const multer = require("multer");
+const axios = require('axios');
 const http = require('http');
 const socketio  = require('socket.io');
 const server = http.createServer(app);
@@ -212,10 +213,33 @@ io.on("connection", (socket) => {
   // });
 
   //when disconnect
-  socket.on("disconnect", () => {
+  const handleDisconnect=()=>{
     console.log("a user disconnected!");
+    let id="";
+    if(users.length>0)
+      id = users.find(e=>e.socketId=socket.id).userId;
+    let data={
+      usersId:id,
+      isActive:false,
+    }
+    const activeOn = async () => {
+      try {
+        const res = await axios.put('http://localhost:8800/api/users/'+id, data);
+        console.log(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    if(id!="")
+      activeOn();
     removeUser(socket.id);
     io.emit("getUsers", users);
+  }
+  socket.on("onDisconnect", () =>{
+    handleDisconnect()
+  });
+  socket.on("disconnect", () => {
+    handleDisconnect()
   });
 });
 server.listen(8800, () => {

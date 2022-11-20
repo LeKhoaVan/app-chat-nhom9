@@ -86,7 +86,7 @@ router.post('/register', async (req, res) => {
 				newOtp.save();
 
 				const hashedPassword = await argon2.hash(password);
-				const newUser = new User({ email, password: hashedPassword ,username,birthday,gender , avt,status})
+				const newUser = new User({ email, password: hashedPassword ,username,birthday,gender , avt,status,isActive:true})
 				await newUser.save();
 
 		

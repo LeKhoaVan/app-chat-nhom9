@@ -6,7 +6,7 @@ import { AuthContext } from '../contexts/AuthContext'
 
 
 export default function SettingScreen() {
-    const{logout} = useContext(AuthContext)
+    const{logout,socket} = useContext(AuthContext)
   return (
     <View>
         <TouchableOpacity style={styles.button}>
@@ -59,7 +59,10 @@ export default function SettingScreen() {
                 name='chevron-forward'
                 size={25}/>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={()=>logout()}>
+        <TouchableOpacity style={styles.button} onPress={()=>{
+            logout()
+            socket.current.emit('onDisconnect')
+            }}>
         <Ionicons 
                 name='md-log-out-outline'
                 size={25}

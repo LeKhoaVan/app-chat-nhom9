@@ -7,7 +7,7 @@ router.use(cors());
 
 //update user
 router.put("/:id", async (req, res) => {
-  if (req.body.userId === req.params.id || req.body.isAdmin) {
+  if (req.body.usersId === req.params.id || req.body.isAdmin) {
     if (req.body.password) {
       try {
         const salt = await bcrypt.genSalt(10);
