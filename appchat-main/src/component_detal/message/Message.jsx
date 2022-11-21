@@ -1,5 +1,6 @@
 import "./message.css";
-import moment from "moment";
+import * as moment from 'moment';
+import 'moment/locale/vi';
 import axios from "axios";
 import { Component, useEffect, useState, useRef, useContext } from "react";
 
@@ -117,7 +118,7 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
 
       
       </ul>
-      <div className="messageBottom">{moment(message.createdAt).format("LT")}</div>
+      <div className="messageBottom">{moment(message.createdAt).fromNow()}</div>
       </div>
     );
   }
@@ -161,7 +162,7 @@ export default function Message({ message, own, onClickDelete, userId, onClickDe
           </div>
           
         </ul>
-        <div className="messageBottom">{moment(message.createdAt).format("LT")} </div>
+        <div className="messageBottom">{moment(message.createdAt).fromNow()} </div>
       </div>
     );
   }

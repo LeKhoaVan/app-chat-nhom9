@@ -9,6 +9,8 @@ import { AuthContext } from '../contexts/AuthContext'
 import { io } from 'socket.io-client';
 import * as ImagePicker from 'expo-image-picker';
 import * as DocumentPicker from 'expo-document-picker';
+import  moment from 'moment';
+import 'moment/locale/vi';
 
 // send image
 import storage from '../firebase/Firebase';
@@ -50,30 +52,7 @@ export default function ChattingScreen({ navigation }) {
           return "Đang hoạt động"
         else
         {
-          let dateNow = new Date(Date.now());
-          let yearNow = dateNow.getFullYear();
-          let monthNow = dateNow.getMonth();
-          let dayNow = dateNow.getDate();
-          let hourNow = dateNow.getHours();
-          let minuteNow = dateNow.getMinutes();
-          let dateA = new Date(user.updatedAt);
-          let yearA = dateA.getFullYear();
-          let monthA = dateA.getMonth();
-          let dayA = dateA.getDate();
-          let hourA = dateA.getHours();
-          let minuteA = dateA.getMinutes();
-          //return(hourNow+","+hourA+","+dayNow+","+dayA+","+monthNow+","+monthA+","+yearNow+","+yearA)
-          let resulta;
-          if(hourNow==hourA && dayNow==dayA && monthNow==monthA && yearNow==yearA){
-            resulta = minuteNow-minuteA+ ' phút trước'
-          }
-          else if(hourNow!=hourA && dayNow==dayA && monthNow==monthA && yearNow==yearA){
-            resulta =  hourNow-hourA +' giờ trước'
-          }
-          else if(dayNow-dayA==1 && monthNow==monthA && yearNow==yearA){
-            resulta = '1 ngày trước'
-          } else return ""
-          return 'Hoạt động ' + resulta
+          return 'Hoạt động ' + moment(user.updatedAt).fromNow()
         }         
     }
     else

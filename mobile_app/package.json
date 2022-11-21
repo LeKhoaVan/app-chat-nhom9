@@ -30,7 +30,9 @@
     "expo-permissions": "~13.2.0",
     "expo-splash-screen": "~0.16.2",
     "expo-status-bar": "~1.4.0",
+    "expo-updates": "~0.14.7",
     "firebase": "^9.14.0",
+    "moment": "^2.29.4",
     "react": "18.0.0",
     "react-dom": "18.0.0",
     "react-moment": "^1.1.2",
@@ -47,8 +49,7 @@
     "react-native-vector-icons": "^9.2.0",
     "react-native-web": "~0.18.7",
     "react-router-dom": "^6.4.3",
-    "socket.io-client": "^4.5.3",
-    "expo-updates": "~0.14.7"
+    "socket.io-client": "^4.5.3"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

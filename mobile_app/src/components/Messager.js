@@ -5,19 +5,15 @@ import { Url } from '../contexts/constants';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { AuthContext } from '../contexts/AuthContext';
 import { Audio, Video } from 'expo-av';
+import  moment from 'moment';
+import 'moment/locale/vi';
 // import { downloadToFolder } from "expo-file-dl";
 
 const Messager = ({ message, own, onClickDeleteMgsUser, onClickDeleteMgsFri, onClickDelete }) => {
   // const [user, setUser] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const { userInfo } = useContext(AuthContext);
-  const CTime = (date) => {
-    let tempDate = new Date(date);
-    let minute = tempDate.getMinutes();
-    { minute < 10 ? minute = '0' + minute : minute = minute }
-    let fDate = tempDate.getHours() + ":" + minute;
-    return fDate;
-  };
+
   // const downloadFile= async(url)=>{
   //   await downloadToFolder(
   //     url,
@@ -119,7 +115,7 @@ const Messager = ({ message, own, onClickDeleteMgsUser, onClickDeleteMgsFri, onC
             isLooping
             useNativeControls />
           : <></>}
-        <Text style={{ color: '#939393', fontSize: 13 }}>{CTime(message.createdAt)}</Text>
+        <Text style={{ color: '#939393', fontSize: 13 }}>{moment(message.createdAt).fromNow()}</Text>
       </TouchableOpacity>
       <Modal
         visible={modalVisible}
@@ -163,7 +159,7 @@ const Messager = ({ message, own, onClickDeleteMgsUser, onClickDeleteMgsFri, onC
                       isLooping
                       useNativeControls />
                     : <></>}
-                  <Text style={{ color: '#939393', fontSize: 13 }}>{CTime(message.createdAt)}</Text>
+                  <Text style={{ color: '#939393', fontSize: 13 }}>{moment(message.createdAt).fromNow()}</Text>
                 </TouchableOpacity>
               </View>
 
