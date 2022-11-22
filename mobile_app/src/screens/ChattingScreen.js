@@ -292,6 +292,13 @@ export default function ChattingScreen({ navigation }) {
 
     }
   };
+  const handleOpenSettings = () => {
+    if (Platform.OS === 'ios') {
+      Linking.openURL('app-settings:');
+    } else {
+      Linking.openSettings();
+    }
+};
   const showImagePicker = async () => {
     // Ask the user for the permission to access the media library 
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -395,6 +402,7 @@ export default function ChattingScreen({ navigation }) {
     // Explore the result 
     if (!result.cancelled) {
       // console.log(result);
+      if(result.type!='cancel')
       handleFileChange(result);
 
     }

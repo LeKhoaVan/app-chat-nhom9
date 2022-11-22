@@ -25,7 +25,6 @@ export default function RegisterScreen() {
         selected:false,
     }]
 
-    const [show,setShow] = useState(false)
     const [visible,setVisible] = useState(true)
     const [avatarSource,setAvatarSource] = useState('');
     const [modalVisible, setModalVisible] = useState(false);
@@ -247,11 +246,10 @@ export default function RegisterScreen() {
                         <TouchableOpacity
                             style={{width:'10%'}}
                             onPress={()=>{
-                            setShow(!show);
                             setVisible(!visible);
                             }}>
                             <Ionicons
-                                name={show === false ? 'eye-outline':'eye-off-outline'}
+                                name={visible === false ? 'eye-outline':'eye-off-outline'}
                                 size={26}
                                 />
                         </TouchableOpacity>
@@ -265,12 +263,11 @@ export default function RegisterScreen() {
                             onChangeText={(value)=>SetCfpassword(value)}/>
                         <TouchableOpacity
                             style={{width:'10%'}}
-                            onPress={()=>{
-                            setShow(!show);
+                            onPress={()=>{  
                             setVisible(!visible);
                             }}>
                             <Ionicons
-                                name={show === false ? 'eye-outline':'eye-off-outline'}
+                                name={visible === false ? 'eye-outline' : 'eye-off-outline'}
                                 size={26}
                                 />
                         </TouchableOpacity>

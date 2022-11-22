@@ -1,14 +1,28 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../contexts/AuthContext';
 import { useNavigation } from "@react-navigation/native";
 import axios from 'axios';
 import { Url } from '../contexts/constants';
 
-export default function UserSearch({ item }) {
+export default function Friend({ item }) {
     // console.log({item});
     const { userInfo, setAuthorize, setCurrentChat, conversations } = useContext(AuthContext);
+    const [user,setUser]=useState({});
     const nav = useNavigation();
+
+    useEffect(() => {
+        const getUser = async () => {
+          try {
+            const res = await axios(`${Url}/api/users?userId=${item}`);
+            setUser(res.data);
+          } catch (err) {
+            console.log(err);
+          }
+        }
+        getUser();
+        
+      }, [item]);
     async function handleChatOne(senderId, receiverId) {
         let conv
         let checkCon = false
@@ -47,8 +61,8 @@ export default function UserSearch({ item }) {
     return (
         <TouchableOpacity
             onPress={() => {
-                userInfo._id != item._id ?
-                    handleChatOne(userInfo._id, item._id) :
+                userInfo._id != user._id ?
+                    handleChatOne(userInfo._id, user._id) :
                     console.log("Đây là tài email của bạn")
             }}
             style={{
@@ -58,13 +72,13 @@ export default function UserSearch({ item }) {
             }}>
             <View>
                 <Image
-                    source={{ uri: item.avt }}
+                    source={{ uri: user.avt }}
                     style={{
                         width: 60,
                         height: 60,
                         borderRadius: 100,
                     }} />
-                {item.isActive ?
+                {user.isActive ?
                     <View
                         style={{
                             width: 12,
@@ -85,7 +99,7 @@ export default function UserSearch({ item }) {
                     width: '100%',
                     padding: 20,
                 }}>
-                {userInfo._id == item._id ? 'Bạn' : item.username}</Text>
+                {userInfo._id == user._id ? 'Bạn' : user.username}</Text>
         </TouchableOpacity>
     )
 }

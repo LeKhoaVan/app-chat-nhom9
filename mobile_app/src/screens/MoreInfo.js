@@ -58,6 +58,13 @@ export default function MoreInfo({ navigation }) {
       console.log(err);
     };
   };
+  const handleOpenSettings = () => {
+    if (Platform.OS === 'ios') {
+      Linking.openURL('app-settings:');
+    } else {
+      Linking.openSettings();
+    }
+};
   const showImagePicker = async () => {
     // Ask the user for the permission to access the media library 
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -79,7 +86,7 @@ export default function MoreInfo({ navigation }) {
         });
         return;
     }
-    setModalVisible(false);
+    setModalImgVisible(false);
     const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
@@ -116,7 +123,7 @@ const openCamera = async () => {
         });
         return;
     }
-    setModalVisible(false);
+    setModalImgVisible(false);
     const result = await ImagePicker.launchCameraAsync(
         {
             mediaTypes: ImagePicker.MediaTypeOptions.Images,

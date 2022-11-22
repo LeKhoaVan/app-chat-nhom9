@@ -6,7 +6,6 @@ import {AuthContext}  from '../contexts/AuthContext';
 
 
 export default function Login({navigation}) {
-  const [show,setShow] = useState(false)
   const [visible,setVisible] = useState(true)
   const [loading,setLoading] = useState(false)
   const {login} = useContext(AuthContext)
@@ -76,11 +75,10 @@ export default function Login({navigation}) {
               <TouchableOpacity
                 style={{width:'10%'}}
                 onPress={()=>{
-                  setShow(!show);
                   setVisible(!visible);
                 }}>
               <Ionicons
-                name={show === false ? 'eye-outline':'eye-off-outline'}
+                name={visible === false ? 'eye-outline' : 'eye-off-outline'}
                 size={26}
                 />
               </TouchableOpacity>

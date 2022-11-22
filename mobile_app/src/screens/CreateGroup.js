@@ -60,6 +60,13 @@ export default function CreateGroup({ navigation }) {
 
         }
     }
+    const handleOpenSettings = () => {
+        if (Platform.OS === 'ios') {
+          Linking.openURL('app-settings:');
+        } else {
+          Linking.openSettings();
+        }
+    };
     const openCamera = async () => {
         // Ask the user for the permission to access the camera
         const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
