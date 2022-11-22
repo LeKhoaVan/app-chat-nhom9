@@ -910,6 +910,21 @@ export default function MyChat() {
   }
 
   function clickButtonAdd2(e) {
+    // e.preventDefault()
+    // //checkIfUserExistInConv()
+    // let check = checkAddUserNewGroup2()
+    // if(check){
+    //   setUserSearchAddNew(null)
+    //   document.querySelector('#search-group2').value = ""
+    // }
+    // else if(userSearchAddCheckExist === "false"){
+    //   setlistUserGroupAdd([...listUserGroupAdd,userSearchAddNew])
+    //   setUserSearchAddNew(null)
+    //   document.querySelector('#search-group2').value = ""
+    //   setUserSearchAddCheckExist(null)
+    // }else{
+    //   alert('Thành viên hiện đang trong nhóm')
+    // }
     e.preventDefault()
     //checkIfUserExistInConv()
     let check = checkAddUserNewGroup2()
@@ -917,13 +932,11 @@ export default function MyChat() {
       setUserSearchAddNew(null)
       document.querySelector('#search-group2').value = ""
     }
-    else if(userSearchAddCheckExist === "false"){
+    else{
       setlistUserGroupAdd([...listUserGroupAdd,userSearchAddNew])
       setUserSearchAddNew(null)
       document.querySelector('#search-group2').value = ""
       setUserSearchAddCheckExist(null)
-    }else{
-      alert('Thành viên hiện đang trong nhóm')
     }
   }
 
@@ -1450,9 +1463,18 @@ export default function MyChat() {
                 <div className="item">
                   <Avatar src={userSearchAddNew.avt}></Avatar>
                   <p>{userSearchAddNew.username}</p>
-                  {userSearchAddNew._id === _id ? <div className="add">Bạn</div> :
+                  {/* {userSearchAddNew._id === _id ? <div className="add">Bạn</div> :
                     <button onClick={clickButtonAdd2}className="add">Thêm</button>    
                   //userSearchAddNew._id === userSearchAddCheckExist._id? <div className="add">Người này đã trong nhóm</div> :
+                  } */}
+                  {userSearchAddNew._id === _id ? <div className="add">bạn</div> :
+                  
+                  currentChat.members.some((auth1) => (
+                    auth1 === userSearchAddNew._id
+                  )) ?  
+                  <div className="add">Đã là thành viên</div> : 
+                  <button onClick={clickButtonAdd2} className="add">Thêm</button>
+
                   }
                 </div> : <div className="nullUser">Không thấy user</div>}
 
