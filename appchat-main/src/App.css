@@ -800,9 +800,6 @@ body{
 }
 
 
-
-
-
 #search-group{
   position: relative;
 }
@@ -811,6 +808,17 @@ body{
   display: none;
 }
 #search-group:not(:placeholder-shown)~.model-search{
+  display: block;
+}
+
+#search-group2{
+  position: relative;
+}
+
+#search-group2:placeholder-shown~.model-search{
+  display: none;
+}
+#search-group2:not(:placeholder-shown)~.model-search{
   display: block;
 }
 
@@ -976,4 +984,38 @@ body{
 button:disabled{
   background-color: #495057;
   pointer-events: none;
+}
+.changePass {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-user-hover);
+  width: 100%;
+  border-radius: 5px;
+}
+.updatePassBtn{
+  color:white;
+  background-color:#4267B2; 
+  border:1px solid #999;
+  padding:10px;
+  margin-left: 90px;
+}
+.clearPassBtn{
+  color:white;
+  background-color:#4267B2; 
+  border:1px solid #999;
+  padding:10px;
+  margin-left: 5px;
+}
+
+div.modal-content{
+  line-height: 0.6;
+}
+
+.modal-content .updatePassBtn:hover{
+  opacity:.8;
+  cursor:pointer;
+}
+.modal-content .clearPassBtn:hover{
+  opacity:.8;
+  cursor:pointer;
 }
