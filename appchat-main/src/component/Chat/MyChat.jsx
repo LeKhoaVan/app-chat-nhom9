@@ -1313,7 +1313,12 @@ export default function MyChat() {
                 <div className="item">
                   <Avatar src={userSearch.avt}></Avatar>
                   <p>{userSearch.username}</p>
-                  {userSearch._id === _id ? <div className="add">bạn</div> : <button onClick={clickButtonAdd} className="add">Thêm</button>}
+                  {userSearch._id === _id ? <div className="add">bạn</div> : 
+                  
+                 
+                  <button onClick={clickButtonAdd} className="add">Thêm</button>
+
+                  }
                 </div> : <div className="nullUser">Không thấy user</div>}
 
             </div>
@@ -1383,7 +1388,15 @@ export default function MyChat() {
                 <div className="item">
                   <Avatar src={userSearch.avt}></Avatar>
                   <p>{userSearch.username}</p>
-                  {userSearch._id === _id ? <div className="add">bạn</div> : <button onClick={clickButtonAdd} className="add">Thêm</button>}
+                  {userSearch._id === _id ? <div className="add">bạn</div> :
+                  
+                  currentChat.members.some((auth1) => (
+                    auth1 === userSearch._id
+                  )) ?  
+                  <div className="add">Đã là thành viên</div> : 
+                  <button onClick={clickButtonAdd} className="add">Thêm</button>
+
+               }
                 </div> : <div className="nullUser">Không thấy user</div>}
 
             </div>
