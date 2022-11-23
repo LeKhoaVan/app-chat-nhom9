@@ -727,8 +727,13 @@ export default function MyChat() {
       
 
 
+      const timeUpdate= {
+        "convId" : currentChat._id,
+      }
+
       try {
         const res = await axios.post("http://localhost:8800/api/messages", message);
+        const updateTime = await axios.put("http://localhost:8800/api/conversations/updateAt", timeUpdate);
         // setMessages([...messages, res.data]);
         setNewMessages("");
         socket.current.emit("sendMessage", {

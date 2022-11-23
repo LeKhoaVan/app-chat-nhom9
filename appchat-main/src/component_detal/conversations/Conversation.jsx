@@ -106,7 +106,7 @@ export default function Conversation({ conversation, currentUser, timeM, myMes,r
                     </>
                     : 
                     <>
-                      {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {newMes !== null ? newMes.text : "vừa tham gia nhóm"} 
+                      {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {newMes !== "" ? newMes.text : "vừa tham gia nhóm"} 
                     </>     
                   )
                   :
