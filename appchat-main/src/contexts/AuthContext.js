@@ -108,8 +108,18 @@ const AuthContextProvider = ({ children }) => {
 			payload: { isAuthenticated: false, user: null }
 		})
 	}
+		//changePassword
+		const changePassUser = async userForm => {
+			try {
+				const response = await axios.put(`${apiUrl}/changePassword`, userForm)
+				return response.data
+			} catch (error) {
+				if (error.response.data) return error.response.data
+				else return { success: false, message: error.message }
+			}
+		}
 
-    const authContextData = {loginUser , authState , logoutUser, registerUser , checkOTP}
+    const authContextData = {loginUser , authState , logoutUser, registerUser, changePassUser, checkOTP}
 	// Return provider
 	return (
 		<AuthContext.Provider value={authContextData}>
