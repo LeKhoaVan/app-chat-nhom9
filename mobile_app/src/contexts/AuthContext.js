@@ -123,6 +123,18 @@ export const AuthContextProvider = ({ children }) => {
 			}
 		}
 	}
+	//OTP
+	const checkOTP = async userForm =>{
+		try {
+			const response = await axios.put(`${apiUrl}/verifyOtp`, userForm)
+			return response.data
+		} catch (error) {
+			if (error.response.data) return error.response.data
+			else return { success: false, message: error.message }
+		}
+	}
+
+
 	// Return provider
 	return (
 		<AuthContext.Provider value={{userToken,register,login,logout,userInfo,
@@ -130,7 +142,7 @@ export const AuthContextProvider = ({ children }) => {
 		recallStatus,setRecallStatus,senderMessage, setSenderMessage,authorize,setAuthorize,
 		userCons, setUserCons,listUserGroupNew, setListUserGroupNew,conversations, setConversation,
 		listUserGroupAddNew, setListUserGroupAddNew,render,setRender,listFriend, setListFriend,
-		listReceive, setListReceive,listSend, setListSend
+		listReceive, setListReceive,listSend, setListSend,checkOTP
 		}}>
 			{children}
 		</AuthContext.Provider>
