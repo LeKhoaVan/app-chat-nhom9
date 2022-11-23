@@ -24,11 +24,26 @@ router.get("/:userId", async (req, res) => {
   try { 
     const conversation = await Conversation.find({
       members: { $in: [req.params.userId] },
-    });
+    }).sort({updatedAt:-1}) ;
     res.status(200).json(conversation);
   } catch (err) {
     res.status(500).json(err);
   }
+});
+
+//update time conv 
+router.put("/updateAt", async (req, res) => {
+ 
+  try{
+    const result = await Conversation.findByIdAndUpdate(
+      req.body.convId, 
+      {"updatedAt": Date.now()})
+
+    res.status(200).json(req.body.id);
+  }catch (err) {
+    res.status(500).json(err);
+  }
+    
 });
 
 

@@ -549,6 +549,20 @@ export default function MyChat() {
         avt: data.avt
       });
 
+       //load conversation latest
+       conversations.find((conv) => {
+
+        if(conv._id === data.conversationId){
+          conv.updatedAt = new Date(Date.now()).toISOString();
+          for(let index=0; index<conv.members.length; index++){
+            if(conv.members[index] === _id){
+              conversations.sort((a,b) => b.updatedAt.localeCompare(a.updatedAt))
+                setConversation(conversations);
+            }              
+          }
+        }
+    })
+
     });
     socket.current.on("getStatus", (data) => {
       setSenderMessage({
