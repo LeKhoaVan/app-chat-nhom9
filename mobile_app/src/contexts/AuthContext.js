@@ -23,6 +23,9 @@ export const AuthContextProvider = ({ children }) => {
 	const [listUserGroupAddNew, setListUserGroupAddNew] = useState([]);
 	const [conversations, setConversation] = useState([]);
 	const [render,setRender]=useState(1);
+	const [listFriend, setListFriend] = useState([])
+	const [listReceive, setListReceive] = useState([])
+	const [listSend, setListSend] = useState([])
 	const socket = useRef();
 	//Login
 	const login = async userForm =>{
@@ -126,7 +129,8 @@ export const AuthContextProvider = ({ children }) => {
 		isLoading,loadUser_Register,setUserToken,currentChat,setCurrentChat,socket,
 		recallStatus,setRecallStatus,senderMessage, setSenderMessage,authorize,setAuthorize,
 		userCons, setUserCons,listUserGroupNew, setListUserGroupNew,conversations, setConversation,
-		listUserGroupAddNew, setListUserGroupAddNew,render,setRender
+		listUserGroupAddNew, setListUserGroupAddNew,render,setRender,listFriend, setListFriend,
+		listReceive, setListReceive,listSend, setListSend
 		}}>
 			{children}
 		</AuthContext.Provider>

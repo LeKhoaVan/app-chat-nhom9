@@ -8,7 +8,7 @@ import { Url } from '../contexts/constants';
 
 export default function FriendReceive({ item }) {
     // console.log({item});
-    const { userInfo, setAuthorize, setCurrentChat, conversations } = useContext(AuthContext);
+    const { userInfo, setAuthorize, setCurrentChat, conversations,setListFriend,setListReceive } = useContext(AuthContext);
     const [user, setUser] = useState({});
     const nav = useNavigation();
 
@@ -25,14 +25,14 @@ export default function FriendReceive({ item }) {
           try {
             const res = await axios.get(`${Url}/api/users/friends/${userInfo._id}`);
             userInfo.friends=res.data
-            console.log("friend:",userInfo.friends);
+            setListFriend(res.data)
           } catch (err) {
             console.log(err);
           }
           try {
             const res = await axios.get(`${Url}/api/users/receiveFrs/${userInfo._id}`);
             userInfo.receiveFrs=res.data
-            console.log("receiveFrs:",userInfo.receiveFrs);
+            setListReceive(res.data)
           } catch (err) {
             console.log(err);
           }

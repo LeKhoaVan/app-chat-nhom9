@@ -5,8 +5,8 @@ import FriendReceive from '../components/FriendReceive';
 import axios from 'axios';
 import { Url } from '../contexts/constants';
 export default function ReceiveFR({ navigation }) {
-  const [listReceive, setListReceive] = useState([])
-  const { userInfo, } = useContext(AuthContext);
+  
+  const { userInfo, listReceive, setListReceive} = useContext(AuthContext);
   
   useEffect(() => {
     const loadlistReceive= async() => {

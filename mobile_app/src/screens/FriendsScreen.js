@@ -6,8 +6,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons'
 import axios from 'axios';
 import { Url } from '../contexts/constants';
 export default function FriendsScreen({ navigation }) {
-  const [listFriend, setListFriend] = useState([])
-  const { userInfo, } = useContext(AuthContext);
+
+  const { userInfo, listFriend, setListFriend} = useContext(AuthContext);
   
   useEffect(() => {
     const loadlistFriend = async() => {
