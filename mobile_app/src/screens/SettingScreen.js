@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useContext } from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
@@ -6,29 +6,9 @@ import { AuthContext } from '../contexts/AuthContext'
 
 
 export default function SettingScreen() {
-    const{logout} = useContext(AuthContext)
+    const{logout,socket} = useContext(AuthContext)
   return (
     <View>
-        <TouchableOpacity style={styles.button}>
-            <Ionicons 
-                name='image-outline'
-                size={25}
-                color='#0DA1B6'/>
-            <Text style={styles.text}>Cập nhập ảnh đại diện</Text>
-            <Ionicons 
-                name='chevron-forward'
-                size={25}/>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-            <Ionicons 
-                name='mail'
-                size={25}
-                color='#FF5042'/>
-            <Text style={styles.text}>Đổi email</Text>
-            <Ionicons 
-                name='chevron-forward'
-                size={25}/>
-        </TouchableOpacity>
         <TouchableOpacity style={styles.button}>
             <Ionicons 
                 name='key-outline'
@@ -59,7 +39,22 @@ export default function SettingScreen() {
                 name='chevron-forward'
                 size={25}/>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button} onPress={()=>logout()}>
+        <TouchableOpacity style={styles.button} onPress={()=>
+            Alert.alert("Thông báo","Bạn có chắc chắn đăng xuất",[
+                {
+                    text:'Hủy',
+                    style:'cancel',
+                },
+                {
+                    text:'Đăng xuất',
+                    onPress:()=>{
+                        logout()
+                        socket.current.emit('onDisconnect')
+                    }
+                    
+                }
+            ])
+            }>
         <Ionicons 
                 name='md-log-out-outline'
                 size={25}

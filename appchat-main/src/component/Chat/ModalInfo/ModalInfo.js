@@ -96,7 +96,7 @@ function ModalInfo({ title, username, email, gender, birthday, avt, onDialog, _i
 
 
   return (
-    <div onClick={() => onDialog(false)} className='popup-question'>
+    <div className='popup-question'>
       <div onClick={(e) => e.stopPropagation()} className="popup-question-modal if">
         <div className="header">
           <p>{title}</p>

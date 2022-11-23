@@ -1,10 +1,43 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-
-export default function SendFR() {
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
+import { AuthContext } from '../contexts/AuthContext';
+import FriendSend from '../components/FriendSend';
+import axios from 'axios';
+import { Url } from '../contexts/constants';
+export default function SendFR({ navigation }) {
+  const [listSend, setListSend] = useState([])
+  const { userInfo, } = useContext(AuthContext);
+  
+  useEffect(() => {
+    const loadlistSend= async() => {
+      try {
+        const res = await axios.get(`${Url}/api/users/sendFrs/${userInfo._id}`);
+        setListSend(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    loadlistSend();
+  }, [])
   return (
-    <View>
-      <Text>SendFR</Text>
+    <View
+      style={{
+      }}>
+      {listSend.length==0?
+      <Text
+        style={{
+          fontSize: 15,
+          marginTop:50,
+          textAlign:'center',
+        }}>
+        Không có lời mời kết bạn đã gửi
+      </Text>:<></>}
+      <ScrollView>
+        {listSend.map((u) => (
+          <FriendSend key={u} item={u} />
+        ))
+        }
+      </ScrollView>
     </View>
   )
 }

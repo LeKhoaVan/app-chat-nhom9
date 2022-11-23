@@ -48,7 +48,7 @@ export default function HomeScreen({ navigation }) {
                         navName = 'AddFriendScreen';
                     } else
                         if (route.name === "Me") {
-                            iconHeader = 'edit';
+                            iconHeader = 'settings';
                             navName = 'SettingScreen';
                         }
                     return <View style={styles.search_nav}>
