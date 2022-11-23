@@ -6,8 +6,7 @@ import { Url } from '../contexts/constants';
 import UserInGroup from '../components/UserInGroup';
 
 export default function ManageMember() {
-    const {userInfo,currentChat} = useContext(AuthContext);
-    const [userCons, setUserCons] = useState([]);
+    const {userInfo,currentChat,userCons, setUserCons} = useContext(AuthContext);
     useEffect(() => {
       const getUserCon = async () => {
         let list = [];
@@ -23,7 +22,6 @@ export default function ManageMember() {
         setUserCons(list);
       };
       getUserCon();
-      console.log(userCons);
     },[currentChat]);
   return (
     <View>

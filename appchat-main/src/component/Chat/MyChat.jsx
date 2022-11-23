@@ -255,36 +255,34 @@ export default function MyChat() {
               }
             }
 
-
-            socket.current.emit("sendMessage", {
-              senderId: _id,
-              receiverIds,
-              type: e.target.files[0].type.match('video.*')? 2:3,
-              text: messageFile.text,
-              conversationId: currentChat._id,
-              delUser: "",
-              date: Date.now(),
-              username: username,
-              avt: avt,
-            });
-
-            socket.current.emit("sendStatus", {
-              senderId: _id,
-              username: username,
-              receiverIds: currentChat.members,
-              type: e.target.files[0].type.match('video.*')? 2:3,
-              text: messageFile.text,
-              conversationId: currentChat._id,
-              delUser: "",
-              date: Date.now(),
-
-            })
-
-
             try {
               const res = await axios.post("http://localhost:8800/api/messages", messageFile);
-              setMessages([...messages, res.data]);
-
+              // setMessages([...messages, res.data]);
+              socket.current.emit("sendMessage", {
+                _id:res.data._id,
+                senderId: _id,
+                receiverIds,
+                type: e.target.files[0].type.match('video.*')? 2:3,
+                text: messageFile.text,
+                conversationId: currentChat._id,
+                reCall: false,
+                delUser: "",
+                date: Date.now(),
+                username: username,
+                avt: avt,
+              });
+  
+              socket.current.emit("sendStatus", {
+                senderId: _id,
+                username: username,
+                receiverIds: currentChat.members,
+                type: e.target.files[0].type.match('video.*')? 2:3,
+                text: messageFile.text,
+                conversationId: currentChat._id,
+                delUser: "",
+                date: Date.now(),
+  
+              })
 
             } catch (err) {
               console.log(err);
@@ -869,24 +867,36 @@ export default function MyChat() {
       setUserSearch(null)
     }
   }
+  function checkAddUserNewGroup(){
+    return listUserGroupNew.some((userN)=>
+      userN._id == userSearch._id
+    )
+  }
   function clickButtonAdd(e) {
     e.preventDefault()
-    setListUserGroupNew([...listUserGroupNew, userSearch])
-    setUserSearch(null)
-    document.querySelector('#search-group').value = ""
-    let countMem = 0;
-    listUserGroupNew.map((userGr) => {
-      countMem++;
-      return countMem;
-    })
-    if (countMem > 0) {
-      setStateDis({
-        disabled: false
+    let check = checkAddUserNewGroup()
+    if(check){
+      setUserSearch(null)
+      document.querySelector('#search-group').value = ""
+    }
+    else{
+      setListUserGroupNew([...listUserGroupNew, userSearch])
+      setUserSearch(null)
+      document.querySelector('#search-group').value = ""
+      let countMem = 0;
+      listUserGroupNew.map((userGr) => {
+        countMem++;
+        return countMem;
       })
-    } else {
-      setStateDis({
-        disabled: true
-      })
+      if (countMem > 0) {
+        setStateDis({
+          disabled: false
+        })
+      } else {
+        setStateDis({
+          disabled: true
+        })
+      }
     }
   }
 
@@ -1014,9 +1024,7 @@ export default function MyChat() {
                 </div>
                 <div>
                   <div className="user-fet">
-                    <Tooltip placement="bottom-end" title="Thêm bạn vào nhóm">
-                      <IconButton onClick={() => { setOpenPopup2(true); }}><GroupAddIcon /></IconButton>
-                    </Tooltip>
+                 
                     <Tooltip
                       title="Tìm kiếm tin nhắn"
                       placement="bottom-end">
@@ -1127,6 +1135,14 @@ export default function MyChat() {
                   </IconButton>
                 </Tooltip> : <div></div>}
 
+            </div>
+            <div>
+            {currentChat?.authorization.length > 0 ?
+            <div className="edit_button">
+              <IconButton onClick={() => { setOpenPopup2(true); }}><GroupAddIcon /></IconButton>
+              <p className="title_edit_button">Thêm thành viên</p>
+            </div>      
+                  : <div></div>}
             </div>
             {/* <div className="edit_button">
                 <IconButton>
@@ -1359,9 +1375,7 @@ export default function MyChat() {
         openPopup={openPopup2}
         setOpenPopup={setOpenPopup2}
       >
-
         <form>
-
           <div className="input-group">
             <input className="form-control rounded ip-addGr" type="text" onKeyUp={handleTextSearch} id="search-group" placeholder="Tìm kiếm bằng email" />
             <div className="model-search">

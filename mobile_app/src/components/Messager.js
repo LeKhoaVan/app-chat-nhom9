@@ -117,7 +117,7 @@ const Messager=({ message, own, onClickDeleteMgsUser, onClickDeleteMgsFri, onCli
                         visible={modalVisible}
                         transparent={true}
                         onRequestClose={() => setModalVisible(false)}
-                        animationType='slide'
+                        animationType='fade'
                         hardwareAccelerated>
                         <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
                             <View style={[styles.centered_view,{alignItems: !own? 'flex-start': 'flex-end' }]} >

@@ -8,6 +8,7 @@ import { Url, UrlSK } from '../contexts/constants'
 import { AuthContext } from '../contexts/AuthContext'
 import {io} from 'socket.io-client';
 import * as ImagePicker from 'expo-image-picker';
+import * as DocumentPicker from 'expo-document-picker';
 
 // send image
 import storage from '../firebase/Firebase';
@@ -22,7 +23,7 @@ export default function ChattingScreen({navigation}) {
     const scrollView_ref = useRef();
     const [messages, setMessages] = useState([]);
     const [user, setUser] = useState([]);
-    const {userInfo,currentChat,socket,setSenderMessage,setRecallStatus} = useContext(AuthContext);
+    const {userInfo,currentChat,socket,setSenderMessage,setRecallStatus,userCons} = useContext(AuthContext);
     const [arrivalMessage, setArrivalMessages] = useState(null);
     const [Nmember,setNMember]= useState(0);
     const [recallMessage, setRecallMessages] = useState(null);
@@ -68,8 +69,8 @@ export default function ChattingScreen({navigation}) {
       }
     };
     getMessages();
-    setNMember(currentChat.members.length)
   }, [currentChat]);
+  useEffect(() =>{setNMember(currentChat.members.length)},[userCons]);
   useEffect(() =>{
     // socket.current = io(`${UrlSK}`);
     socket.current.on("getMessage",(data) =>{
@@ -368,17 +369,17 @@ const showFilePicker = async () => {
     return;
   }
   setModalVisible(false);
-  const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+  const result = await DocumentPicker.getDocumentAsync({
       allowsMultipleSelection:true,
-      quality: 1,
+      // quality: 1,
     }
   );
   
   // Explore the result 
   if (!result.cancelled) {
-    // console.log(result);
-    handleImageChange(result);
+    console.log(result);
+    handleFileChange(result);
+
   }
 }
 //send image
@@ -469,12 +470,113 @@ const handleImageChange = async (image) => {
     });
 
 };
+// send all file
+const handleFileChange = async (file) => {
+  const messageFile = {
+    sender: userInfo._id,
+    text: '',
+    type: file.mimeType.match('image')?1: file.mimeType.match('video')?2:3,
+    conversationId: currentChat._id,
+    reCall: false,
+    delUser: "",
+    date: Date.now(),
+    username: userInfo.username,
+    avt: userInfo.avt,
+  };
+  const blob = await new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      resolve(xhr.response);
+    };
+    xhr.onerror = function (e) {
+      console.log(e);
+      reject(new TypeError("Network request failed"));
+    };
+    xhr.responseType = "blob";
+    xhr.open("GET",file.uri, true);
+    xhr.send(null);
+  });
+
+   // Max= 1 GB
+  // const maxAllowedSize = 1 * 1024 * 1024 *1024;
+  // if (e.target.files[0].size > maxAllowedSize) {
+    
+  //   alert("Kích thước file vượt quá 1 GB");
+  //    return false;
+  // }
+  
+  // console.log(e.target.files[0].type)
+  
+  const fileName = file.uri.slice(file.uri.lastIndexOf('/')+1,file.uri.lastIndexOf('.'))+"-"+Date.now();
+  const fileRef = ref(storage, `/files/${fileName}`);
+ 
+  uploadBytes(fileRef, blob)
+    .then(() => {
+      getDownloadURL(fileRef)
+        .then(async (url) => {
+
+          messageFile.text = url
+
+          console.log(url)
+
+          const receiverIds = [];
+
+          for (let index = 0; index < currentChat.members.length; index++) {
+            if (currentChat.members[index] !== userInfo._id) {
+              receiverIds.push(currentChat.members[index]);
+            }
+          }
+
+          try {
+            const res = await axios.post(`${Url}/api/messages`, messageFile);
+            // setMessages([...messages, res.data]);
+            socket.current.emit("sendMessage", {
+              _id:res.data._id,
+              senderId: userInfo._id,
+              receiverIds,
+              type: file.mimeType.match('image')?1: file.mimeType.match('video')?2:3,
+              text: messageFile.text,
+              conversationId: currentChat._id,
+              reCall: false,
+              delUser: "",
+              date: Date.now(),
+              username: userInfo.username,
+              avt: userInfo.avt,
+            });
+  
+            socket.current.emit("sendStatus", {
+              senderId: userInfo._id,
+              username: userInfo.username,
+              receiverIds: currentChat.members,
+              type: file.mimeType.match('image')?1: file.mimeType.match('video')?2:3,
+              text: messageFile.text,
+              conversationId: currentChat._id,
+              delUser: "",
+              date: Date.now(),
+  
+            })
+
+          } catch (err) {
+            console.log(err);
+          }
+
+
+        })
+        .catch((error) => {
+          console.log(error.message, "error getting the file url");
+        });
+
+    })
+    .catch((error) => {
+      console.log(error.message);
+    });
+};
   
   return (
     <SafeAreaView style={{height:'100%'}}>
         <View style={styles.Header}>
             <TouchableOpacity 
-                onPress={()=> navigation.goBack()}>
+                onPress={()=> navigation.navigate('HomeNavigator')}>
                 <Ionicons 
                     name='arrow-back'
                     size={25}
@@ -564,7 +666,7 @@ const handleImageChange = async (image) => {
                         visible={modalVisible}
                         transparent={true}
                         onRequestClose={() => setModalVisible(false)}
-                        animationType='slide'
+                        animationType='fade'
                         hardwareAccelerated>
                         <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
                             <View style={styles.centered_view} >

@@ -6,9 +6,9 @@ import { AuthContext } from '../contexts/AuthContext';
 import { Url } from '../contexts/constants'
 import Ionicons from 'react-native-vector-icons/Ionicons' 
 
-export default function Conversation({ conversation, currentUser,navigation,myMes,recall}) {
+export default function Conversation({ conversation,navigation,myMes,recall}) {
   const [user, setUser] = useState({});
-  const [newMes, setNewMes] = useState([]);
+  const [newMes, setNewMes] = useState({});
   const [userName, setUserName] = useState([]);
   const {currentChat,setCurrentChat,userInfo, setAuthorize} = useContext(AuthContext);
   const ref_sw = useRef();
@@ -26,7 +26,7 @@ export default function Conversation({ conversation, currentUser,navigation,myMe
       return m.slice(0,19)+'...'
   }
   useEffect(()=>{
-    const friendId = conversation.members.find((m) => m !== currentUser);
+    const friendId = conversation.members.find((m) => m !== userInfo._id);
     const getUser = async () => {
       try {
         const res = await axios(`${Url}/api/users?userId=${friendId}`);  
@@ -37,7 +37,7 @@ export default function Conversation({ conversation, currentUser,navigation,myMe
       }
     };
     getUser();
-  },[currentUser, conversation])
+  },[userInfo, conversation])
   useEffect(() => {
     const getNewMes = async () => {
       try {
@@ -51,8 +51,7 @@ export default function Conversation({ conversation, currentUser,navigation,myMe
           else{
             setNewMes(newM);
           }
-        }
-        console.log(newMes)    
+        }    
       } catch (err) {
         console.log(err); 
       }

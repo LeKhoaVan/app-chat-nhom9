@@ -74,9 +74,19 @@ router.get("/", async (req, res) => {
   try {
     const user = userId 
       ? await User.findById(userId)
-      : await User.findOne({ username: username });
+      : await User.findOne({ username: username ,status:0});
     const { password, updatedAt, ...other } = user._doc;
     res.status(200).json(other);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//getAllUser
+router.get("/getAll", async (req, res) => {
+  try {
+    const user = await User.find({});
+    res.status(200).json(user);
   } catch (err) {
     res.status(500).json(err);
   }
@@ -88,8 +98,8 @@ router.get("/userByMailOrName", async (req, res) => {
   const username = req.query.username;
   try {
     const user = email 
-      ? await User.findOne({email: email})
-      : await User.findOne({ username: username });
+      ? await User.findOne({email: email,status:0})
+      : await User.findOne({ username: username ,status:0});
     const { password, updatedAt, ...other } = user._doc;
     res.status(200).json(other);
   } catch (err) {

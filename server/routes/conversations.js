@@ -42,6 +42,29 @@ router.put('/updateImg/:id', function(req,res){
   .catch(err=>next(err));
 })
 
+//update name
+router.put("/updateName", async (req, res) => {
+  try{
+    const result = await Conversation.findByIdAndUpdate(
+      req.body.id, 
+      {"name": req.body.name})
+    res.status(200).json(req.body.id);
+  }catch (err) {
+    res.status(500).json(err);
+  }
+});
+//update Avt 
+router.put("/updateAvt", async (req, res) => {
+  try{
+    const result = await Conversation.findByIdAndUpdate(
+      req.body.id, 
+      {"img": req.body.img})
+    res.status(200).json(req.body.id);
+  }catch (err) {
+    res.status(500).json(err);
+  }
+}); 
+
 
 //get conv by id
 router.get("/findById/:convId", async (req, res) => {
