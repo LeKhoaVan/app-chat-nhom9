@@ -59,15 +59,9 @@ router.post('/register', async (req, res) => {
 			return res.status(400).json({ success: false, message: 'Username đã tồn tại' });
         }
 		
-		
-    
-
-
-
 
 		const otp = Math.floor(Math.random() * 9000 + 1000) + "";
 		
-
 		var mailOptions = {
 			from: process.env.GMAIL,
 			to: emailRe,
@@ -180,26 +174,37 @@ router.post('/login', async (req, res) => {
 
 router.put('/changePassword', async (req, res) => {
 
-	const {username,passwordOld , passwordNew} = req.body
-
+	const {emailChange,passwordOld , passwordNew, cfpassword} = req.body
+	const email = emailChange
+	if(  !email || !passwordOld ||  !passwordNew || !cfpassword ) 
+        return res
+            .status(400)
+            .json({ success: false, message: 'Chưa nhập đủ dữ liệu' })
 	try{
 
-        const user = await User.findOne({ username })
+        const user = await User.findOne({ email })
 
 		const passwordValid = await argon2.verify(user.password, passwordOld)
         if(!passwordValid){
-            return res.status(400).json({ success: false, message: 'Mật khẩu không khớp' });
+            return res.status(400).json({ success: false, message: 'Mật khẩu hiện tại không đúng' });
         }
 
-		const hashedPassword = await argon2.hash(passwordNew);
+		if( passwordNew === cfpassword){
+			const hashedPassword = await argon2.hash(passwordNew);
 
-		const postUpdateCondition = {username: username}
-		const userUpdate = await User.findOneAndUpdate(postUpdateCondition, { 
-			$set:{"password": hashedPassword}
+			const postUpdateCondition = {email: email}
+			const userUpdate = await User.findOneAndUpdate(postUpdateCondition, { 
+				$set:{"password": hashedPassword}
+			}
+			, { new: true })
+	
+			res.json({success: true, message: 'Đổi mật khẩu thành công'})
 		}
-		, { new: true })
+		else{
+			return res.status(400).json({ success: false, message: 'Mật khẩu mới nhập lại không đúng' });
+		}
 
-		res.json({success: true, message: 'Đổi mật khẩu thành công'})
+
 	}
 	catch (error) {
 		console.log(error)
