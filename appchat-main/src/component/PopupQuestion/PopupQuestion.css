@@ -148,7 +148,6 @@
     background-color: var(--bg-navbar-hover);
 }
 
-<<<<<<< HEAD
 .RadioButtonProfile{
     margin-top: 10px;
     margin-left: 10px;
@@ -165,7 +164,6 @@
     font-size: 15px;
     
   }
-=======
 .popup-question .form-control{
     width: 100%;
     display: flex;
@@ -200,4 +198,3 @@
     margin-top: 10px;
     margin-left: 10px;
 }
->>>>>>> 7adfe020b093b6a90ed64475ebe230ac1d12bb58
