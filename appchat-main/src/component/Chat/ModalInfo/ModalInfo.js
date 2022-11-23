@@ -134,17 +134,17 @@ function ModalInfo({ title, username, email, gender, birthday, avt, onDialog, _i
                 <div className="modal-content">
                   <form className="form" onSubmit={changePs}>
                     <br></br>
-                    <input placeholder="Nhập mật khẩu hiện tại" className="changePass" type="password"
+                    <input placeholder="Nhập mật khẩu hiện tại" className="passCss-ip changePass" type="password"
                       name="passwordOld" value={passwordOld} onChange={onChangePassForm}></input>
                     <br></br>
-                    <input placeholder="Nhập mật khẩu mới" className="changePass" type="password"
+                    <input placeholder="Nhập mật khẩu mới" className="passCss-ip changePass" type="password"
                       name="passwordNew" value={passwordNew} onChange={onChangePassForm}></input>
                     <br></br>
-                    <input placeholder="Nhập lại mật khẩu mới" className="changePass" type="password"
+                    <input placeholder="Nhập lại mật khẩu mới" className="passCss-ip changePass" type="password"
                       name="cfpassword" value={cfpassword} onChange={onChangePassForm}></input>
                     <br></br>
-                    <input type="submit" value="Cập nhật" className='updatePassBtn' />
-                    <input type="button" value="Nhập lại" className='clearPassBtn' onClick={handleClear} />
+                    <input type="submit" value="Cập nhật" className='btn-info passCss-btn updatePassBtn' />
+                    <input type="button" value="Nhập lại" className='btn-info passCss-btn clearPassBtn' onClick={handleClear} />
                   </form>
                 </div>
               </div>

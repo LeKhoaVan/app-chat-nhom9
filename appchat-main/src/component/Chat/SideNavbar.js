@@ -137,7 +137,7 @@ const updateProfile= async (data) =>{
             </Tooltip>
 
           </li>
-          <li onClick={handleToggle} className={isActive ? "nav__tabs--item dark-theme dark" : "nav__tabs--item dark-theme light"}>
+          {/* <li onClick={handleToggle} className={isActive ? "nav__tabs--item dark-theme dark" : "nav__tabs--item dark-theme light"}>
             <Tooltip placement="top" title={isActive ? "Light Mode" : "Dark Mode"} enterDelay={1000} leaveDelay={100}>
               <div className="dark-mode">
                 <div className="item light-item"><LightModeIcon /></div>
@@ -145,7 +145,7 @@ const updateProfile= async (data) =>{
                 <span className="ball"></span>
               </div>
             </Tooltip>
-          </li>
+          </li> */}
         </ul>
       </div>
       <div class="clear"></div>

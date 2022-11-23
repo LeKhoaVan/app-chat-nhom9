@@ -556,8 +556,12 @@ export default function MyChat() {
           conv.updatedAt = new Date(Date.now()).toISOString();
           for(let index=0; index<conv.members.length; index++){
             if(conv.members[index] === _id){
-              conversations.sort((a,b) => b.updatedAt.localeCompare(a.updatedAt))
-                setConversation(conversations);
+              const concsts = conversations.sort((a,b) => b.updatedAt.localeCompare(a.updatedAt))
+                setConversation(concsts);
+                concsts.forEach((con,index)=>{
+                  if(con === currentChat)
+                    setConActive(index)
+                })
             }              
           }
         }
@@ -1217,7 +1221,9 @@ export default function MyChat() {
                   </span>
                 </Tooltip>
               </div>
-            </> : <span className="noChat">Chưa có tin nhắn</span>
+            </> : <div className="noChat">
+            <div className="noChat-title">Chào mừng bạn đến với CynoChat</div>
+            </div>
         }
       </div>
       <div className="morInfo_con">
@@ -1414,7 +1420,7 @@ export default function MyChat() {
           </div>
 
           <div className="input-group">
-            <input className="form-control rounded ip-addGr" type="text" onKeyUp={handleTextSearch} id="search-group" placeholder="Tìm kiếm bằng email" />
+            <input className="form-control rounded ip-addGr search" type="text" onKeyUp={handleTextSearch} id="search-group" placeholder="Nhập email để tìm kiếm" />
             <div className="model-search">
               {userSearch ?
                 <div className="item">
@@ -1431,8 +1437,8 @@ export default function MyChat() {
             </div>
           </div>
 
-          <div><p>____________________________________________________________________________</p></div>
-          <p className="title-Add">Danh sách cần thêm</p>
+          <div className="line-form"></div>
+          <p className="title-Add">Đã chọn</p>
           <ul className="listAdd">
             {listUserGroupNew.map((user_gr) => (
               <li className="itemAdd">
@@ -1489,9 +1495,9 @@ export default function MyChat() {
       >
         <form>
           <div className="input-group">
-            <input className="form-control rounded ip-addGr" type="text" 
+            <input className="form-control rounded ip-addGr search" type="text" 
             onKeyUp={handleTextSearch2}
-            id="search-group2" placeholder="Tìm kiếm bằng email" /> 
+            id="search-group2" placeholder="Nhập email để tìm kiếm" /> 
                 
             <div className="model-search">
               {userSearchAddNew?
@@ -1515,9 +1521,8 @@ export default function MyChat() {
 
             </div>
           </div>
-
-          <div><p>____________________________________________________________________________</p></div>
-          <p className="title-Add">Danh sách cần thêm</p>
+          <div className="line-form"></div>
+          <p className="title-Add">Đã chọn</p>
           <ul className="listAdd">
             {listUserGroupAdd.map((user_gr) => (
               <li className="itemAdd">

@@ -164,10 +164,7 @@ body{
   margin: 0px;
   box-sizing: border-box;
 }
-.fullSc{
-  /* width: 100vw;
-  height: 100vh; */
-}
+
 /* SideNabar */
 
 
@@ -825,7 +822,7 @@ body{
 .model-search{
   display: none;
   position: absolute;
-  width: 86%;
+  width: 91%;
   z-index: 999;
   background-color: var(--white);
   box-shadow: 0 0 10px var(--boxshadow-01);
@@ -895,12 +892,37 @@ body{
 }
 
 .ip-addGr{
-  padding: 5px;
-  margin-bottom: 5px;
+  width: 500px !important;
+  padding: 5px 10px;
+  margin-bottom: 10px;
   color: var(--black) !important;
   font-size: 15px;
+  border: none;
+  border-bottom: 1px solid var(--bd-01);
 }
 
+
+
+.ip-addGr.search{
+  border-radius: 20px;
+  border: 1px solid var(--bd-01);
+  margin-bottom: 5px;
+}
+.ip-addGr:focus{
+  border: none;
+  outline: none;
+  border-bottom: 1px solid var(--login-line);
+}
+.ip-addGr.search:focus{
+  outline: none;
+  border: 1px solid var(--login-line);
+}
+.line-form{
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+  border-top: 1px solid var(--bd-01);
+}
 .btn-addGr{
   outline: none;
   border: none;
@@ -919,7 +941,8 @@ body{
 }
 
 .title-Add{
-  font-weight: bold;
+  font-weight: 500;
+  margin-bottom: 5px;
 }
 
 .nullUser{
@@ -973,49 +996,34 @@ body{
 .model-usersearch .item:hover{
   background-color: var(--bg-item-hover-01);
 }
-
 .noChat{
-  position: absolute;
-  top : 10%;
-  left: 50%;
-  font-size : 50px;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bd-lg);
+  text-align: center;
+}
+
+.noChat-title{
+  padding-top: 100px;
+  font-size : 45px;
   color: var(--bd-01);
+
 }
 button:disabled{
   background-color: #495057;
   pointer-events: none;
 }
-.changePass {
-  display: flex;
-  align-items: center;
-  background-color: var(--bg-user-hover);
-  width: 100%;
-  border-radius: 5px;
-}
-.updatePassBtn{
-  color:white;
-  background-color:#4267B2; 
-  border:1px solid #999;
-  padding:10px;
-  margin-left: 90px;
-}
-.clearPassBtn{
-  color:white;
-  background-color:#4267B2; 
-  border:1px solid #999;
-  padding:10px;
-  margin-left: 5px;
+.makeStyles-dialogWrapper-1 {
+  padding: 0 !important;
 }
 
-div.modal-content{
-  line-height: 0.6;
+.MuiDialogTitle-root {
+  padding: 7px 20px !important;
 }
 
-.modal-content .updatePassBtn:hover{
-  opacity:.8;
-  cursor:pointer;
+.MuiTypography-h6{
+  line-height: 2 !important;
 }
-.modal-content .clearPassBtn:hover{
-  opacity:.8;
-  cursor:pointer;
+.MuiDialogContent-dividers{
+  padding: 16px !important;
 }

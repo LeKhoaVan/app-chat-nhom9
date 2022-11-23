@@ -35,7 +35,7 @@
   justify-content: space-between;
 }
 .conversationGrMess span{
-  width: 100%;
+  width: 135px;
   margin-left: 10px;
   white-space: nowrap;
   overflow: hidden;
@@ -52,7 +52,7 @@
 }
 
 .time {
-  font-size: 13px;
+  font-size: 11px;
   white-space: nowrap;
   position: absolute;
   right: 10px;
