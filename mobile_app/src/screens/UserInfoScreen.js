@@ -12,6 +12,16 @@ export default function UserInfoScreen({ route, navigation }) {
     let fDate = tempDate.getDate() + "/" + (tempDate.getMonth() * 1 + 1) + "/" + tempDate.getFullYear();
     return fDate;
   };
+  const handleRemoveFriend = async () => {
+    try {
+      const data = {
+        userId: route.params.user._id,
+      };
+      const res = await axios.put(`${Url}/api/users/${userInfo._id}/removeFriend`, data);
+    } catch (err) {
+      console.log(err);
+    };
+  }
   const [modalVisible, setModalVisible] = useState(false);
   const { userInfo, conversations, setCurrentChat, setAuthorize } = useContext(AuthContext);
   async function handleChatOne(senderId, receiverId) {
@@ -131,6 +141,9 @@ export default function UserInfoScreen({ route, navigation }) {
                 marginLeft: 10,
               }}>Nhắn tin</Text>
           </TouchableOpacity>
+          {!userInfo.friends.some((u)=>u==route.params.user._id) &&
+             !userInfo.receiveFrs.some((u)=>u==route.params.user._id) &&
+             !userInfo.sendFrs.some((u)=>u==route.params.user._id)?
           <TouchableOpacity
             style={{
               backgroundColor: '#DFDFDF',
@@ -146,7 +159,41 @@ export default function UserInfoScreen({ route, navigation }) {
                 color: '#056282',
                 marginLeft: 10,
               }}>Kết bạn</Text>
-          </TouchableOpacity>
+          </TouchableOpacity>:<></>}
+          {userInfo.receiveFrs.some((u)=>u==route.params.user._id)?
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#DFDFDF',
+              marginLeft: 30,
+              padding: 10,
+              borderRadius: 10,
+              flexDirection: 'row',
+            }}>
+            <Ionicons name='checkmark' size={26} color={'#056282'} style={{ marginLeft: 'auto' }} />
+            <Text
+              style={{
+                fontSize: 16,
+                color: '#056282',
+                marginLeft: 10,
+              }}>Chấp nhận</Text>
+          </TouchableOpacity>:<></>}
+          {userInfo.sendFrs.some((u)=>u==route.params.user._id)?
+          <TouchableOpacity
+            style={{
+              backgroundColor: '#DFDFDF',
+              marginLeft: 30,
+              padding: 10,
+              borderRadius: 10,
+              flexDirection: 'row',
+            }}>
+            <Ionicons name='close-outline' size={26} color={'#056282'} style={{ marginLeft: 'auto' }} />
+            <Text
+              style={{
+                fontSize: 16,
+                color: '#056282',
+                marginLeft: 10,
+              }}>Hủy yêu cầu</Text>
+          </TouchableOpacity>:<></>}
           <Modal
             visible={modalVisible}
             transparent={true}
@@ -162,14 +209,17 @@ export default function UserInfoScreen({ route, navigation }) {
                       style={styles.choose}>
                       <Text style={styles.text_choose}>Chặn tin nhắn</Text>
                     </TouchableOpacity>
+                    {userInfo.friends.some((u)=>u==route.params.user._id)?
                     <TouchableOpacity
-                      onPress={() => { setModalVisible(false) }}
+                      onPress={() => {
+                        handleRemoveFriend() 
+                        setModalVisible(false) }}
                       style={styles.choose}>
                       <Text style={{
                         fontSize: 16,
                         color: '#EE4545'
                       }}>Xóa bạn</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity>:<></>}
                   </View>
                 </View>
               </View>

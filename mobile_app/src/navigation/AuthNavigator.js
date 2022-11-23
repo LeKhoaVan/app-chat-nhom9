@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen.js';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import VerificationScreen from '../screens/VerificationScreen';
 
 
 const Stack = createNativeStackNavigator();
@@ -26,6 +27,20 @@ const AuthNavigator = () => {
 						backgroundColor:'#056282',
 					},
 					title:'Đăng ký',
+					headerTintColor:'#fff',
+					headerTitleStyle:{
+						fontSize:17,
+					}
+				})}/>
+			<Stack.Screen 
+				name="VerificationScreen" 
+				component={VerificationScreen} 
+				options={()=>({
+					headerShown:true,
+					headerStyle:{
+						backgroundColor:'#056282',
+					},
+					title:'Xác thực tài khoản',
 					headerTintColor:'#fff',
 					headerTitleStyle:{
 						fontSize:17,

@@ -17,6 +17,17 @@ export default function UserInGroup({ user }) {
       setAuthorize(value.data)
     })
   }
+  const handlesendAddFriend = async () => {
+    try {
+      const data = {
+        userId: user._id,
+      };
+      const res = await axios.put(`${Url}/api/users/${userInfo._id}/SendAddFriend`, data);
+    } catch (err) {
+      console.log(err);
+    };
+
+  }
   function SetAuth(conId, userId) {
 
     const article = { conId, userId };
@@ -80,34 +91,44 @@ export default function UserInGroup({ user }) {
     }
   }
   return (
-    <TouchableOpacity
-      style={{ flexDirection: 'row', alignItems: 'center', paddingHorizontal: 20, paddingVertical: 10 }}
-      onLongPress={() => setModalVisible(user._id == userInfo._id ? false : true)}>
-      <View>
-        <Image source={{ uri: user.avt }}
-          style={{ width: 60, height: 60, borderRadius: 100, marginRight: 20 }} />
-        {user.isActive ?
-          <View
-            style={{
-              width: 12,
-              height: 12,
-              backgroundColor: '#46AB5E',
-              borderRadius: 100,
-              position: 'absolute',
-              marginTop: 45,
-              marginLeft: 45,
-            }}>
-          </View> : <></>}
-      </View>
-      <View>
-        <Text style={{ fontSize: 17 }}>{user.username == userInfo.username ? "Bạn" : user.username}</Text>
-        <Text>{authorize.map((auth) => (
-          auth === user._id ? "Quản trị viên" : ""
-        ))}</Text>
-      </View>
-      {user._id != userInfo._id ?
-        <Ionicons name='person-add-outline' size={20} color={'#056282'} style={{ marginLeft: 'auto' }} />
-        : <View key={Math.random()}></View>}
+    <View
+      style={{ flexDirection: 'row', justifyContent:'space-between',alignItems:'center', paddingHorizontal: 20, paddingVertical: 10 }}>
+      <TouchableOpacity
+        style={{flexDirection:'row',alignItems:'center',width:'80%'}}
+        onLongPress={() => setModalVisible(user._id == userInfo._id ? false : true)}>
+        <View>
+          <Image source={{ uri: user.avt }}
+            style={{ width: 60, height: 60, borderRadius: 100, marginRight: 20 }} />
+          {user.isActive ?
+            <View
+              style={{
+                width: 12,
+                height: 12,
+                backgroundColor: '#46AB5E',
+                borderRadius: 100,
+                position: 'absolute',
+                marginTop: 45,
+                marginLeft: 45,
+              }}>
+            </View> : <></>}
+        </View>
+        <View>
+          <Text style={{ fontSize: 17 }}>{user.username == userInfo.username ? "Bạn" : user.username}</Text>
+          <Text>{authorize.map((auth) => (
+            auth === user._id ? "Quản trị viên" : ""
+          ))}</Text>
+        </View>
+      </TouchableOpacity>
+      {
+        user._id != userInfo._id && !userInfo.friends.some((u) => u == user._id) &&
+          !userInfo.receiveFrs.some((u) => u == user._id) &&
+          !userInfo.sendFrs.some((u) => u == user._id) ?
+          <TouchableOpacity
+            onPress={()=>handlesendAddFriend()}>
+            <Ionicons name='person-add-outline' size={20} color={'#056282'}   />
+          </TouchableOpacity>
+          : <View key={Math.random()}></View>
+      }
       <Modal
         visible={modalVisible}
         transparent={true}
@@ -200,8 +221,8 @@ export default function UserInGroup({ user }) {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-    </TouchableOpacity>
 
+    </View>
   )
 }
 

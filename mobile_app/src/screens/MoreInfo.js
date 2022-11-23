@@ -326,7 +326,7 @@ const handleImageChange = async (image) => {
             </View>
           </TouchableWithoutFeedback>
         </Modal>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row',alignItems:'flex-start',justifyContent:'center' }}>
           <TouchableOpacity
             style={{ alignItems: 'center', justifyContent: 'center', paddingHorizontal: 20 }} >
             <Ionicons

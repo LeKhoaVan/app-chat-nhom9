@@ -5,11 +5,49 @@ import { useNavigation } from "@react-navigation/native";
 import axios from 'axios';
 import { Url } from '../contexts/constants';
 
+
 export default function FriendReceive({ item }) {
     // console.log({item});
     const { userInfo, setAuthorize, setCurrentChat, conversations } = useContext(AuthContext);
     const [user, setUser] = useState({});
     const nav = useNavigation();
+
+    const handleAccept= async()=>{
+        try {
+            const data = {
+              userId: item,
+            };
+            const res = await axios.put(`${Url}/api/users/${userInfo._id}/acceptFriend`, data);
+          } catch (err) {
+            console.log(err);
+          };
+
+          try {
+            const res = await axios.get(`${Url}/api/users/friends/${userInfo._id}`);
+            userInfo.friends=res.data
+            console.log("friend:",userInfo.friends);
+          } catch (err) {
+            console.log(err);
+          }
+          try {
+            const res = await axios.get(`${Url}/api/users/receiveFrs/${userInfo._id}`);
+            userInfo.receiveFrs=res.data
+            console.log("receiveFrs:",userInfo.receiveFrs);
+          } catch (err) {
+            console.log(err);
+          }
+    }
+    const handleCancel= async()=>{
+        try {
+            const data = {
+              userId: item,
+            };
+            const res = await axios.put(`${Url}/api/users/${userInfo._id}/cancelAddFriend`, data);
+          } catch (err) {
+            console.log(err);
+          };
+
+    }
 
     useEffect(() => {
         const getUser = async () => {
@@ -27,16 +65,17 @@ export default function FriendReceive({ item }) {
         <View
             style={{
                 padding: 10,
-                borderBottomColor:'#E1E1E1',
-                borderBottomWidth:1,
-                borderStyle:'dashed'
+                borderBottomColor: '#E1E1E1',
+                borderBottomWidth: 1,
+                borderStyle: 'dashed'
             }}>
-            <View
+            <TouchableOpacity
+                onPress={() => nav.navigate({ name: 'UserInfoScreen', params: { user } })}
                 style={{
                     flexDirection: 'row',
                     justifyContent: 'flex-start',
                     alignItems: 'center',
-                    
+
                 }}>
                 <View>
                     <Image
@@ -65,7 +104,7 @@ export default function FriendReceive({ item }) {
                         marginLeft: 20,
                     }}>
                     {user.username}</Text>
-            </View>
+            </TouchableOpacity>
             <View
                 style={{
                     flexDirection: 'row',
@@ -73,6 +112,7 @@ export default function FriendReceive({ item }) {
                     marginTop: 10,
                 }}>
                 <TouchableOpacity
+                    onPress={()=>handleCancel()}
                     style={{
                         backgroundColor: '#E1E1E1',
                         padding: 10,
@@ -87,6 +127,7 @@ export default function FriendReceive({ item }) {
                         }}>Từ chối</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
+                onPress={()=>handleAccept()}
                     style={{
                         backgroundColor: '#41AFA5',
                         padding: 10,

@@ -11,16 +11,6 @@ export default function SettingScreen() {
     <View>
         <TouchableOpacity style={styles.button}>
             <Ionicons 
-                name='mail'
-                size={25}
-                color='#FF5042'/>
-            <Text style={styles.text}>Đổi email</Text>
-            <Ionicons 
-                name='chevron-forward'
-                size={25}/>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
-            <Ionicons 
                 name='key-outline'
                 size={25}
                 color='#17D8B7'/>

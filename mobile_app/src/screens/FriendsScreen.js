@@ -3,17 +3,20 @@ import React, { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../contexts/AuthContext';
 import Friend from '../components/Friend';
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import axios from 'axios';
+import { Url } from '../contexts/constants';
 export default function FriendsScreen({ navigation }) {
   const [listFriend, setListFriend] = useState([])
   const { userInfo, } = useContext(AuthContext);
   
   useEffect(() => {
-    const loadlistFriend = () => {
-      let listF=[]
-      userInfo.friends.forEach((c) => {
-          listF.push(c)
-      });
-      setListFriend(listF)
+    const loadlistFriend = async() => {
+      try {
+        const res = await axios.get(`${Url}/api/users/friends/${userInfo._id}`);
+        setListFriend(res.data);
+      } catch (err) {
+        console.log(err);
+      }
     }
     loadlistFriend();
   }, [])

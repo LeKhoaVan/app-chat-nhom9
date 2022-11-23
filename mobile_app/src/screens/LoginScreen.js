@@ -47,6 +47,7 @@ export default function Login({navigation}) {
                     style={styles.input}
                     placeholder='Email'
                     value={email}
+                    keyboardType='email-address'
                     onChangeText={(value)=>setEmail(value)}
                     onPressIn={()=>
                       setAlert('')}
@@ -132,7 +133,7 @@ const styles = StyleSheet.create({
     width:180,
     height:180,
     borderRadius:100,
-    marginTop:-60,
+    marginTop:-100,
   },
   inputEmail:{
     width:'90%',

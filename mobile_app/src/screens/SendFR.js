@@ -2,17 +2,20 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import React, { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../contexts/AuthContext';
 import FriendSend from '../components/FriendSend';
+import axios from 'axios';
+import { Url } from '../contexts/constants';
 export default function SendFR({ navigation }) {
   const [listSend, setListSend] = useState([])
   const { userInfo, } = useContext(AuthContext);
   
   useEffect(() => {
-    const loadlistSend= () => {
-      let listS=[]
-      userInfo.sendFrs.forEach((c) => {
-          listS.push(c)
-      });
-      setListSend(listS)
+    const loadlistSend= async() => {
+      try {
+        const res = await axios.get(`${Url}/api/users/sendFrs/${userInfo._id}`);
+        setListSend(res.data);
+      } catch (err) {
+        console.log(err);
+      }
     }
     loadlistSend();
   }, [])

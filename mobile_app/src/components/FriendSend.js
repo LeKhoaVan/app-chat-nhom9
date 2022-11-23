@@ -11,6 +11,17 @@ export default function FriendSend({ item }) {
     const [user, setUser] = useState({});
     const nav = useNavigation();
 
+    const handleRecall= async()=>{
+        try {
+            const data = {
+              userId: userInfo._id,
+            };
+            const res = await axios.put(`${Url}/api/users/${item}/cancelAddFriend`, data);
+          } catch (err) {
+            console.log(err);
+          };
+
+    }
     useEffect(() => {
         const getUser = async () => {
             try {
@@ -28,40 +39,45 @@ export default function FriendSend({ item }) {
         <View
             style={{
                 flexDirection: 'row',
-                justifyContent: 'flex-start',
+                justifyContent: 'space-between',
                 alignItems: 'center',
                 padding: 10,
 
             }}>
-            <View>
-                <Image
-                    source={{ uri: user.avt }}
-                    style={{
-                        width: 60,
-                        height: 60,
-                        borderRadius: 100,
-                    }} />
-                {user.isActive ?
-                    <View
-                        style={{
-                            width: 12,
-                            height: 12,
-                            backgroundColor: '#46AB5E',
-                            borderRadius: 100,
-                            position: 'absolute',
-                            marginTop: 45,
-                            marginLeft: 45,
-                        }}>
-                    </View> : <></>}
-            </View>
-            <Text
-                style={{
-                    fontSize: 16,
-                    marginRight: 'auto',
-                    marginLeft: 10,
-                }}>
-                {user.username}</Text>
             <TouchableOpacity
+                onPress={() => nav.navigate({ name: 'UserInfoScreen', params: { user } })}
+                style={{flexDirection:"row",justifyContent:'center',alignItems:'center'}}>
+                <View>
+                    <Image
+                        source={{ uri: user.avt }}
+                        style={{
+                            width: 60,
+                            height: 60,
+                            borderRadius: 100,
+                        }} />
+                    {user.isActive ?
+                        <View
+                            style={{
+                                width: 12,
+                                height: 12,
+                                backgroundColor: '#46AB5E',
+                                borderRadius: 100,
+                                position: 'absolute',
+                                marginTop: 45,
+                                marginLeft: 45,
+                            }}>
+                        </View> : <></>}
+                </View>
+                <Text
+                    style={{
+                        fontSize: 16,
+                        marginRight: 'auto',
+                        marginLeft: 10,
+                    }}>
+                    {user.username}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+            onPress={()=>handleRecall()}
                 style={{
                     backgroundColor: '#E1E1E1',
                     padding: 10,

@@ -14,7 +14,7 @@ export default function MeScreen() {
     id: '1',
     label: 'Nam',
     value: 'Nam',
-    selected: false,
+    selected: true,
   }, {
     id: '2',
     label: 'Nữ',
@@ -83,7 +83,7 @@ export default function MeScreen() {
         usersId: userInfo._id,
         username: userName,
       };
-      const res = await axios.put(`${Url}/api/users/` + userInfo._id, data);
+      // const res = await axios.put(`${Url}/api/users/` + userInfo._id, data);
     } catch (err) {
       console.log(err);
     };
@@ -384,8 +384,8 @@ export default function MeScreen() {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            setModalGender(true)
             checkgender()
+            setModalGender(true)
           }}
           style={{
             flexDirection: 'row',
@@ -401,7 +401,7 @@ export default function MeScreen() {
             <TouchableWithoutFeedback onPress={() => setModalGender(false)}>
               <View style={styles.centered_view2} >
                 <View style={styles.modal_cont2}>
-                  <Text style={styles.modal_title2}>Đổi Giới tính</Text>
+                  <Text style={styles.modal_title2}>Đổi giới tính</Text>
                   <View style={styles.modal_body2}>
                     <RadioGroup
                       layout='row'
@@ -425,8 +425,8 @@ export default function MeScreen() {
                     <TouchableOpacity
                       onPress={() => {
                         handleUpdateGender(gender)
-                        setModalGender(false)
                         userInfo.gender = gender
+                        setModalGender(false)
                         // setRender(Math.random())
                       }}>
                       <Text

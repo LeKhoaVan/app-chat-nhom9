@@ -2,17 +2,20 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-nati
 import React, { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../contexts/AuthContext';
 import FriendReceive from '../components/FriendReceive';
+import axios from 'axios';
+import { Url } from '../contexts/constants';
 export default function ReceiveFR({ navigation }) {
   const [listReceive, setListReceive] = useState([])
   const { userInfo, } = useContext(AuthContext);
   
   useEffect(() => {
-    const loadlistReceive= () => {
-      let listR=[]
-      userInfo.receiveFrs.forEach((c) => {
-          listR.push(c)
-      });
-      setListReceive(listR)
+    const loadlistReceive= async() => {
+      try {
+        const res = await axios.get(`${Url}/api/users/receiveFrs/${userInfo._id}`);
+        setListReceive(res.data);
+      } catch (err) {
+        console.log(err);
+      }
     }
     loadlistReceive();
   }, [])
