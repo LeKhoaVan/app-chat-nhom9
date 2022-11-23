@@ -83,7 +83,7 @@ export default function MeScreen() {
         usersId: userInfo._id,
         username: userName,
       };
-      // const res = await axios.put(`${Url}/api/users/` + userInfo._id, data);
+      const res = await axios.put(`${Url}/api/users/` + userInfo._id, data);
     } catch (err) {
       console.log(err);
     };
