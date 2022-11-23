@@ -29,6 +29,30 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+
+
+//update profile
+router.put('/updateProfile/:id', async (req, res) => {
+  try {
+     const userupdate =await User.findByIdAndUpdate(req.params.id, req.body)
+     .exec().then(()=>{
+    res.status(200).json({
+      success: true,
+      message: 'User is updated',
+      updateUser: req.body,
+    });
+  })
+    
+    
+
+  } catch(err) {
+      console.error(err.message);
+      res.send(400).send('Server Error');
+  }
+});
+
+
+
 //delete user
 router.delete("/:id", async (req, res) => {
   if (req.body.userId === req.params.id || req.body.isAdmin) {
