@@ -176,6 +176,10 @@ router.put('/changePassword', async (req, res) => {
 
 	const {emailChange,passwordOld , passwordNew, cfpassword} = req.body
 	const email = emailChange
+	if(  !email || !passwordOld ||  !passwordNew || !cfpassword ) 
+        return res
+            .status(400)
+            .json({ success: false, message: 'Chưa nhập đủ dữ liệu' })
 	try{
 
         const user = await User.findOne({ email })
