@@ -147,3 +147,20 @@
 .popup-question .btn-info:hover{
     background-color: var(--bg-navbar-hover);
 }
+
+.RadioButtonProfile{
+    margin-top: 10px;
+    margin-left: 10px;
+    font-size: 20px;
+}
+
+.inputTextProfile {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border-radius: 4px;
+    font-weight: 200;
+    font-size: 15px;
+    
+  }

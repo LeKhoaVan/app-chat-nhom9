@@ -901,7 +901,6 @@ export default function MyChat() {
 
 
 
-
   const createNewConvGroup = async () => {
 
     let listMemberId =
@@ -1203,7 +1202,6 @@ export default function MyChat() {
                     </li>
 
                   ))}
-
 
 
                 </ul>
