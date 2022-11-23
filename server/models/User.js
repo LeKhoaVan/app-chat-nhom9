@@ -33,7 +33,19 @@ const UserSchema = new mongoose.Schema(
     },
     status:{
       type: Number,
-    }
+    },
+    isActive:{
+      type: Boolean,
+    },
+    friends: {
+      type: Array,
+    },
+    sendFrs: {
+      type: Array,
+    },
+    receiveFrs: {
+      type: Array,
+    },
   },
   { timestamps: true }
 );

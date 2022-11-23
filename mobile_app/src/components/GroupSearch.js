@@ -10,8 +10,8 @@ export default function GroupSearch({item,navigation}) {
     <TouchableOpacity
         onPress={()=>{
             setCurrentChat(item)
+            setAuthorize(item.authorization)
             nav.navigate('ChattingScreen')
-            console.log(item);
         }}
         style={{
             flexDirection:'row',

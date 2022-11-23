@@ -60,6 +60,13 @@ export default function CreateGroup({ navigation }) {
 
         }
     }
+    const handleOpenSettings = () => {
+        if (Platform.OS === 'ios') {
+          Linking.openURL('app-settings:');
+        } else {
+          Linking.openSettings();
+        }
+    };
     const openCamera = async () => {
         // Ask the user for the permission to access the camera
         const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
@@ -290,13 +297,27 @@ export default function CreateGroup({ navigation }) {
                             justifyContent: 'space-between',
                             alignItems: 'center',
                         }}>
-                        <Image
-                            source={{ uri: userSearchCon.avt }}
-                            style={{
-                                width: 60,
-                                height: 60,
-                                borderRadius: 100,
-                            }} />
+                        <View>
+                            <Image
+                                source={{ uri: userSearchCon.avt }}
+                                style={{
+                                    width: 60,
+                                    height: 60,
+                                    borderRadius: 100,
+                                }} />
+                            {userSearchCon.isActive ?
+                                <View
+                                    style={{
+                                        width: 12,
+                                        height: 12,
+                                        backgroundColor: '#46AB5E',
+                                        borderRadius: 100,
+                                        position: 'absolute',
+                                        marginTop: 45,
+                                        marginLeft: 45,
+                                    }}>
+                                </View> : <></>}
+                        </View>
                         <Text
                             style={{
                                 fontSize: 16,
@@ -310,7 +331,7 @@ export default function CreateGroup({ navigation }) {
                                 onPress={() => {
                                     {
                                         listUserGroupNew.some((userN) => userN._id == userSearchCon._id) ?
-                                        setTextSearch("") : Add()
+                                            setTextSearch("") : Add()
                                     }
 
                                 }}

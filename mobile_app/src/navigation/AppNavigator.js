@@ -5,8 +5,6 @@ import { AuthContext } from '../contexts/AuthContext';
 import AuthNavigator from './AuthNavigator';
 import RootNavigator from './RootNavigator';
 
-
-
 export default function AppNavigator() {
   const{userToken,isLoading}=useContext(AuthContext)
   if (isLoading){
@@ -18,7 +16,7 @@ export default function AppNavigator() {
     );
   }
   return (
-        <NavigationContainer>
+      <NavigationContainer>
             {userToken !== null ?<RootNavigator/>:<AuthNavigator/>}
 	    </NavigationContainer>
        

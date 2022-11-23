@@ -5,6 +5,8 @@ import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
 import { Url } from '../contexts/constants'
 import Ionicons from 'react-native-vector-icons/Ionicons' 
+import  moment from 'moment';
+import 'moment/locale/vi';
 
 export default function Conversation({ conversation,navigation,myMes,recall}) {
   const [user, setUser] = useState({});
@@ -12,13 +14,7 @@ export default function Conversation({ conversation,navigation,myMes,recall}) {
   const [userName, setUserName] = useState([]);
   const {currentChat,setCurrentChat,userInfo, setAuthorize} = useContext(AuthContext);
   const ref_sw = useRef();
-  const CTime = (date) => {
-    let tempDate = new Date(date);
-    let minute = tempDate.getMinutes();
-    {minute<10? minute='0'+minute:minute=minute}
-    let fDate =tempDate.getHours()+":"+minute;
-    return fDate;
-  };
+
   const mess=(m)=>{
     if(m.length<=23)
       return m
@@ -100,6 +96,7 @@ export default function Conversation({ conversation,navigation,myMes,recall}) {
         setAuthorize(conversation.authorization)
         }}>
     <View style={styles.container}>
+      <View>
       <Image 
           source={{uri : conversation.name? conversation.img: user.avt}}
           style={{
@@ -108,12 +105,25 @@ export default function Conversation({ conversation,navigation,myMes,recall}) {
               borderRadius:100,
               backgroundColor:'#008FF3',
           }}/>
+        {!conversation.name && user.isActive?
+        <View
+          style={{
+            width:12,
+            height:12,
+            backgroundColor:'#46AB5E',
+            borderRadius:100,
+            position:'absolute',
+            marginTop:45,
+            marginLeft:45,
+          }}>
+        </View>:<></>}
+      </View>
       <View style={styles.center}>
         <Text style={styles.name_user}>{conversation.name? conversation.name : user.username}</Text>
         <Text style={styles.last_chat}>{newMes?.text? conversation.name?   mess( userName+': '+newMes?.text) :mess(newMes?.text): 'Chưa có tin nhắn'}</Text>
       </View>
-      <Text>{newMes?.text?  CTime( myMes? myMes.conversationId === conversation._id? 
-              myMes.createdAt:newMes.createdAt:newMes.createdAt):""}</Text>
+      <Text>{newMes?.text?  moment( myMes? myMes.conversationId === conversation._id? 
+               myMes.createdAt:newMes.createdAt:newMes.createdAt).fromNow():""}</Text>
     </View>
     </TouchableOpacity>
     </Swipeable>

@@ -1,4 +1,4 @@
-import { Alert, Image, Modal, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, Alert, Image, Modal, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../contexts/AuthContext';
 import axios from 'axios';
@@ -18,11 +18,12 @@ export default function MoreInfo({ navigation }) {
   const [avt, setAvt] = useState(null);
   const [user, SetUser] = useState({});
   const [nameGroup, setNameGroup] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
   const getUser = async () => {
     const friendId = currentChat.members.find((m) => m !== userInfo._id);
     try {
-      const res = await axios(`${Url}/api/users/name?userId=${friendId}`);
+      const res = await axios.get(`${Url}/api/users/name?userId=${friendId}`);
       { res.data.avt === "" ? setAvt("null") : setAvt(res.data.avt) }
       SetUser(res.data);
     } catch (err) {
@@ -57,6 +58,13 @@ export default function MoreInfo({ navigation }) {
       console.log(err);
     };
   };
+  const handleOpenSettings = () => {
+    if (Platform.OS === 'ios') {
+      Linking.openURL('app-settings:');
+    } else {
+      Linking.openSettings();
+    }
+};
   const showImagePicker = async () => {
     // Ask the user for the permission to access the media library 
     const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -78,7 +86,7 @@ export default function MoreInfo({ navigation }) {
         });
         return;
     }
-    setModalVisible(false);
+    setModalImgVisible(false);
     const result = await ImagePicker.launchImageLibraryAsync({
         mediaTypes: ImagePicker.MediaTypeOptions.Images,
         allowsEditing: true,
@@ -115,7 +123,7 @@ const openCamera = async () => {
         });
         return;
     }
-    setModalVisible(false);
+    setModalImgVisible(false);
     const result = await ImagePicker.launchCameraAsync(
         {
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -136,6 +144,7 @@ const openCamera = async () => {
 }
 //send image
 const handleImageChange = async (image) => {
+    
     const blob = await new Promise((resolve, reject) => {
         const xhr = new XMLHttpRequest();
         xhr.onload = function () {
@@ -149,6 +158,7 @@ const handleImageChange = async (image) => {
         xhr.open("GET", image.uri, true);
         xhr.send(null);
     });
+    setIsLoading(true);
     const fileName = image.uri.slice(image.uri.lastIndexOf('/') + 1, image.uri.lastIndexOf('.')) + "-" + Date.now();
     const imageRef = ref(storage, `/image/${fileName}`);
     uploadBytes(imageRef, blob)
@@ -159,6 +169,7 @@ const handleImageChange = async (image) => {
                     setAvt(url)
                     currentChat.img = url
                     setRender(Math.random())
+                    setIsLoading(false);
                 })
                 .catch((error) => {
                     console.log(error.message, "error getting the image url");
@@ -182,13 +193,26 @@ const handleImageChange = async (image) => {
 
         }}>
         <View>
+          {isLoading == true? 
+           <View
+            style={{
+              width: 100,
+              height: 100,
+              borderRadius:100,
+              borderWidth:1,
+              borderColor:'#C1C1C1',
+              alignItems:'center',
+              justifyContent:'center',
+            }}>
+             <ActivityIndicator size={'small'}/> 
+           </View>:
           <Image
             source={{ uri: avt }}
             style={{
               width: 100,
               height: 100,
               borderRadius: 100,
-            }} />
+            }} /> }
           {currentChat.name ?
             <TouchableOpacity
               onPress={()=>setModalImgVisible(true)}
@@ -302,12 +326,12 @@ const handleImageChange = async (image) => {
             </View>
           </TouchableWithoutFeedback>
         </Modal>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: 'row',alignItems:'flex-start',justifyContent:'center' }}>
           <TouchableOpacity
             style={{ alignItems: 'center', justifyContent: 'center', paddingHorizontal: 20 }} >
             <Ionicons
-              name='search' size={25} style={{ backgroundColor: '#DEDEDE', padding: 10, borderRadius: 100, width: 47 }} />
-            <Text style={{ fontSize: 15, width: 90, textAlign: 'center' }}>Tìm kiếm tin nhắn</Text>
+              name='search' size={20} style={{ backgroundColor: '#DEDEDE', padding: 10, borderRadius: 100, width: 40,height:40 }} />
+            <Text style={{ fontSize: 14, width: 90, textAlign: 'center' }}>Tìm kiếm tin nhắn</Text>
           </TouchableOpacity>
           {currentChat.name ?
             <TouchableOpacity
@@ -317,10 +341,20 @@ const handleImageChange = async (image) => {
               }}
               style={{ alignItems: 'center', justifyContent: 'center', paddingHorizontal: 20 }} >
               <Ionicons
-                name='person-add-outline' size={25} style={{ backgroundColor: '#DEDEDE', padding: 10, borderRadius: 100, width: 47 }} />
-              <Text style={{ fontSize: 15, width: 90, textAlign: 'center' }}>Thêm thành viên</Text>
+                name='person-add-outline' size={20} style={{ backgroundColor: '#DEDEDE', padding: 10, borderRadius: 100, width: 40,height:40 }} />
+              <Text style={{ fontSize: 14, width: 90, textAlign: 'center' }}>Thêm thành viên</Text>
             </TouchableOpacity> : <></>}
-
+            {!currentChat.name ?
+            <TouchableOpacity
+              onPress={() => {
+                navigation.navigate({ name: 'UserInfoScreen', params: { user } })
+              }}
+              style={{ alignItems: 'center', justifyContent: 'center', paddingHorizontal: 20 }} >
+              <Ionicons
+                name='person-outline' size={20} style={{ backgroundColor: '#DEDEDE', padding: 10, borderRadius: 100, width: 40,height:40 }} />
+              <Text style={{ fontSize: 14, width: 90, textAlign: 'center' }}>Trang cá nhân</Text>
+            </TouchableOpacity> : <></>}
+          
         </View>
 
       </View>
@@ -336,7 +370,7 @@ const handleImageChange = async (image) => {
           <Ionicons
             name='images-outline' size={23} color={'#7E7E7E'} style={{ marginLeft: 10, paddingBottom: 15 }} />
           <Text style={{ fontSize: 16, marginLeft: 15, borderBottomWidth: 1, borderBottomColor: '#DEDEDE', width: '100%', paddingBottom: 15 }}>
-            Ảnh, file, link đã gửi</Text>
+            Ảnh, file đã gửi</Text>
         </TouchableOpacity>
         {currentChat.name ?
           <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center', paddingVertical: 10, }}

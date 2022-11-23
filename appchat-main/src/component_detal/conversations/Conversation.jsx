@@ -1,7 +1,8 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import "./conversation.css"
-import moment from "moment";
+import * as moment from 'moment';
+import 'moment/locale/vi';
 
 
 
@@ -146,11 +147,11 @@ export default function Conversation({ conversation, currentUser, timeM, myMes,r
           <span className='time'>
             {myMes? 
               <>
-                {myMes.conversationId === conversation._id? moment(myMes.createdAt).format("LT"): moment(newMes.createdAt).format("LT")}
+                {myMes.conversationId === conversation._id? moment(myMes.createdAt).fromNow(): moment(newMes.createdAt).fromNow()}
               </>
               :
               <>
-                {moment(newMes.createdAt).format("LT")}
+                {moment(newMes.createdAt).fromNow()}
                 
               </>
               }

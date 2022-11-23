@@ -49,7 +49,7 @@ import { v4 } from "uuid";
 import { async } from "@firebase/util";
 
 export default function MyChat() {
-  const { authState: { user: { avt, _id, username } } } = useContext(AuthContext)
+  const { authState: { user: { avt, _id, username } } ,socket} = useContext(AuthContext)
 
   const [conversations, setConversation] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
@@ -89,7 +89,7 @@ export default function MyChat() {
 
 
   const [recallStatus, setRecallStatus] = useState(null)
-  const socket = useRef();
+  
 
   const [openPopup, setOpenPopup] = useState(false);
   const [openPopup2, setOpenPopup2] = useState(false);
@@ -599,6 +599,19 @@ export default function MyChat() {
     socket.current.on("getUsers", (users) => {
       // console.log(users)
     })
+    let data={
+      usersId:_id,
+      isActive:true,
+    }
+    const activeOn = async () => {
+      try {
+        const res = await axios.put('http://localhost:8800/api/users/'+_id, data);
+        console.log(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    activeOn();
   }, [_id]);
 
   useEffect(() => {

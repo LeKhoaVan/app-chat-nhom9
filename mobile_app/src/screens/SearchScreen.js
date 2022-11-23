@@ -41,7 +41,7 @@ export default function SearchScreen({ navigation }) {
                 }
                 let listG = []
                 conversations.forEach((c) => {
-                    if (convert(c.name).includes(textSearch.toLocaleLowerCase()) && c.name != "") {
+                    if (convert(c.name).includes(textSearch.toLocaleLowerCase()) && c.name != null) {
                         listG.push(c)
                     }
                 });
@@ -57,7 +57,7 @@ export default function SearchScreen({ navigation }) {
                 setListSearchUser(list)
             }
         }
-        if (textSearch == "") {
+        if (textSearch.trim() == "") {
             setListSearchUser([]);
             setListSearchGroup([]);
         }

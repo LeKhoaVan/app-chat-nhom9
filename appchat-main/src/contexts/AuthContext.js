@@ -1,8 +1,9 @@
-import { createContext, useReducer, useEffect } from 'react'
+import { createContext, useReducer, useEffect, useRef } from 'react'
 import { authReducer } from '../reducers/authReducer'
 import { apiUrl, LOCAL_STORAGE_TOKEN_NAME } from './constants'
 import axios from 'axios'
 import setAuthToken from '../utils/setAuthToken'
+
 
 export const AuthContext = createContext()
 
@@ -12,6 +13,7 @@ const AuthContextProvider = ({ children }) => {
 		isAuthenticated: false,
 		user: null
 	})
+	const socket = useRef();
 
     //authenticate user
     const loadUser = async () => {
@@ -119,7 +121,7 @@ const AuthContextProvider = ({ children }) => {
 			}
 		}
 
-    const authContextData = {loginUser , authState , logoutUser, registerUser, changePassUser, checkOTP}
+    const authContextData = {loginUser , authState , logoutUser, registerUser, changePassUser, checkOTP , socket}
 	// Return provider
 	return (
 		<AuthContext.Provider value={authContextData}>
