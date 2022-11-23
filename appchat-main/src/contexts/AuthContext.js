@@ -4,6 +4,7 @@ import { apiUrl, LOCAL_STORAGE_TOKEN_NAME } from './constants'
 import axios from 'axios'
 import setAuthToken from '../utils/setAuthToken'
 
+
 export const AuthContext = createContext()
 
 const AuthContextProvider = ({ children }) => {
@@ -12,7 +13,7 @@ const AuthContextProvider = ({ children }) => {
 		isAuthenticated: false,
 		user: null
 	})
-	
+	const socket = useRef();
 
     //authenticate user
     const loadUser = async () => {
@@ -109,8 +110,18 @@ const AuthContextProvider = ({ children }) => {
 			payload: { isAuthenticated: false, user: null }
 		})
 	}
-	const socket = useRef();
-    const authContextData = {loginUser , authState , logoutUser, registerUser , checkOTP,socket}
+		//changePassword
+		const changePassUser = async userForm => {
+			try {
+				const response = await axios.put(`${apiUrl}/changePassword`, userForm)
+				return response.data
+			} catch (error) {
+				if (error.response.data) return error.response.data
+				else return { success: false, message: error.message }
+			}
+		}
+
+    const authContextData = {loginUser , authState , logoutUser, registerUser, changePassUser, checkOTP , socket}
 	// Return provider
 	return (
 		<AuthContext.Provider value={authContextData}>

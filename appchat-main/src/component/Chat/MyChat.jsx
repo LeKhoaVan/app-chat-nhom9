@@ -46,6 +46,7 @@ import styles from "./Avarta/styles.module.css";
 import storage from "./Avarta/firebase";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
+import { async } from "@firebase/util";
 
 export default function MyChat() {
   const { authState: { user: { avt, _id, username } } ,socket} = useContext(AuthContext)
@@ -63,7 +64,10 @@ export default function MyChat() {
   const [recallMessage, setRecallMessages] = useState(null);
   const [deleteMessage, setDeleteMessages] = useState([]);
   const [listUserGroupNew, setListUserGroupNew] = useState([]);
+  const [listUserGroupAdd, setlistUserGroupAdd] = useState([]);
   const [userSearch, setUserSearch] = useState(null);
+  const [userSearchAddNew, setUserSearchAddNew] = useState(null);
+  const [userSearchAddCheckExist, setUserSearchAddCheckExist] = useState(null);
   const [userSearchCon, setUserSearchCon] = useState(null);
   const [convGroupForm, setConvGroupForm] = useState({})
   const [conActive, setConActive] = useState(null)
@@ -358,7 +362,7 @@ export default function MyChat() {
 
   function AddUserCon(conId) {
     let userId =
-      listUserGroupNew.map((userGr) => {
+    listUserGroupAdd.map((userGr) => {
         return userGr._id
       })
 
@@ -545,6 +549,20 @@ export default function MyChat() {
         avt: data.avt
       });
 
+       //load conversation latest
+       conversations.find((conv) => {
+
+        if(conv._id === data.conversationId){
+          conv.updatedAt = new Date(Date.now()).toISOString();
+          for(let index=0; index<conv.members.length; index++){
+            if(conv.members[index] === _id){
+              conversations.sort((a,b) => b.updatedAt.localeCompare(a.updatedAt))
+                setConversation(conversations);
+            }              
+          }
+        }
+    })
+
     });
     socket.current.on("getStatus", (data) => {
       setSenderMessage({
@@ -709,8 +727,13 @@ export default function MyChat() {
       
 
 
+      const timeUpdate= {
+        "convId" : currentChat._id,
+      }
+
       try {
         const res = await axios.post("http://localhost:8800/api/messages", message);
+        const updateTime = await axios.put("http://localhost:8800/api/conversations/updateAt", timeUpdate);
         // setMessages([...messages, res.data]);
         setNewMessages("");
         socket.current.emit("sendMessage", {
@@ -885,6 +908,76 @@ export default function MyChat() {
       userN._id == userSearch._id
     )
   }
+
+
+ function checkIfUserExistInConv() {
+    try {
+      const res =  axios.get("http://localhost:8800/api/conversations/findConvByUserID/"+ currentChat?._id+"/"+userSearchAddNew?._id);
+      
+      console.log(res.data)
+     
+      //setUserSearchAddCheckExist(res.data)
+      //return res.data;
+      res.then(value => {
+        setUserSearchAddCheckExist(value.data)
+      })
+    } catch (error) {
+      console.log(error.message)
+    }
+  }
+
+  async function handleTextSearch2(e) {
+    e.preventDefault()
+    if (e.keyCode == 13) {
+      return false;
+    }
+    let textSearch = document.querySelector('#search-group2').value
+    try {
+      const res = await axios.get("http://localhost:8800/api/users/userByMailOrName?email=" + textSearch);     
+      setUserSearchAddNew(res.data)
+    } catch (err) {
+      setUserSearchAddNew(null)
+    }
+    checkIfUserExistInConv()
+  }
+
+  function clickButtonAdd2(e) {
+    // e.preventDefault()
+    // //checkIfUserExistInConv()
+    // let check = checkAddUserNewGroup2()
+    // if(check){
+    //   setUserSearchAddNew(null)
+    //   document.querySelector('#search-group2').value = ""
+    // }
+    // else if(userSearchAddCheckExist === "false"){
+    //   setlistUserGroupAdd([...listUserGroupAdd,userSearchAddNew])
+    //   setUserSearchAddNew(null)
+    //   document.querySelector('#search-group2').value = ""
+    //   setUserSearchAddCheckExist(null)
+    // }else{
+    //   alert('Thành viên hiện đang trong nhóm')
+    // }
+    e.preventDefault()
+    //checkIfUserExistInConv()
+    let check = checkAddUserNewGroup2()
+    if(check){
+      setUserSearchAddNew(null)
+      document.querySelector('#search-group2').value = ""
+    }
+    else{
+      setlistUserGroupAdd([...listUserGroupAdd,userSearchAddNew])
+      setUserSearchAddNew(null)
+      document.querySelector('#search-group2').value = ""
+      setUserSearchAddCheckExist(null)
+    }
+  }
+
+  function checkAddUserNewGroup2(){
+    return listUserGroupAdd.some((userN)=>
+      userN._id == userSearchAddNew._id
+    )
+  }
+
   function clickButtonAdd(e) {
     e.preventDefault()
     let check = checkAddUserNewGroup()
@@ -915,11 +1008,11 @@ export default function MyChat() {
 
 
 
+
   function AutoScroll() {
     var element = document.querySelector(".live-chat");
     element.scrollTop = element.scrollHeight;
   }
-
 
 
 
@@ -1234,7 +1327,6 @@ export default function MyChat() {
                   ))}
 
 
-
                 </ul>
               </div>
             </div> : <div></div>}
@@ -1328,7 +1420,12 @@ export default function MyChat() {
                 <div className="item">
                   <Avatar src={userSearch.avt}></Avatar>
                   <p>{userSearch.username}</p>
-                  {userSearch._id === _id ? <div className="add">bạn</div> : <button onClick={clickButtonAdd} className="add">Thêm</button>}
+                  {userSearch._id === _id ? <div className="add">bạn</div> : 
+                  
+                 
+                  <button onClick={clickButtonAdd} className="add">Thêm</button>
+
+                  }
                 </div> : <div className="nullUser">Không thấy user</div>}
 
             </div>
@@ -1392,13 +1489,28 @@ export default function MyChat() {
       >
         <form>
           <div className="input-group">
-            <input className="form-control rounded ip-addGr" type="text" onKeyUp={handleTextSearch} id="search-group" placeholder="Tìm kiếm bằng email" />
+            <input className="form-control rounded ip-addGr" type="text" 
+            onKeyUp={handleTextSearch2}
+            id="search-group2" placeholder="Tìm kiếm bằng email" /> 
+                
             <div className="model-search">
-              {userSearch ?
+              {userSearchAddNew?
                 <div className="item">
-                  <Avatar src={userSearch.avt}></Avatar>
-                  <p>{userSearch.username}</p>
-                  {userSearch._id === _id ? <div className="add">bạn</div> : <button onClick={clickButtonAdd} className="add">Thêm</button>}
+                  <Avatar src={userSearchAddNew.avt}></Avatar>
+                  <p>{userSearchAddNew.username}</p>
+                  {/* {userSearchAddNew._id === _id ? <div className="add">Bạn</div> :
+                    <button onClick={clickButtonAdd2}className="add">Thêm</button>    
+                  //userSearchAddNew._id === userSearchAddCheckExist._id? <div className="add">Người này đã trong nhóm</div> :
+                  } */}
+                  {userSearchAddNew._id === _id ? <div className="add">bạn</div> :
+                  
+                  currentChat.members.some((auth1) => (
+                    auth1 === userSearchAddNew._id
+                  )) ?  
+                  <div className="add">Đã là thành viên</div> : 
+                  <button onClick={clickButtonAdd2} className="add">Thêm</button>
+
+                  }
                 </div> : <div className="nullUser">Không thấy user</div>}
 
             </div>
@@ -1407,16 +1519,16 @@ export default function MyChat() {
           <div><p>____________________________________________________________________________</p></div>
           <p className="title-Add">Danh sách cần thêm</p>
           <ul className="listAdd">
-            {listUserGroupNew.map((user_gr) => (
+            {listUserGroupAdd.map((user_gr) => (
               <li className="itemAdd">
                 <Avatar src={user_gr.avt}></Avatar>
                 <p>{user_gr.username}</p>
                 <button onClick={(e) => {
                   e.preventDefault()
-                  const members = listUserGroupNew.filter(
+                  const members = listUserGroupAdd.filter(
                     (u) => u._id !== user_gr._id
                   )
-                  setListUserGroupNew(members)
+                  setlistUserGroupAdd(members)
                 }} className="remove">xóa</button>
               </li>
             ))}
@@ -1432,7 +1544,7 @@ export default function MyChat() {
 
             <button type="button" className="btn-addGr btn-primary" onClick={(e) => {
               e.preventDefault()
-              //setListUserGroupNew([])
+              setlistUserGroupAdd([])
               setOpenPopup2(false)
               AddUserCon(currentChat._id)
             }}>Xác nhận</button>

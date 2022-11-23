@@ -106,7 +106,7 @@ export default function Conversation({ conversation, currentUser, timeM, myMes,r
                     </>
                     : 
                     <>
-                      {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {newMes !== null ? newMes.text : "vừa tham gia nhóm"} 
+                      {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {newMes !== "" ? newMes.text : "vừa tham gia nhóm"} 
                     </>     
                   )
                   :
@@ -127,15 +127,13 @@ export default function Conversation({ conversation, currentUser, timeM, myMes,r
                     </>
                     : 
                     <>
-                      {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} 
-                  : {(newMes !== null && newMes.type==0 ? newMes.text : (newMes.type == 1 ? "img" :"file"))} 
+                      {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {(newMes !== null && newMes.type==0 ? newMes.text : (newMes.type == 1 ? "img" :"file"))} 
                     </>     
                   )
                   :
                   (    
                     <>
-                     {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} 
-                  : {(newMes !== null && newMes.type==0 ? newMes.text : (newMes.type == 1 ? "img" :""))} 
+                     {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {(newMes !== null && newMes.type==0 ? newMes.text : (newMes.type == 1 ? "img" :""))} 
                     </>     
                   )       
                 }

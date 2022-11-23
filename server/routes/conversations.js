@@ -24,11 +24,26 @@ router.get("/:userId", async (req, res) => {
   try { 
     const conversation = await Conversation.find({
       members: { $in: [req.params.userId] },
-    });
+    }).sort({updatedAt:-1}) ;
     res.status(200).json(conversation);
   } catch (err) {
     res.status(500).json(err);
   }
+});
+
+//update time conv 
+router.put("/updateAt", async (req, res) => {
+ 
+  try{
+    const result = await Conversation.findByIdAndUpdate(
+      req.body.convId, 
+      {"updatedAt": Date.now()})
+
+    res.status(200).json(req.body.id);
+  }catch (err) {
+    res.status(500).json(err);
+  }
+    
 });
 
 
@@ -87,7 +102,7 @@ router.get("/find/:firstUserId/:secondUserId", async (req, res) => {
     });
     res.status(200).json(conversation)
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json(err.message);
   }
 });
 
@@ -172,7 +187,7 @@ router.get("/", async (req, res) => {
     const conversation = await Conversation.findById(conId);
     res.status(200).json(conversation.authorization);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json(err.message);
   }
 });
 
@@ -207,9 +222,30 @@ router.delete("/deleteCon", async (req, res) => {
     res.status(200).json(conversation);
   }
   catch(err){
-    res.status(500).json(err);
+    res.status(500).json(err.message);
   }
 })
+
+
+
+
+router.get("/findConvByUserID/:converID/:userIdFind", async (req, res) => {
+  try {
+    const conversation = await Conversation.findOne({
+      _id: req.params.converID,
+      members: req.params.userIdFind,
+    });
+    if(conversation){
+      //return res.status(400).json({ success: false, message: 'Thành viên đã có trong nhóm' });
+      res.status(200).json(conversation);
+    }else{
+      res.status(200).json('false');
+    }
+    
+  } catch (err) {
+    res.status(500).json(err.message);
+  }
+});
 
 
 
