@@ -32,7 +32,7 @@ import PermContactCalendarIcon from '@mui/icons-material/PermContactCalendar';
 import { io } from "socket.io-client";
 import { AuthContext } from "../../contexts/AuthContext";
 //import 'bootstrap/dist/css/bootstrap.css';
-
+import isEmail from "validator/lib/isEmail"
 import Popup from "./Popup";
 
 
@@ -105,6 +105,8 @@ export default function MyChat() {
     name: "",
     img: ""
   });
+
+  const [emailCheck, setEmailCheck] = useState('')
 
   const handleChange = ({ currentTarget: input }) => {
     setData({ ...data, [input.name]: input.value });
@@ -881,12 +883,34 @@ export default function MyChat() {
   }, [currentChat]);
 
   async function handleTextSearchUser(e) {
+    // if (e.keyCode == 13) {
+    //   return false;
+    // }
+    // let textSearch = document.querySelector('#search-user').value
+    // try {
+    //   const res = await axios.get("http://localhost:8800/api/users/userByMailOrName?email=" + textSearch);
+
+    //   setUserSearchCon(res.data)
+    // } catch (err) {
+    //   setUserSearchCon(null)
+    // }
     if (e.keyCode == 13) {
       return false;
-    }
+    }    
     let textSearch = document.querySelector('#search-user').value
+    setEmailCheck(textSearch)
+    setUserSearchCon(null)
     try {
-      const res = await axios.get("http://localhost:8800/api/users/userByMailOrName?email=" + textSearch);
+      var url = "";
+      if (!isEmail(emailCheck)){
+        //alert('?')
+        url = "http://localhost:8800/api/users/userByMailOrName?username="+ textSearch;
+      }
+      else{
+        url = "http://localhost:8800/api/users/userByMailOrName?email="+ textSearch;
+      }
+      const res = await axios.get(url);
+      
 
       setUserSearchCon(res.data)
     } catch (err) {
@@ -1080,13 +1104,13 @@ export default function MyChat() {
             <input type="text" placeholder="Tìm kiếm" id="search-user" onKeyUp={handleTextSearchUser} />
             <div className="model-usersearch">
               {userSearchCon ? (userSearchCon._id == _id ?
-                <div className="nullUser">Đây là email của bạn</div> :
+                <div className="nullUser">Đây là bạn</div> :
                 <div className="item" onClick={() => {
                   handleChatOne(_id, userSearchCon._id)
                 }}>
                   <Avatar src={userSearchCon.avt}></Avatar>
                   <p>{userSearchCon.username}</p>
-                </div>) : <div className="nullUser">Không tìm thấy tài khoản</div>}
+                </div>) : <div className="nullUser">Không tìm thấy người dùng này</div>}
 
             </div>
           </div>
