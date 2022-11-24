@@ -513,7 +513,7 @@ export default function MyChat() {
         //setConversation(con.data);
         setCurrentChat(res.data);
         setAuthorize(res.data.authorization)
-        setConActive(conversations.length)
+        setConActive(0)
       } catch (err) {
         console.log(err)
       }
@@ -1041,7 +1041,7 @@ export default function MyChat() {
       const res = await axios.post("http://localhost:8800/api/conversations/newConvGroup", conv);
       setCurrentChat(res.data);
       setAuthorize(res.data.authorization)
-      setConActive(conversations.length)
+      setConActive(0)
     } catch (err) {
       console.log(err.message);
     }
