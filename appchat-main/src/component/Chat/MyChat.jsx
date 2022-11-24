@@ -883,17 +883,6 @@ export default function MyChat() {
   }, [currentChat]);
 
   async function handleTextSearchUser(e) {
-    // if (e.keyCode == 13) {
-    //   return false;
-    // }
-    // let textSearch = document.querySelector('#search-user').value
-    // try {
-    //   const res = await axios.get("http://localhost:8800/api/users/userByMailOrName?email=" + textSearch);
-
-    //   setUserSearchCon(res.data)
-    // } catch (err) {
-    //   setUserSearchCon(null)
-    // }
     if (e.keyCode == 13) {
       return false;
     }    
