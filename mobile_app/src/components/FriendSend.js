@@ -7,7 +7,7 @@ import { Url } from '../contexts/constants';
 
 export default function FriendSend({ item }) {
     // console.log({item});
-    const { userInfo, setAuthorize, setCurrentChat, conversations } = useContext(AuthContext);
+    const { userInfo, setAuthorize, setCurrentChat, conversations ,setListSend} = useContext(AuthContext);
     const [user, setUser] = useState({});
     const nav = useNavigation();
 
@@ -20,6 +20,14 @@ export default function FriendSend({ item }) {
           } catch (err) {
             console.log(err);
           };
+
+          try {
+            const res = await axios.get(`${Url}/api/users/sendFrs/${userInfo._id}`);
+            userInfo.sendFrs=res.data
+            setListSend(res.data)
+          } catch (err) {
+            console.log(err);
+          }
 
     }
     useEffect(() => {

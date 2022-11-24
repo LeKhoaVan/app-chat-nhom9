@@ -133,7 +133,16 @@ export const AuthContextProvider = ({ children }) => {
 			else return { success: false, message: error.message }
 		}
 	}
-
+	//changePassword
+	const changePassUser = async userForm => {
+		try {
+			const response = await axios.put(`${apiUrl}/changePassword`, userForm)
+			return response.data
+		} catch (error) {
+			if (error.response.data) return error.response.data
+			else return { success: false, message: error.message }
+		}
+	}
 
 	// Return provider
 	return (
@@ -142,7 +151,7 @@ export const AuthContextProvider = ({ children }) => {
 		recallStatus,setRecallStatus,senderMessage, setSenderMessage,authorize,setAuthorize,
 		userCons, setUserCons,listUserGroupNew, setListUserGroupNew,conversations, setConversation,
 		listUserGroupAddNew, setListUserGroupAddNew,render,setRender,listFriend, setListFriend,
-		listReceive, setListReceive,listSend, setListSend,checkOTP
+		listReceive, setListReceive,listSend, setListSend,checkOTP,changePassUser
 		}}>
 			{children}
 		</AuthContext.Provider>

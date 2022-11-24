@@ -277,7 +277,6 @@ const handleImageChange = async (image) => {
           onRequestClose={() => setModalVisible(false)}
           animationType='fade'
           hardwareAccelerated>
-          <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
             <View style={styles.centered_view} >
               <View style={styles.modal_cont}>
                 <Text style={styles.modal_title}>Đặt tên nhóm</Text>
@@ -324,7 +323,6 @@ const handleImageChange = async (image) => {
                 </View>
               </View>
             </View>
-          </TouchableWithoutFeedback>
         </Modal>
         <View style={{ flexDirection: 'row',alignItems:'flex-start',justifyContent:'center' }}>
           <TouchableOpacity

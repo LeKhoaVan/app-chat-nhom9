@@ -46,6 +46,14 @@ export default function FriendReceive({ item }) {
           } catch (err) {
             console.log(err);
           };
+          try {
+            const res = await axios.get(`${Url}/api/users/receiveFrs/${userInfo._id}`);
+            userInfo.receiveFrs=res.data
+            setListReceive(res.data)
+          } catch (err) {
+            console.log(err);
+          }
+
 
     }
 
