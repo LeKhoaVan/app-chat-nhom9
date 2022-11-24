@@ -1222,7 +1222,7 @@ export default function MyChat() {
                 </Tooltip>
               </div>
             </> : <div className="noChat">
-            <div className="noChat-title">Chào mừng bạn đến với CynoChat</div>
+            <div className="header-name">Chào mừng bạn đến với CynoChat</div>
             </div>
         }
       </div>
