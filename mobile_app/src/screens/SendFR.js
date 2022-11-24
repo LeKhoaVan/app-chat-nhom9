@@ -5,8 +5,8 @@ import FriendSend from '../components/FriendSend';
 import axios from 'axios';
 import { Url } from '../contexts/constants';
 export default function SendFR({ navigation }) {
-  const [listSend, setListSend] = useState([])
-  const { userInfo, } = useContext(AuthContext);
+  
+  const { userInfo,listSend, setListSend } = useContext(AuthContext);
   
   useEffect(() => {
     const loadlistSend= async() => {

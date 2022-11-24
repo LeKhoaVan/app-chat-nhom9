@@ -7,7 +7,8 @@ import axios from 'axios';
 import { useNavigation } from "@react-navigation/native";
 
 export default function UserInGroup({ user }) {
-  const { userInfo, currentChat, authorize, setAuthorize, setUserCons, conversations, setCurrentChat, setRender } = useContext(AuthContext);
+  const { userInfo, currentChat, authorize, setAuthorize, 
+    setUserCons, conversations, setCurrentChat, setRender,setListSend } = useContext(AuthContext);
   const [modalVisible, setModalVisible] = useState(false);
   const nav = useNavigation();
   function RemoveAuth(conId, userId) {
@@ -26,6 +27,13 @@ export default function UserInGroup({ user }) {
     } catch (err) {
       console.log(err);
     };
+    try {
+      const res = await axios.get(`${Url}/api/users/sendFrs/${userInfo._id}`);
+      userInfo.sendFrs=res.data
+      setListSend(res.data)
+    } catch (err) {
+      console.log(err);
+    }
 
   }
   function SetAuth(conId, userId) {

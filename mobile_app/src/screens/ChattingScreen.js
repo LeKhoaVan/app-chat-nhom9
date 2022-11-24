@@ -31,6 +31,14 @@ export default function ChattingScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(false)
   
   
+  const mess=(m)=>{
+    if(m!=null){
+      if(m.length<=25)
+        return m
+      else 
+        return m.slice(0,21)+'...'}
+    return ""
+  }
 
   useEffect(() => {
     const friendId = currentChat.members.find((m) => m !== userInfo._id);
@@ -612,7 +620,7 @@ export default function ChattingScreen({ navigation }) {
           />
         </TouchableOpacity>
         <View style={styles.Name}>
-          <Text style={styles.text_Name}>{currentChat.name ? currentChat.name : user.username}</Text>
+          <Text style={styles.text_Name}>{currentChat.name ? mess(currentChat.name) : mess(user.username)}</Text>
           <Text style={styles.active}>{currentChat.name ? Nmember + ' thành viên' : getOnline()}</Text>
         </View>
         <TouchableOpacity>

@@ -16,10 +16,12 @@ export default function Conversation({ conversation,navigation,myMes,recall}) {
   const ref_sw = useRef();
 
   const mess=(m)=>{
-    if(m.length<=23)
-      return m
-    else 
-      return m.slice(0,19)+'...'
+    if(m!=null){
+      if(m.length<=20)
+        return m
+      else 
+        return m.slice(0,16)+'...'}
+    return ""
   }
   useEffect(()=>{
     const friendId = conversation.members.find((m) => m !== userInfo._id);
@@ -119,7 +121,7 @@ export default function Conversation({ conversation,navigation,myMes,recall}) {
         </View>:<></>}
       </View>
       <View style={styles.center}>
-        <Text style={styles.name_user}>{conversation.name? conversation.name : user.username}</Text>
+        <Text style={styles.name_user}>{conversation.name? mess(conversation.name) : mess(user.username)}</Text>
         <Text style={styles.last_chat}>{newMes?.text? conversation.name?   mess( userName+': '+newMes?.text) :mess(newMes?.text): 'Chưa có tin nhắn'}</Text>
       </View>
       <Text>{newMes?.text?  moment( myMes? myMes.conversationId === conversation._id? 

@@ -55,9 +55,7 @@ router.post('/register', async (req, res) => {
             return res.status(400).json({ success: false, message: 'Email đã tồn tại' });
         }
 		const userName = await User.findOne({ username })
-        if(userName){
-			return res.status(400).json({ success: false, message: 'Username đã tồn tại' });
-        }
+        
 		
 
 		const otp = Math.floor(Math.random() * 9000 + 1000) + "";

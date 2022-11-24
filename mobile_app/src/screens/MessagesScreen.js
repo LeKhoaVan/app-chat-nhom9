@@ -43,6 +43,17 @@ export default function MessagesScreen({ navigation }) {
             recall={recallStatus}
             navigation={navigation} />
         ))}
+        {conversations.length ==0?
+        <View
+        style={{
+          marginTop:100,
+          alignItems:'center',
+        }}>
+          <Text
+            style={{
+              fontSize:17,
+            }}>Chưa có tin nhắn</Text>
+        </View>:<></>}
       </ScrollView>
     </View>
   )

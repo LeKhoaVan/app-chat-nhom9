@@ -83,7 +83,7 @@ export default function MeScreen() {
         usersId: userInfo._id,
         username: userName,
       };
-      // const res = await axios.put(`${Url}/api/users/` + userInfo._id, data);
+      const res = await axios.put(`${Url}/api/users/` + userInfo._id, data);
     } catch (err) {
       console.log(err);
     };
@@ -314,7 +314,7 @@ export default function MeScreen() {
           onRequestClose={() => setModalVisible(false)}
           animationType='fade'
           hardwareAccelerated>
-          <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          
             <View style={styles.centered_view} >
               <View style={styles.modal_cont}>
                 <Text style={styles.modal_title}>Đổi UserName</Text>
@@ -361,7 +361,7 @@ export default function MeScreen() {
                 </View>
               </View>
             </View>
-          </TouchableWithoutFeedback>
+          
         </Modal>
       </TouchableOpacity>
       <View>
@@ -398,7 +398,6 @@ export default function MeScreen() {
             onRequestClose={() => setModalGender(false)}
             animationType='fade'
             hardwareAccelerated>
-            <TouchableWithoutFeedback onPress={() => setModalGender(false)}>
               <View style={styles.centered_view2} >
                 <View style={styles.modal_cont2}>
                   <Text style={styles.modal_title2}>Đổi giới tính</Text>
@@ -439,7 +438,6 @@ export default function MeScreen() {
                   </View>
                 </View>
               </View>
-            </TouchableWithoutFeedback>
           </Modal>
         </TouchableOpacity>
       </View>
