@@ -1,4 +1,4 @@
-import { Alert, Dimensions, Image, Linking, Modal, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Alert, Dimensions, Image, Linking, Modal, StyleSheet, Text, ToastAndroid, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios';
 import { Url } from '../contexts/constants';
@@ -61,13 +61,15 @@ const Messager = ({ message, own, onClickDeleteMgsUser, onClickDeleteMgsFri, onC
         .then(async ({ uri }) => {
           console.log('Finished downloading to ', uri);
           const asset = await MediaLibrary.createAssetAsync(uri)
-          MediaLibrary.createAlbumAsync('Downloads', asset)
-            .then(() => {
-              alert("download complete")
-            })
-            .catch(error => {
-              alert("issue with download contact support")
-            });
+          ToastAndroid.show("Tải xuống thành công", ToastAndroid.SHORT);
+          // MediaLibrary.createAlbumAsync('Downloads', asset)
+          //   .then(() => {
+          //     alert("download complete")
+          //   })
+          //   .catch(error => {
+          //     alert("issue with download contact support")
+          //   });
+          
 
         })
         .catch(error => {
