@@ -1,4 +1,4 @@
-import { ActivityIndicator, Alert, Image, Modal, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, Alert, Image, Linking, Modal, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../contexts/AuthContext';
 import axios from 'axios';
@@ -72,7 +72,7 @@ export default function MoreInfo({ navigation }) {
     if (permissionResult.granted === false) {
         Alert.alert(
             "Cấp quyền truy cập",
-            "Bạn cần cấp quyền cho phép ứng dụng này truy cập vào ảnh của bạn \n\nBấm mở cài đặt, chọn Quyền và bật ON các quyền tương thích",
+            "Bạn cần cấp quyền cho phép ứng dụng này truy cập vào bộ nhớ của bạn \n\nBấm mở cài đặt, chọn Quyền và bật ON các quyền tương thích",
             [
                 {
                     text: 'Hủy',

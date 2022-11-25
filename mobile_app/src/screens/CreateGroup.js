@@ -1,4 +1,4 @@
-import { Alert, FlatList, Image, Modal, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Alert, FlatList, Image, Linking, Modal, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Ionicons from 'react-native-vector-icons/Ionicons'
@@ -29,7 +29,7 @@ export default function CreateGroup({ navigation }) {
         if (permissionResult.granted === false) {
             Alert.alert(
                 "Cấp quyền truy cập",
-                "Bạn cần cấp quyền cho phép ứng dụng này truy cập vào ảnh của bạn \n\nBấm mở cài đặt, chọn Quyền và bật ON các quyền tương thích",
+                "Bạn cần cấp quyền cho phép ứng dụng này truy cập vào bộ nhớ của bạn \n\nBấm mở cài đặt, chọn Quyền và bật ON các quyền tương thích",
                 [
                     {
                         text: 'Hủy',

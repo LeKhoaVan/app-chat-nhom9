@@ -1,27 +1,80 @@
-import { Dimensions, Image, Modal, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Alert, Dimensions, Image, Linking, Modal, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import axios from 'axios';
 import { Url } from '../contexts/constants';
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import { AuthContext } from '../contexts/AuthContext';
 import { Audio, Video } from 'expo-av';
-import  moment from 'moment';
+import moment from 'moment';
 import 'moment/locale/vi';
-// import { downloadToFolder } from "expo-file-dl";
+import * as MediaLibrary from 'expo-media-library';
+import * as FileSystem from 'expo-file-system';
+import * as ImagePicker from 'expo-image-picker';
 
 const Messager = ({ message, own, onClickDeleteMgsUser, onClickDeleteMgsFri, onClickDelete }) => {
   // const [user, setUser] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const { userInfo } = useContext(AuthContext);
 
-  // const downloadFile= async(url)=>{
-  //   await downloadToFolder(
-  //     url,
-  //     'd.jpg',
-  //     'Download',
-  //     channelId,{}
-  //     );
-  // }
+  const handleOpenSettings = () => {
+    if (Platform.OS === 'ios') {
+      Linking.openURL('app-settings:');
+    } else {
+      Linking.openSettings();
+    }
+  }
+
+  const downloadFile = async (url) => {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+
+    if (permissionResult.granted === false) {
+      Alert.alert(
+        "Cấp quyền truy cập",
+        "Bạn cần cấp quyền cho phép ứng dụng này truy cập vào bộ nhớ của bạn \n\nBấm mở cài đặt, chọn Quyền và bật ON các quyền tương thích",
+        [
+          {
+            text: 'Hủy',
+          },
+          {
+            text: 'Mở cài đặt',
+            onPress: () => handleOpenSettings(),
+          },
+        ], {
+        cancelable: true,
+      });
+      return;
+    }
+    else {
+      let pathNoAtt = url.split("?")
+      console.log(pathNoAtt)
+      let pathWithCompany = pathNoAtt[0].split('/');
+      let path = pathWithCompany[pathWithCompany.length - 1];
+      //firebase only
+
+      const file_name = path.split("%2F")[path.split("%2F").length - 1]
+      console.log(file_name)
+
+      FileSystem.downloadAsync(
+        url,
+        FileSystem.documentDirectory + file_name
+      )
+        .then(async ({ uri }) => {
+          console.log('Finished downloading to ', uri);
+          const asset = await MediaLibrary.createAssetAsync(uri)
+          MediaLibrary.createAlbumAsync('Downloads', asset)
+            .then(() => {
+              alert("download complete")
+            })
+            .catch(error => {
+              alert("issue with download contact support")
+            });
+
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
+  }
 
   // useEffect(() => {
   //   const getUser = async () => {
@@ -115,6 +168,58 @@ const Messager = ({ message, own, onClickDeleteMgsUser, onClickDeleteMgsFri, onC
             isLooping
             useNativeControls />
           : <></>}
+        {message.type == 3 ?
+          <View
+            style={{
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              paddingHorizontal: 20,
+            }}>
+            {message.text.slice(message.text.lastIndexOf('.') + 1, message.text.lastIndexOf('?')).includes('txt') ?
+              <Image
+                source={require('../image/txt.png')}
+                style={{
+                  width: 40, height: 40
+                }} /> :
+              message.text.slice(message.text.lastIndexOf('.') + 1, message.text.lastIndexOf('?')).includes('pdf') ?
+                <Image
+                  source={require('../image/pdf.png')}
+                  style={{
+                    width: 40, height: 40
+                  }} /> :
+                message.text.slice(message.text.lastIndexOf('.') + 1, message.text.lastIndexOf('?')).includes('doc') ?
+                  <Image
+                    source={require('../image/doc.png')}
+                    style={{
+                      width: 40, height: 40
+                    }} /> :
+                  message.text.slice(message.text.lastIndexOf('.') + 1, message.text.lastIndexOf('?')).includes('ppt') ?
+                    <Image
+                      source={require('../image/ppt.png')}
+                      style={{
+                        width: 40, height: 40
+                      }} /> :
+                    message.text.slice(message.text.lastIndexOf('.') + 1, message.text.lastIndexOf('?')).includes('xls') ?
+                      <Image
+                        source={require('../image/excel.png')}
+                        style={{
+                          width: 40, height: 40
+                        }} /> :
+                      <Image
+                        source={require('../image/file.png')}
+                        style={{
+                          width: 40, height: 40
+                        }} />
+            }
+            <Text
+              style={{
+                marginLeft: 5,
+                color: own ? '#fff' : '#000'
+              }}>
+              {message.text.slice(message.text.lastIndexOf('%2') + 3, message.text.lastIndexOf('?'))}
+            </Text>
+          </View> : <></>}
         <Text style={{ color: '#939393', fontSize: 13 }}>{moment(message.createdAt).fromNow()}</Text>
       </TouchableOpacity>
       <Modal
@@ -159,6 +264,58 @@ const Messager = ({ message, own, onClickDeleteMgsUser, onClickDeleteMgsFri, onC
                       isLooping
                       useNativeControls />
                     : <></>}
+                  {message.type == 3 ?
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        paddingHorizontal: 20,
+                      }}>
+                      {message.text.slice(message.text.lastIndexOf('.') + 1, message.text.lastIndexOf('?')).includes('txt') ?
+                        <Image
+                          source={require('../image/txt.png')}
+                          style={{
+                            width: 40, height: 40
+                          }} /> :
+                        message.text.slice(message.text.lastIndexOf('.') + 1, message.text.lastIndexOf('?')).includes('pdf') ?
+                          <Image
+                            source={require('../image/pdf.png')}
+                            style={{
+                              width: 40, height: 40
+                            }} /> :
+                          message.text.slice(message.text.lastIndexOf('.') + 1, message.text.lastIndexOf('?')).includes('doc') ?
+                            <Image
+                              source={require('../image/doc.png')}
+                              style={{
+                                width: 40, height: 40
+                              }} /> :
+                            message.text.slice(message.text.lastIndexOf('.') + 1, message.text.lastIndexOf('?')).includes('ppt') ?
+                              <Image
+                                source={require('../image/ppt.png')}
+                                style={{
+                                  width: 40, height: 40
+                                }} /> :
+                              message.text.slice(message.text.lastIndexOf('.') + 1, message.text.lastIndexOf('?')).includes('xls') ?
+                                <Image
+                                  source={require('../image/excel.png')}
+                                  style={{
+                                    width: 40, height: 40
+                                  }} /> :
+                                <Image
+                                  source={require('../image/file.png')}
+                                  style={{
+                                    width: 40, height: 40
+                                  }} />
+                      }
+                      <Text
+                        style={{
+                          marginLeft: 5,
+                          color: own ? '#fff' : '#000'
+                        }}>
+                        {message.text.slice(message.text.lastIndexOf('%2') + 3, message.text.lastIndexOf('?'))}
+                      </Text>
+                    </View> : <></>}
                   <Text style={{ color: '#939393', fontSize: 13 }}>{moment(message.createdAt).fromNow()}</Text>
                 </TouchableOpacity>
               </View>
@@ -217,7 +374,7 @@ const Messager = ({ message, own, onClickDeleteMgsUser, onClickDeleteMgsFri, onC
                   style={{ alignItems: 'center' }}
                   onPress={() => {
                     setModalVisible(false)
-                    // downloadFile(message.text)
+                    downloadFile(message.text)
                   }}>
                   <Ionicons name='download-outline' size={30} color={'#3FE293'} />
                   <Text>Tải xuống</Text>

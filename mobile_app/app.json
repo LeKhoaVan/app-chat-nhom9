@@ -1,13 +1,26 @@
 {
   "expo": {
-    "name": "mobile_app",
-    "slug": "mobile_app",
+    "name": "CynoChat",
+    "slug": "CynoChat",
     "version": "1.0.0",
+    "icon": "./src/image/icon.png",
     "assetBundlePatterns": [
       "**/*"
     ],
     "android": {
-      "package": "com.tranguyen1610.mobile_app"
-    }
+      "package": "com.tranguyen1610.mobile_app",
+      "useNextNotificationsApi": true
+    },
+    "plugins": [
+      [
+        "expo-media-library",
+        {
+          "photosPermission": "Allow $(PRODUCT_NAME) to access your photos.",
+          "savePhotosPermission": "Allow $(PRODUCT_NAME) to save photos.",
+          "isAccessMediaLocationEnabled": true
+        }
+      ]
+    ]
+
   }
 }
