@@ -16,10 +16,10 @@ export default function AddFriendScreen({ navigation }) {
   const handelClickSearch = async () => {
     try {
       const res = await axios.get(`${Url}/api/users/userByMailOrName?email=` + email);
-      if (res.data == null)
+      if (res.data === null)
         setErr('Địa chỉ email này chưa đăng ký tài khoản');
       else
-        if (res.data._id == userInfo._id)
+        if (res.data._id === userInfo._id)
           setErr('Địa chỉ email này là của bạn');
         else {
           let user = res.data;
