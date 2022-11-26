@@ -23,7 +23,8 @@ export default function ChattingScreen({ navigation }) {
   const scrollView_ref = useRef();
   const [messages, setMessages] = useState([]);
   const [user, setUser] = useState([]);
-  const { userInfo, currentChat, socket, setSenderMessage, setRecallStatus, userCons } = useContext(AuthContext);
+  const { userInfo, currentChat, socket, setSenderMessage, setRecallStatus, userCons,
+    conversations,setConversation } = useContext(AuthContext);
   const [arrivalMessage, setArrivalMessages] = useState(null);
   const [Nmember, setNMember] = useState(0);
   const [recallMessage, setRecallMessages] = useState(null);
@@ -111,7 +112,18 @@ export default function ChattingScreen({ navigation }) {
         username: data.username,
         avt: data.avt,
       });
-
+      //load conversation latest
+      conversations.find((conv) => {
+        if (conv._id === data.conversationId) {
+          conv.updatedAt = new Date(Date.now()).toISOString();
+          for (let index = 0; index < conv.members.length; index++) {
+            if (conv.members[index] === userInfo._id) {
+              const concsts = conversations.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
+              setConversation(concsts);
+            }
+          }
+        }
+      })
     });
     socket.current.on("getStatus", (data) => {
       setSenderMessage({
@@ -264,7 +276,6 @@ export default function ChattingScreen({ navigation }) {
         }
       }
 
-
       try {
         const res = await axios.post(`${Url}/api/messages`, message);
         // setMessages([...messages, res.data]);  
@@ -281,6 +292,10 @@ export default function ChattingScreen({ navigation }) {
           username: userInfo.username,
           avt: userInfo.avt,
         });
+        const timeUpdate= {
+          "convId" : currentChat._id,
+        }
+        const updateTime = await axios.put(`${Url}/api/conversations/updateAt`, timeUpdate);
 
         socket.current.emit("sendStatus", {
           senderId: userInfo._id,
@@ -464,6 +479,7 @@ export default function ChattingScreen({ navigation }) {
             }
             try {
               const res = await axios.post(`${Url}/api/messages`, messageimage);
+              
               // setMessages([...messages, res.data]);
               socket.current.emit("sendMessage", {
                 _id: res.data._id,
@@ -478,6 +494,10 @@ export default function ChattingScreen({ navigation }) {
                 username: userInfo.username,
                 avt: userInfo.avt,
               });
+              const timeUpdate= {
+                "convId" : currentChat._id,
+              }
+              const updateTime = await axios.put(`${Url}/api/conversations/updateAt`, timeUpdate);
 
               socket.current.emit("sendStatus", {
                 senderId: userInfo._id,
@@ -565,6 +585,7 @@ export default function ChattingScreen({ navigation }) {
 
             try {
               const res = await axios.post(`${Url}/api/messages`, messageFile);
+              
               // setMessages([...messages, res.data]);
               socket.current.emit("sendMessage", {
                 _id: res.data._id,
@@ -579,6 +600,11 @@ export default function ChattingScreen({ navigation }) {
                 username: userInfo.username,
                 avt: userInfo.avt,
               });
+
+              const timeUpdate= {
+                "convId" : currentChat._id,
+              }
+              const updateTime = await axios.put(`${Url}/api/conversations/updateAt`, timeUpdate);
 
               socket.current.emit("sendStatus", {
                 senderId: userInfo._id,

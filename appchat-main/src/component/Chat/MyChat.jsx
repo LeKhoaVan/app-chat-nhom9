@@ -172,6 +172,10 @@ export default function MyChat() {
             }
             try {
               const res = await axios.post("http://localhost:8800/api/messages", messageimage);
+              const timeUpdate= {
+                "convId" : currentChat._id,
+              }
+              const updateTime = await axios.put("http://localhost:8800/api/conversations/updateAt", timeUpdate);
               //setMessages([...messages, res.data]);
               socket.current.emit("sendMessage", {
                 _id:res.data._id,
@@ -263,6 +267,10 @@ export default function MyChat() {
 
             try {
               const res = await axios.post("http://localhost:8800/api/messages", messageFile);
+              const timeUpdate= {
+                "convId" : currentChat._id,
+              }
+              const updateTime = await axios.put("http://localhost:8800/api/conversations/updateAt", timeUpdate);
               // setMessages([...messages, res.data]);
               socket.current.emit("sendMessage", {
                 _id:res.data._id,
@@ -733,12 +741,13 @@ export default function MyChat() {
       
 
 
-      const timeUpdate= {
-        "convId" : currentChat._id,
-      }
+      
 
       try {
         const res = await axios.post("http://localhost:8800/api/messages", message);
+        const timeUpdate= {
+          "convId" : currentChat._id,
+        }
         const updateTime = await axios.put("http://localhost:8800/api/conversations/updateAt", timeUpdate);
         // setMessages([...messages, res.data]);
         setNewMessages("");
