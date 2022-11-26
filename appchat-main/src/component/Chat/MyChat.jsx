@@ -1434,7 +1434,7 @@ export default function MyChat() {
 
           <div className="input-group">
             <input className="form-control rounded ip-addGr search" type="text" onKeyUp={handleTextSearch} id="search-group" placeholder="Nhập email để tìm kiếm" />
-            <div className="model-search">
+            <div className="model-search group">
               {userSearch ?
                 <div className="item">
                   <Avatar src={userSearch.avt}></Avatar>
@@ -1512,7 +1512,7 @@ export default function MyChat() {
             onKeyUp={handleTextSearch2}
             id="search-group2" placeholder="Nhập email để tìm kiếm" /> 
                 
-            <div className="model-search">
+            <div className="model-search group">
               {userSearchAddNew?
                 <div className="item">
                   <Avatar src={userSearchAddNew.avt}></Avatar>
@@ -1582,7 +1582,7 @@ export default function MyChat() {
         openPopup={openPopupAvarta}
         setOpenPopup={setOpenPopupAvarta}>
 
-        <h1 >{currentChat?.name}</h1>
+        <h2 className={styles.titlename}>{currentChat?.name}</h2>
 
         <div className={styles.container}>
           <form className={styles.form} onSubmit={handleSubmit} >

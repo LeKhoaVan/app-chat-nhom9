@@ -472,13 +472,14 @@ body{
   background-color: var(--bg-user-hover);
   width: 80%;
   border-radius: 5px;
+  overflow: hidden;
 }
 .search-cont input {
   outline: none;
   border: none;
   background-color: inherit;
-  width: 78%;
-  padding: 10px 0px 10px 0px;
+  width: 100%;
+  padding: 10px 10px 10px 0px;
   font-size: 15px;
 }
 .search-c svg {
@@ -1096,8 +1097,9 @@ body{
 
 }
 button:disabled{
-  background-color: #495057;
+  background-color: #28747c;
   pointer-events: none;
+  cursor:none;
 }
 .makeStyles-dialogWrapper-1 {
   padding: 0 !important;
@@ -1112,4 +1114,7 @@ button:disabled{
 }
 .MuiDialogContent-dividers{
   padding: 16px !important;
+}
+.model-search.group{
+  width: 94%;
 }
