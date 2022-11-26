@@ -71,7 +71,7 @@ export default function Conversation({ conversation, currentUser, timeM, myMes,r
     };
   
     getUserName();
-  },[newMes]);
+  },[newMes, conv]);
 
   
     return (
@@ -106,13 +106,13 @@ export default function Conversation({ conversation, currentUser, timeM, myMes,r
                     </>
                     : 
                     <>
-                      {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {newMes !== "" ? newMes.text : "vừa tham gia nhóm"} 
+                      {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} :  {(newMes !== "" ? newMes.type==0 ? newMes.text : newMes.type == 1 ? "img" : newMes.type == 2 ? "file" : ""  : "")} 
                     </>     
                   )
                   :
                   (    
                     <>
-                      {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {newMes !== null ? (newMes !== null && newMes.type==0 ? newMes.text : (newMes.type == 1 ? "img" :"file")) : "vừa tham gia nhóm"} 
+                      {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} :  {(newMes !== "" ? newMes.type==0 ? newMes.text : newMes.type == 1 ? "img" : newMes.type == 2 ? "file" : ""  : "")} 
                     </>     
                   )       
                 }
@@ -127,13 +127,13 @@ export default function Conversation({ conversation, currentUser, timeM, myMes,r
                     </>
                     : 
                     <>
-                      {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {(newMes !== null && newMes.type==0 ? newMes.text : (newMes.type == 1 ? "img" :"file"))} 
+                      {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} :  {(newMes !== "" ? newMes.type==0 ? newMes.text : newMes.type == 1 ? "img" : newMes.type == 2 ? "file" : ""  : "")} 
                     </>     
                   )
                   :
                   (    
                     <>
-                     {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {(newMes !== null && newMes.type==0 ? newMes.text : (newMes.type == 1 ? "img" :""))} 
+                     {(newMes ? (newMes.sender === currentUser ? "bạn" : userName) : "bạn")} : {(newMes !== "" ? newMes.type==0 ? newMes.text : newMes.type == 1 ? "img" : newMes.type == 2 ? "file" : ""  : "")} 
                     </>     
                   )       
                 }
