@@ -125,8 +125,17 @@ export default function Login() {
 
     const register = async event => {
         event.preventDefault()
-
-        if(passwordRe === cfpassword){
+        const currentYear = new Date().getFullYear()
+        const bd = new Date(birthday)
+        if(!birthday){
+            setAlertRe({ type: 'danger', message: "Chưa chọn ngày sinh" })
+            setTimeout(() => setAlertRe(null), 5000)
+        }
+        else if(currentYear - bd.getFullYear() < 16){
+            setAlertRe({ type: 'danger', message: "Chỉ cho phép người dùng trên 16 tuổi" })
+            setTimeout(() => setAlertRe(null), 5000)
+        }
+        else if(passwordRe === cfpassword){
             try {
                 const registerData = await registerUser(registerForm)
                 if (!registerData.success) {
