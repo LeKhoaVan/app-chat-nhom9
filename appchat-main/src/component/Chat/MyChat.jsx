@@ -34,6 +34,7 @@ import { AuthContext } from "../../contexts/AuthContext";
 //import 'bootstrap/dist/css/bootstrap.css';
 import isEmail from "validator/lib/isEmail"
 import Popup from "./Popup";
+import ModalInfoUser from "./ModalInfo/ModalInfoUser";
 
 
 //Avarta
@@ -89,7 +90,12 @@ export default function MyChat() {
     mes: '',
     isLoading: false
   })
-
+  const [popupInfo, setPopupInfo] = useState({
+    username: '',
+    message: '',
+    isLoading: false,
+   
+  })
 
   const [recallStatus, setRecallStatus] = useState(null)
 
@@ -163,8 +169,30 @@ export default function MyChat() {
 
   };
 
-
-
+  function handlePopupInfo(choose) {
+    if (!choose) {
+      setPopupInfo({
+        title: '',
+        username: "",
+        avt: "",
+        birthday: '',
+        gender: '',
+        email: '',
+        isLoading: false
+      });
+    }
+  }
+function ShowInfo(username , email,birthday, gender,avt){
+  setPopupInfo({
+    title: 'Thông tin tài khoản',
+    username: username,
+    avt: avt,
+    birthday: birthday,
+    gender: gender,
+    email: email,
+    isLoading: true
+  });
+}
 
   //send image
   const handleImageChange = (e) => {
@@ -1317,7 +1345,7 @@ export default function MyChat() {
                 <p className="title_edit_button">Tạo nhóm trò chuyện</p>
               </div> */}
           </div>
-          {currentChat?.authorization.length > 0 ?
+          {/* {currentChat?.authorization.length > 0 ? */}
             <div className="user_con">
               <div className="iv_title">
                 <p>Thành viên</p>
@@ -1326,7 +1354,10 @@ export default function MyChat() {
               <div className="iv_main">
                 <ul className="list-user">
                   {userCons.map((user) => (
-                    <li>
+                    <li onClick={() =>
+                      user._id === _id ?  false :
+                      ShowInfo(user.username , user.email,user.birthday, user.gender,user.avt) 
+                     }>
                       <div className="avt"><img src={user.avt ? user.avt : ""} /></div>
 
 
@@ -1350,7 +1381,9 @@ export default function MyChat() {
                               {authorize.map((auth1) => (
                                 auth1 === user._id ?
                                   <div className="item"
-                                    onClick={() => RemoveAuth(currentChat._id, user._id)}>Gỡ quyền quản trị viên</div>
+                                    onClick={(e) =>{
+                                      e.stopPropagation()
+                                       RemoveAuth(currentChat._id, user._id)}}>Gỡ quyền quản trị viên</div>
                                   :
                                   <div></div>
                               ))}
@@ -1361,16 +1394,20 @@ export default function MyChat() {
                                 authorize.some((auth1) => (
                                   auth1 === user._id
                                 )) ? <div></div> : <div className="item"
-                                  onClick={() => {
+                                  onClick={(e) => {
+                                    e.stopPropagation()
                                     SetAuth(currentChat._id, user._id)
                                   }}>Chỉ định quản trị viên</div>
 
                               }
-                              <div className="item" onClick={() => {
+                              <div className="item" onClick={(e) => {
+                                e.stopPropagation()
                                 RemoveUserCon(currentChat._id, user._id)
 
                               }}
                               >Xóa khỏi nhóm</div>
+
+                        
 
                             </div>
                           </div>
@@ -1388,7 +1425,8 @@ export default function MyChat() {
 
                 </ul>
               </div>
-            </div> : <div></div>}
+            </div> : <div></div>
+            {/* } */}
           <div className="image_video_con">
             <div className="iv_title">
               <p>Ảnh/Video</p>
@@ -1659,6 +1697,16 @@ export default function MyChat() {
       {popupQuestion.isLoading && <PopupQuestion onDialog={disbandGroupSure} title={popupQuestion.title} mes={popupQuestion.mes} />}
       {popupQuestionOutGroup.isLoading && <PopupQuestionOutGroup onDialog={outGroupSure} title={popupQuestionOutGroup.title} mes={popupQuestionOutGroup.mes} />}
       {popupNotify.isLoading && <PopupNotify onDialog={handleNotify} title={popupNotify.title} mes={popupNotify.mes} />}
+      {popupInfo.isLoading && <ModalInfoUser onDialog={handlePopupInfo}
+        avt={popupInfo.avt}
+        gender={popupInfo.gender}
+        birthday={popupInfo.birthday}
+        email={popupInfo.email}
+        title={popupInfo.title}
+        username={popupInfo.username}
+        />}
+
+    
     </div>
   );
 }

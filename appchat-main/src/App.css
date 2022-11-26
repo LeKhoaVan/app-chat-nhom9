@@ -784,6 +784,7 @@ body{
   display: flex;
   align-items: center;
   position: relative;
+  cursor: pointer;
 }
 .list-user li:hover{
   background-color: var(--bg-hover-03);
