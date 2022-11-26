@@ -38,8 +38,11 @@ import Popup from "./Popup";
 
 //Avarta
 import PopupAvartar from "./Avarta/Popup";
-import FileInput from "./Avarta/FileInput";
 import styles from "./Avarta/styles.module.css";
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+
+
+
 
 
 // send image
@@ -49,7 +52,7 @@ import { v4 } from "uuid";
 import { async } from "@firebase/util";
 
 export default function MyChat() {
-  const { authState: { user: { avt, _id, username } } ,socket} = useContext(AuthContext)
+  const { authState: { user: { avt, _id, username } }, socket } = useContext(AuthContext)
 
   const [conversations, setConversation] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
@@ -89,7 +92,7 @@ export default function MyChat() {
 
 
   const [recallStatus, setRecallStatus] = useState(null)
-  
+
 
   const [openPopup, setOpenPopup] = useState(false);
   const [openPopup2, setOpenPopup2] = useState(false);
@@ -112,9 +115,6 @@ export default function MyChat() {
     setData({ ...data, [input.name]: input.value });
   };
 
-  const handleInputState = (name, value) => {
-    setData((prev) => ({ ...prev, [name]: value }));
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -122,6 +122,8 @@ export default function MyChat() {
       const url = "http://localhost:8800/api/conversations/updateImg/" + currentChat?._id;
       const { data: res } = await axios.put(url, data);
       console.log(res)
+
+      setCurrentChat({ ...currentChat, img: (data.img),name:(data.name  ) })
 
     } catch (error) {
       console.log(error)
@@ -132,6 +134,34 @@ export default function MyChat() {
   const [stateDis, setStateDis] = useState({
     disabled: true
   });
+
+
+  //Update Image Anh nhom
+  const handleEditAvtNhom = (e) => {
+
+    const imageRef = ref(storage, `/avartaNhom/${e.target.files[0].name + v4()}`);
+    uploadBytes(imageRef, e.target.files[0])
+      .then(() => {
+        getDownloadURL(imageRef)
+          .then(async (url) => {
+
+
+            setData({ ...data, img: (url) })
+
+
+          })
+          .catch((error) => {
+            console.log(error.message, "error getting the image url");
+          });
+
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+
+
+
+  };
 
 
 
@@ -180,8 +210,8 @@ export default function MyChat() {
               const updateTime = await axios.put("http://localhost:8800/api/conversations/updateAt", timeUpdate);
               //setMessages([...messages, res.data]);
               socket.current.emit("sendMessage", {
-                _id:res.data._id,
-                senderId:_id,
+                _id: res.data._id,
+                senderId: _id,
                 receiverIds,
                 type: 1,
                 text: messageimage.text,
@@ -192,7 +222,7 @@ export default function MyChat() {
                 username: username,
                 avt: avt,
               });
-  
+
               socket.current.emit("sendStatus", {
                 senderId: _id,
                 username: username,
@@ -202,7 +232,7 @@ export default function MyChat() {
                 conversationId: currentChat._id,
                 delUser: "",
                 date: Date.now(),
-    
+
               });
 
             } catch (err) {
@@ -223,8 +253,8 @@ export default function MyChat() {
   };
 
 
-   // send all file
-   const handleFileChange = async (e) => {
+  // send all file
+  const handleFileChange = async (e) => {
     const messageFile = {
       sender: _id,
       text: '',
@@ -237,12 +267,12 @@ export default function MyChat() {
       avt: avt,
     };
 
-     // Max= 1 GB
-    const maxAllowedSize = 1 * 1024 * 1024 *1024;
+    // Max= 1 GB
+    const maxAllowedSize = 1 * 1024 * 1024 * 1024;
     if (e.target.files[0].size > maxAllowedSize) {
-      
+
       alert("Kích thước file vượt quá 1 GB");
-       return false;
+      return false;
     }
     
     const filed = e.target.files[0].name.slice(e.target.files[0].name.lastIndexOf('.') + 1,e.target.files[0].name.length);
@@ -275,7 +305,7 @@ export default function MyChat() {
               const updateTime = await axios.put("http://localhost:8800/api/conversations/updateAt", timeUpdate);
               // setMessages([...messages, res.data]);
               socket.current.emit("sendMessage", {
-                _id:res.data._id,
+                _id: res.data._id,
                 senderId: _id,
                 receiverIds,
                 type: e.target.files[0].type.match('image.*')? 1:e.target.files[0].type.match('video.*')?2:3,
@@ -287,7 +317,7 @@ export default function MyChat() {
                 username: username,
                 avt: avt,
               });
-  
+
               socket.current.emit("sendStatus", {
                 senderId: _id,
                 username: username,
@@ -297,7 +327,7 @@ export default function MyChat() {
                 conversationId: currentChat._id,
                 delUser: "",
                 date: Date.now(),
-  
+
               })
 
             } catch (err) {
@@ -374,7 +404,7 @@ export default function MyChat() {
 
   function AddUserCon(conId) {
     let userId =
-    listUserGroupAdd.map((userGr) => {
+      listUserGroupAdd.map((userGr) => {
         return userGr._id
       })
 
@@ -549,7 +579,7 @@ export default function MyChat() {
     socket.current = io("ws://localhost:8800");
     socket.current.on("getMessage", (data) => {
       setArrivalMessages({
-        _id:data._id,
+        _id: data._id,
         sender: data.senderId,
         text: data.text,
         type: data.type,
@@ -561,23 +591,23 @@ export default function MyChat() {
         avt: data.avt
       });
 
-       //load conversation latest
-       conversations.find((conv) => {
+      //load conversation latest
+      conversations.find((conv) => {
 
-        if(conv._id === data.conversationId){
+        if (conv._id === data.conversationId) {
           conv.updatedAt = new Date(Date.now()).toISOString();
-          for(let index=0; index<conv.members.length; index++){
-            if(conv.members[index] === _id){
-              const concsts = conversations.sort((a,b) => b.updatedAt.localeCompare(a.updatedAt))
-                setConversation(concsts);
-                concsts.forEach((con,index)=>{
-                  if(con === currentChat)
-                    setConActive(index)
-                })
-            }              
+          for (let index = 0; index < conv.members.length; index++) {
+            if (conv.members[index] === _id) {
+              const concsts = conversations.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt))
+              setConversation(concsts);
+              concsts.forEach((con, index) => {
+                if (con === currentChat)
+                  setConActive(index)
+              })
+            }
           }
         }
-    })
+      })
 
     });
     socket.current.on("getStatus", (data) => {
@@ -608,11 +638,11 @@ export default function MyChat() {
   }, [currentChat]);
 
 
-  const ktt=(messages)=>{
-    if(messages.length==0) 
+  const ktt = (messages) => {
+    if (messages.length == 0)
       return true;
     else
-      if(messages[messages.length-1]._id != arrivalMessage._id)
+      if (messages[messages.length - 1]._id != arrivalMessage._id)
         return true;
       else return false;
   }
@@ -629,13 +659,13 @@ export default function MyChat() {
     socket.current.on("getUsers", (users) => {
       // console.log(users)
     })
-    let data={
-      usersId:_id,
-      isActive:true,
+    let data = {
+      usersId: _id,
+      isActive: true,
     }
     const activeOn = async () => {
       try {
-        const res = await axios.put('http://localhost:8800/api/users/'+_id, data);
+        const res = await axios.put('http://localhost:8800/api/users/' + _id, data);
         console.log(res.data);
       } catch (err) {
         console.log(err);
@@ -740,7 +770,6 @@ export default function MyChat() {
       }
 
 
-      
 
 
       
@@ -754,7 +783,7 @@ export default function MyChat() {
         // setMessages([...messages, res.data]);
         setNewMessages("");
         socket.current.emit("sendMessage", {
-          _id:res.data._id,
+          _id: res.data._id,
           senderId: _id,
           receiverIds,
           type: 0,
@@ -766,7 +795,7 @@ export default function MyChat() {
           username: username,
           avt: avt,
         });
-  
+
         socket.current.emit("sendStatus", {
           senderId: _id,
           username: username,
@@ -776,7 +805,7 @@ export default function MyChat() {
           conversationId: currentChat._id,
           delUser: "",
           date: Date.now(),
-  
+
         })
 
       } catch (err) {
@@ -805,7 +834,7 @@ export default function MyChat() {
 
     //gửi tin nhắn thu hồi
     socket.current.emit("deleteMessage", {
-      id:Math.random(),
+      id: Math.random(),
       messagesCurrent: messages,
       messageId: id,
       senderId: _id,
@@ -931,19 +960,19 @@ export default function MyChat() {
       setUserSearch(null)
     }
   }
-  function checkAddUserNewGroup(){
-    return listUserGroupNew.some((userN)=>
+  function checkAddUserNewGroup() {
+    return listUserGroupNew.some((userN) =>
       userN._id == userSearch._id
     )
   }
 
 
- function checkIfUserExistInConv() {
+  function checkIfUserExistInConv() {
     try {
-      const res =  axios.get("http://localhost:8800/api/conversations/findConvByUserID/"+ currentChat?._id+"/"+userSearchAddNew?._id);
-      
+      const res = axios.get("http://localhost:8800/api/conversations/findConvByUserID/" + currentChat?._id + "/" + userSearchAddNew?._id);
+
       console.log(res.data)
-     
+
       //setUserSearchAddCheckExist(res.data)
       //return res.data;
       res.then(value => {
@@ -961,7 +990,7 @@ export default function MyChat() {
     }
     let textSearch = document.querySelector('#search-group2').value
     try {
-      const res = await axios.get("http://localhost:8800/api/users/userByMailOrName?email=" + textSearch);     
+      const res = await axios.get("http://localhost:8800/api/users/userByMailOrName?email=" + textSearch);
       setUserSearchAddNew(res.data)
     } catch (err) {
       setUserSearchAddNew(null)
@@ -988,20 +1017,20 @@ export default function MyChat() {
     e.preventDefault()
     //checkIfUserExistInConv()
     let check = checkAddUserNewGroup2()
-    if(check){
+    if (check) {
       setUserSearchAddNew(null)
       document.querySelector('#search-group2').value = ""
     }
-    else{
-      setlistUserGroupAdd([...listUserGroupAdd,userSearchAddNew])
+    else {
+      setlistUserGroupAdd([...listUserGroupAdd, userSearchAddNew])
       setUserSearchAddNew(null)
       document.querySelector('#search-group2').value = ""
       setUserSearchAddCheckExist(null)
     }
   }
 
-  function checkAddUserNewGroup2(){
-    return listUserGroupAdd.some((userN)=>
+  function checkAddUserNewGroup2() {
+    return listUserGroupAdd.some((userN) =>
       userN._id == userSearchAddNew._id
     )
   }
@@ -1009,11 +1038,11 @@ export default function MyChat() {
   function clickButtonAdd(e) {
     e.preventDefault()
     let check = checkAddUserNewGroup()
-    if(check){
+    if (check) {
       setUserSearch(null)
       document.querySelector('#search-group').value = ""
     }
-    else{
+    else {
       setListUserGroupNew([...listUserGroupNew, userSearch])
       setUserSearch(null)
       document.querySelector('#search-group').value = ""
@@ -1159,7 +1188,7 @@ export default function MyChat() {
                 </div>
                 <div>
                   <div className="user-fet">
-                 
+
                     <Tooltip
                       title="Tìm kiếm tin nhắn"
                       placement="bottom-end">
@@ -1246,7 +1275,7 @@ export default function MyChat() {
                 </Tooltip>
               </div>
             </> : <div className="noChat">
-            <div className="header-name">Chào mừng bạn đến với CynoChat</div>
+              <div className="header-name">Chào mừng bạn đến với CynoChat</div>
             </div>
         }
       </div>
@@ -1274,12 +1303,12 @@ export default function MyChat() {
 
             </div>
             <div>
-            {currentChat?.authorization.length > 0 ?
-            <div className="edit_button">
-              <IconButton onClick={() => { setOpenPopup2(true); }}><GroupAddIcon /></IconButton>
-              <p className="title_edit_button">Thêm thành viên</p>
-            </div>      
-                  : <div></div>}
+              {currentChat?.authorization.length > 0 ?
+                <div className="edit_button">
+                  <IconButton onClick={() => { setOpenPopup2(true); }}><GroupAddIcon /></IconButton>
+                  <p className="title_edit_button">Thêm thành viên</p>
+                </div>
+                : <div></div>}
             </div>
             {/* <div className="edit_button">
                 <IconButton>
@@ -1450,10 +1479,10 @@ export default function MyChat() {
                 <div className="item">
                   <Avatar src={userSearch.avt}></Avatar>
                   <p>{userSearch.username}</p>
-                  {userSearch._id === _id ? <div className="add">bạn</div> : 
-                  
-                 
-                  <button onClick={clickButtonAdd} className="add">Thêm</button>
+                  {userSearch._id === _id ? <div className="add">bạn</div> :
+
+
+                    <button onClick={clickButtonAdd} className="add">Thêm</button>
 
                   }
                 </div> : <div className="nullUser">Không thấy user</div>}
@@ -1533,12 +1562,12 @@ export default function MyChat() {
                   //userSearchAddNew._id === userSearchAddCheckExist._id? <div className="add">Người này đã trong nhóm</div> :
                   } */}
                   {userSearchAddNew._id === _id ? <div className="add">bạn</div> :
-                  
-                  currentChat.members.some((auth1) => (
-                    auth1 === userSearchAddNew._id
-                  )) ?  
-                  <div className="add">Đã là thành viên</div> : 
-                  <button onClick={clickButtonAdd2} className="add">Thêm</button>
+
+                    currentChat.members.some((auth1) => (
+                      auth1 === userSearchAddNew._id
+                    )) ?
+                      <div className="add">Đã là thành viên</div> :
+                      <button onClick={clickButtonAdd2} className="add">Thêm</button>
 
                   }
                 </div> : <div className="nullUser">Không thấy user</div>}
@@ -1589,40 +1618,43 @@ export default function MyChat() {
 
 
       <PopupAvartar
-        title="Thông tin nhóm"
+        title="Cập nhật thông tin nhóm"
         openPopup={openPopupAvarta}
         setOpenPopup={setOpenPopupAvarta}>
 
-        <h2 className={styles.titlename}>{currentChat?.name}</h2>
+       
 
-        <div className={styles.container}>
-          <form className={styles.form} onSubmit={handleSubmit} >
+        <div className="avtEditNhom">
+          <Avatar src={data.img}
+            sx={{ width: 70, height: 70 }}>
+          </Avatar>
 
-            <input
-              type="text"
-              className={styles.input}
-              placeholder="Ten nhom"
-              name="name"
-              onChange={handleChange}
-              value={data.name}
-            />
+          {/* Choose image avtar */}
+          <label for="myAnhNhom"><AddAPhotoIcon /></label>
+          <input type="file" accept="image/png, image/jpeg" id="myAnhNhom" name="myAnhNhom" style={{ display: 'none' }} onChange={handleEditAvtNhom} />
 
-            <FileInput
-              name="img"
-              label="Choose Image"
-              handleInputState={handleInputState}
-              type="image"
-              value={data.img}
-            />
-
-            <button type="submit" className={styles.submit_btn} onClick={() => {
-              setOpenPopupAvarta(false);
-              //window.location.reload(false)
-            }}>
-              Submit
-            </button>
-          </form>
         </div>
+        {/* <h2 className={styles.titlename}>{currentChat?.name}</h2> */}
+        <br></br>
+        <label >Tên nhóm</label>
+        <input
+          type="text"
+          className={styles.input}
+          placeholder="Ten nhom"
+          name="name"
+          onChange={handleChange}
+          value={data.name}
+        />
+        <form onSubmit={handleSubmit}>
+          <button type="submit" class={styles.submit_btn} onClick={(e) => {
+            setOpenPopupAvarta(false);
+            window.location.reload(false)
+          }}>
+            Cập nhật
+          </button>
+        </form>
+
+
       </PopupAvartar>
       {popupQuestion.isLoading && <PopupQuestion onDialog={disbandGroupSure} title={popupQuestion.title} mes={popupQuestion.mes} />}
       {popupQuestionOutGroup.isLoading && <PopupQuestionOutGroup onDialog={outGroupSure} title={popupQuestionOutGroup.title} mes={popupQuestionOutGroup.mes} />}
