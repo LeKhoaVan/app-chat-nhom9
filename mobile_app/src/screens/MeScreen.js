@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, Modal, TouchableWithoutFeedback, ActivityIndicator, Keyboard } from 'react-native'
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Image, Modal, TouchableWithoutFeedback, ActivityIndicator, Keyboard, Alert, Linking } from 'react-native'
 import Ionicons from 'react-native-vector-icons/Ionicons'
 import React, { useContext, useState } from 'react'
 import { AuthContext } from '../contexts/AuthContext'
@@ -113,7 +113,7 @@ export default function MeScreen() {
     if (permissionResult.granted === false) {
       Alert.alert(
         "Cấp quyền truy cập",
-        "Bạn cần cấp quyền cho phép ứng dụng này truy cập vào ảnh của bạn \n\nBấm mở cài đặt, chọn Quyền và bật ON các quyền tương thích",
+        "Bạn cần cấp quyền cho phép ứng dụng này truy cập vào bộ nhớ của bạn \n\nBấm mở cài đặt, chọn Quyền và bật ON các quyền tương thích",
         [
           {
             text: 'Hủy',

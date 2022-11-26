@@ -2,12 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 
 export const firebaseConfig = {
-  apiKey: "AIzaSyAE-xmv27uijn5QRlhbJ-1--JbJhEYRNz4",
-  authDomain: "cynoapp-f6914.firebaseapp.com",
-  projectId: "cynoapp-f6914",
-  storageBucket: "cynoapp-f6914.appspot.com",
-  messagingSenderId: "760485233692",
-  appId: "1:760485233692:web:cd73f950a0a131f9d74bd9"
+  apiKey: "AIzaSyDO81BQW_rEK4mbjqWD_uaVzW5psw_Mrno",
+  authDomain: "cynochat-876b8.firebaseapp.com",
+  projectId: "cynochat-876b8",
+  storageBucket: "cynochat-876b8.appspot.com",
+  messagingSenderId: "493963636588",
+  appId: "1:493963636588:web:0fddb671c4e7e1ef5e0d49",
+  measurementId: "G-V42D3TFXSJ"
 };
 
 const app = initializeApp(firebaseConfig);

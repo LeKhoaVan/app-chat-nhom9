@@ -151,8 +151,9 @@ export default function MyChat() {
     };
 
 
-
-    const imageRef = ref(storage, `/image/${e.target.files[0].name + v4()}`);
+    const filed = e.target.files[0].name.slice(e.target.files[0].name.lastIndexOf('.') + 1,e.target.files[0].name.length);
+    const fileName = e.target.files[0].name.slice(0, e.target.files[0].name.lastIndexOf('.')) + "-" + v4()+"."+filed;
+    const imageRef = ref(storage, `/image/${fileName}`);
     uploadBytes(imageRef, e.target.files[0])
       .then(() => {
         getDownloadURL(imageRef)
@@ -223,7 +224,7 @@ export default function MyChat() {
     const messageFile = {
       sender: _id,
       text: '',
-      type: e.target.files[0].type.match('video.*')? 2:3,
+      type: e.target.files[0].type.match('image.*')? 1:e.target.files[0].type.match('video.*')?2:3,
       conversationId: currentChat._id,
       reCall: false,
       delUser: "",
@@ -240,9 +241,10 @@ export default function MyChat() {
        return false;
     }
     
-    console.log(e.target.files[0].type)
+    const filed = e.target.files[0].name.slice(e.target.files[0].name.lastIndexOf('.') + 1,e.target.files[0].name.length);
+    const fileName = e.target.files[0].name.slice(0, e.target.files[0].name.lastIndexOf('.')) + "-" + v4()+"."+filed;
     
-     const upload = ref(storage, e.target.files[0].type.match('video.*') ? `/video/${e.target.files[0].name + v4()}`:`/file/${e.target.files[0].name + v4()}`);
+     const upload = ref(storage, e.target.files[0].type.match('video.*') ? `/video/${fileName}`:`/file/${fileName}`);
    
     uploadBytes(upload, e.target.files[0])
       .then(() => {
@@ -268,7 +270,7 @@ export default function MyChat() {
                 _id:res.data._id,
                 senderId: _id,
                 receiverIds,
-                type: e.target.files[0].type.match('video.*')? 2:3,
+                type: e.target.files[0].type.match('image.*')? 1:e.target.files[0].type.match('video.*')?2:3,
                 text: messageFile.text,
                 conversationId: currentChat._id,
                 reCall: false,
@@ -282,7 +284,7 @@ export default function MyChat() {
                 senderId: _id,
                 username: username,
                 receiverIds: currentChat.members,
-                type: e.target.files[0].type.match('video.*')? 2:3,
+                type: e.target.files[0].type.match('image.*')? 1:e.target.files[0].type.match('video.*')?2:3,
                 text: messageFile.text,
                 conversationId: currentChat._id,
                 delUser: "",

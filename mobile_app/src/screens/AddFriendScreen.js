@@ -1,9 +1,36 @@
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Ionicons from 'react-native-vector-icons/Ionicons'
+import { AuthContext } from '../contexts/AuthContext';
+import axios from 'axios';
+import { Url } from '../contexts/constants';
+import { useNavigation } from "@react-navigation/native";
 
 export default function AddFriendScreen({ navigation }) {
+  const nav = useNavigation();
+  const { userInfo } = useContext(AuthContext);
   const [email, setEmail] = useState('');
+  const [userSearchCon, setUserSearchCon] = useState(null);
+  const [err, setErr] = useState("");
+
+  const handelClickSearch = async () => {
+    try {
+      const res = await axios.get(`${Url}/api/users/userByMailOrName?email=` + email);
+      if (res.data == null)
+        setErr('Địa chỉ email này chưa đăng ký tài khoản');
+      else
+        if (res.data._id == userInfo._id)
+          setErr('Địa chỉ email này là của bạn');
+        else {
+          let user = res.data;
+          setErr("")
+          nav.navigate({ name: 'UserInfoScreen', params: {user} })
+        }
+    } catch (err) {
+      setErr('Địa chỉ email này chưa đăng ký tài khoản');
+    }
+
+  }
   return (
     <View style={styles.container}>
       <TouchableOpacity
@@ -12,7 +39,7 @@ export default function AddFriendScreen({ navigation }) {
           alignItems: 'center',
           backgroundColor: '#fff',
           padding: 10,
-          marginBottom: 20,
+          marginBottom: 10,
         }}
         onPress={() => {
           navigation.navigate('FriendRequest')
@@ -30,7 +57,7 @@ export default function AddFriendScreen({ navigation }) {
       </TouchableOpacity>
       <View
         style={{
-          padding:10
+          padding: 10
         }}>
         <Text style={styles.text}>Thêm bạn bằng Email</Text>
         <View style={styles.inputText}>
@@ -38,6 +65,8 @@ export default function AddFriendScreen({ navigation }) {
             placeholder='Nhập email'
             style={styles.input}
             onChangeText={(e) => setEmail(e)}
+            onPressIn={() => setErr("")}
+            onSubmitEditing={()=>handelClickSearch()}
             value={email} />
           {email ?
             <View
@@ -55,6 +84,7 @@ export default function AddFriendScreen({ navigation }) {
                 />
               </TouchableOpacity>
               <TouchableOpacity
+                onPress={() => handelClickSearch()}
                 style={{
                   backgroundColor: '#E0DFDF',
                   padding: 5,
@@ -74,7 +104,13 @@ export default function AddFriendScreen({ navigation }) {
             </View> : <></>}
         </View>
       </View>
-
+      <Text
+        style={{
+          textAlign: 'center',
+          marginTop: 20,
+          fontSize: 16,
+          color: '#F32B2B',
+        }}>{err}</Text>
     </View>
   )
 }
