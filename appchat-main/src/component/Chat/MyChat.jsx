@@ -1648,7 +1648,7 @@ export default function MyChat() {
         <form onSubmit={handleSubmit}>
           <button type="submit" class={styles.submit_btn} onClick={(e) => {
             setOpenPopupAvarta(false);
-            window.location.reload(false)
+            
           }}>
             Cập nhật
           </button>
