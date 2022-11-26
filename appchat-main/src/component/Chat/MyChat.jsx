@@ -49,7 +49,7 @@ import { v4 } from "uuid";
 import { async } from "@firebase/util";
 
 export default function MyChat() {
-  const { authState: { user: { avt, _id, username } } } = useContext(AuthContext)
+  const { authState: { user: { avt, _id, username } } ,socket} = useContext(AuthContext)
 
   const [conversations, setConversation] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
@@ -89,7 +89,7 @@ export default function MyChat() {
 
 
   const [recallStatus, setRecallStatus] = useState(null)
-  const socket = useRef();
+  
 
   const [openPopup, setOpenPopup] = useState(false);
   const [openPopup2, setOpenPopup2] = useState(false);
@@ -513,7 +513,7 @@ export default function MyChat() {
         //setConversation(con.data);
         setCurrentChat(res.data);
         setAuthorize(res.data.authorization)
-        setConActive(conversations.length)
+        setConActive(0)
       } catch (err) {
         console.log(err)
       }
@@ -548,6 +548,24 @@ export default function MyChat() {
         username: data.username,
         avt: data.avt
       });
+
+       //load conversation latest
+       conversations.find((conv) => {
+
+        if(conv._id === data.conversationId){
+          conv.updatedAt = new Date(Date.now()).toISOString();
+          for(let index=0; index<conv.members.length; index++){
+            if(conv.members[index] === _id){
+              const concsts = conversations.sort((a,b) => b.updatedAt.localeCompare(a.updatedAt))
+                setConversation(concsts);
+                concsts.forEach((con,index)=>{
+                  if(con === currentChat)
+                    setConActive(index)
+                })
+            }              
+          }
+        }
+    })
 
     });
     socket.current.on("getStatus", (data) => {
@@ -599,6 +617,19 @@ export default function MyChat() {
     socket.current.on("getUsers", (users) => {
       // console.log(users)
     })
+    let data={
+      usersId:_id,
+      isActive:true,
+    }
+    const activeOn = async () => {
+      try {
+        const res = await axios.put('http://localhost:8800/api/users/'+_id, data);
+        console.log(res.data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+    activeOn();
   }, [_id]);
 
   useEffect(() => {
@@ -700,8 +731,13 @@ export default function MyChat() {
       
 
 
+      const timeUpdate= {
+        "convId" : currentChat._id,
+      }
+
       try {
         const res = await axios.post("http://localhost:8800/api/messages", message);
+        const updateTime = await axios.put("http://localhost:8800/api/conversations/updateAt", timeUpdate);
         // setMessages([...messages, res.data]);
         setNewMessages("");
         socket.current.emit("sendMessage", {
@@ -1005,7 +1041,7 @@ export default function MyChat() {
       const res = await axios.post("http://localhost:8800/api/conversations/newConvGroup", conv);
       setCurrentChat(res.data);
       setAuthorize(res.data.authorization)
-      setConActive(conversations.length)
+      setConActive(0)
     } catch (err) {
       console.log(err.message);
     }
@@ -1185,7 +1221,9 @@ export default function MyChat() {
                   </span>
                 </Tooltip>
               </div>
-            </> : <span className="noChat">Chưa có tin nhắn</span>
+            </> : <div className="noChat">
+            <div className="header-name">Chào mừng bạn đến với CynoChat</div>
+            </div>
         }
       </div>
       <div className="morInfo_con">
@@ -1382,7 +1420,7 @@ export default function MyChat() {
           </div>
 
           <div className="input-group">
-            <input className="form-control rounded ip-addGr" type="text" onKeyUp={handleTextSearch} id="search-group" placeholder="Tìm kiếm bằng email" />
+            <input className="form-control rounded ip-addGr search" type="text" onKeyUp={handleTextSearch} id="search-group" placeholder="Nhập email để tìm kiếm" />
             <div className="model-search">
               {userSearch ?
                 <div className="item">
@@ -1399,8 +1437,8 @@ export default function MyChat() {
             </div>
           </div>
 
-          <div><p>____________________________________________________________________________</p></div>
-          <p className="title-Add">Danh sách cần thêm</p>
+          <div className="line-form"></div>
+          <p className="title-Add">Đã chọn</p>
           <ul className="listAdd">
             {listUserGroupNew.map((user_gr) => (
               <li className="itemAdd">
@@ -1457,9 +1495,9 @@ export default function MyChat() {
       >
         <form>
           <div className="input-group">
-            <input className="form-control rounded ip-addGr" type="text" 
+            <input className="form-control rounded ip-addGr search" type="text" 
             onKeyUp={handleTextSearch2}
-            id="search-group2" placeholder="Tìm kiếm bằng email" /> 
+            id="search-group2" placeholder="Nhập email để tìm kiếm" /> 
                 
             <div className="model-search">
               {userSearchAddNew?
@@ -1483,9 +1521,8 @@ export default function MyChat() {
 
             </div>
           </div>
-
-          <div><p>____________________________________________________________________________</p></div>
-          <p className="title-Add">Danh sách cần thêm</p>
+          <div className="line-form"></div>
+          <p className="title-Add">Đã chọn</p>
           <ul className="listAdd">
             {listUserGroupAdd.map((user_gr) => (
               <li className="itemAdd">

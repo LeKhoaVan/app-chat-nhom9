@@ -2,12 +2,12 @@ import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 
 export const firebaseConfig = {
-  apiKey: "AIzaSyC-SvFb4gP8TJDjn-tht_85KXKJIf8hnPw",
-  authDomain: "appchatmobile-group9.firebaseapp.com",
-  projectId: "appchatmobile-group9",
-  storageBucket: "appchatmobile-group9.appspot.com",
-  messagingSenderId: "1068794345387",
-  appId: "1:1068794345387:web:a379bfcfb3a740730d84ee"
+  apiKey: "AIzaSyAE-xmv27uijn5QRlhbJ-1--JbJhEYRNz4",
+  authDomain: "cynoapp-f6914.firebaseapp.com",
+  projectId: "cynoapp-f6914",
+  storageBucket: "cynoapp-f6914.appspot.com",
+  messagingSenderId: "760485233692",
+  appId: "1:760485233692:web:cd73f950a0a131f9d74bd9"
 };
 
 const app = initializeApp(firebaseConfig);

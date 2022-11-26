@@ -6,7 +6,6 @@ import {AuthContext}  from '../contexts/AuthContext';
 
 
 export default function Login({navigation}) {
-  const [show,setShow] = useState(false)
   const [visible,setVisible] = useState(true)
   const [loading,setLoading] = useState(false)
   const {login} = useContext(AuthContext)
@@ -48,6 +47,7 @@ export default function Login({navigation}) {
                     style={styles.input}
                     placeholder='Email'
                     value={email}
+                    keyboardType='email-address'
                     onChangeText={(value)=>setEmail(value)}
                     onPressIn={()=>
                       setAlert('')}
@@ -76,11 +76,10 @@ export default function Login({navigation}) {
               <TouchableOpacity
                 style={{width:'10%'}}
                 onPress={()=>{
-                  setShow(!show);
                   setVisible(!visible);
                 }}>
               <Ionicons
-                name={show === false ? 'eye-outline':'eye-off-outline'}
+                name={visible === false ? 'eye-outline' : 'eye-off-outline'}
                 size={26}
                 />
               </TouchableOpacity>
@@ -134,7 +133,7 @@ const styles = StyleSheet.create({
     width:180,
     height:180,
     borderRadius:100,
-    marginTop:-60,
+    marginTop:-100,
   },
   inputEmail:{
     width:'90%',

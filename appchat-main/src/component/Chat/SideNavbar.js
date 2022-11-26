@@ -34,7 +34,7 @@ export default function SideNavbar() {
   
   const {
     authState: { user: { _id, avt, username, birthday, gender, email } },
-    logoutUser
+    socket,logoutUser
   } = useContext(AuthContext)
 
 
@@ -49,7 +49,10 @@ export default function SideNavbar() {
   });
 
 
-  const logout = () => logoutUser()
+  const logout = () => {
+    socket.current.emit('onDisconnect')
+    logoutUser()
+  }
 
   function handleToggle() {
     setIsActive(!isActive);
@@ -134,7 +137,7 @@ const updateProfile= async (data) =>{
             </Tooltip>
 
           </li>
-          <li onClick={handleToggle} className={isActive ? "nav__tabs--item dark-theme dark" : "nav__tabs--item dark-theme light"}>
+          {/* <li onClick={handleToggle} className={isActive ? "nav__tabs--item dark-theme dark" : "nav__tabs--item dark-theme light"}>
             <Tooltip placement="top" title={isActive ? "Light Mode" : "Dark Mode"} enterDelay={1000} leaveDelay={100}>
               <div className="dark-mode">
                 <div className="item light-item"><LightModeIcon /></div>
@@ -142,7 +145,7 @@ const updateProfile= async (data) =>{
                 <span className="ball"></span>
               </div>
             </Tooltip>
-          </li>
+          </li> */}
         </ul>
       </div>
       <div class="clear"></div>

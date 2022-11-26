@@ -1,4 +1,88 @@
 :root{
+  --background-login:#80deea ;
+  --login-form:#091c2a;
+  --login-line:#00acc1;
+  --login-button-hover:#00bcd4;
+  --login-button:#00acc1;
+  --login-form-input-bg:transparent;
+  --login-form-input:var(--white);
+  --text-shadow-01:#00acc1;
+  --text-shadow-02:#26c6da;
+  --cl-003:#333;
+  --box-shadow-003:rgba(0, 0, 0, 0.2);
+
+  --bg-navbar:#00bcd4;
+  --bg-navbar-hover:#00acc1;
+  --bg-mychat-cont:#e0f7fa;
+  --bg-mychat-page:#effcfd;
+  
+  --nav-item-hover:#26c6da;
+  --nav-item-active:#00acc1;
+  --bg-con-active:#80deea;
+
+  --bg-hover-05:#b2ebf2;
+
+
+  --bg-08:#b2ebf2;
+  --bg-message:#00bcd4;
+  --cl-message-own:#fff810;
+
+  --white : #fff;
+  --black : #000;
+  
+  --cl-mychat-cont:#495057;
+  --bg-user-hover:#b2ebf2;
+  --bd-lg:#effcfd;
+  --cl-user-fet:#6f7178;
+  --cl-user-name:#495057;
+  --cl-chat:#7a7f9a;
+  --bg-scrollbar:#c4ccdbb2;
+  --cl-title:#757575;
+  --bg-hover-01:#e0f7fa;
+  --bg-disband:#fbebe9;
+  --bg-disband-hover:#f3bcbb;
+  --cl-warning:#DB342E;
+  --cl-send-svg:#858585;
+  --bg-05:#E5E7EB;
+
+  --red: red;
+  --blue:blue;
+  --bg-hover-btn-red:rgba(255, 0, 0, 0.788);
+  --bg-hover-btn-blue:rgba(0, 0, 255, 0.781);
+  --bg-item-hover-01:#e0f7fa;
+  --bg-onloader:rgba(0, 0, 0, 0.849);
+  --boxshadow-01:rgba(0, 0, 0, 0.205);
+  --bg-hover-02:#e0f7fa;
+  --bg-hover-03:#e0f7fa;
+  --bg-hover-04:#e0f7fa;
+ 
+
+  --bg-033:#bbb;
+  --bg-06:#4267B2;
+  --bg-06:rgb(245, 241, 241);
+  
+  --bg-hover-06:#e0f7fa;
+  --bd-01:#ccc;
+  
+ 
+  --boxshadow-022:rgba(0, 0, 0, 0.493);
+  
+
+
+  --bg-popup-01:#f7d8d4;
+  --bg-popup-02:#f0a3a1;
+  --bg-popup-03:rgba(0, 0, 0, 0.05);
+  --bg-popup-04:rgba(0, 0, 0, 0.1);
+  --bg-popup-05:rgba(0, 0, 0, 0.432);
+  --bd-popup-01:rgba(0, 0, 0, 0.274);
+  --cl-popup-01:rgba(0, 0, 0, 0.678);
+  --bd-popup-otp:rgba(155, 155, 155, 0.27);
+
+
+  --cl-info-text:#72808e;
+}
+
+/* :root{
   --background-login:linear-gradient(#141e30, #243b55) ;
   --login-form:#091c2a;
   --login-line:#c23564;
@@ -11,7 +95,7 @@
   --cl-003:#333;
   --box-shadow-003:rgba(0, 0, 0, 0.2);
 
-  --bg-navbar:#08A5DB;
+  --bg-navbar:#205375;
   --bg-navbar-hover:#0091ffc4;
   --white : #fff;
   --nav-item-hover:#0082e5;
@@ -68,7 +152,7 @@
 
 
   --cl-info-text:#72808e;
-}
+} */
 
 
 .on-loader{
@@ -164,10 +248,7 @@ body{
   margin: 0px;
   box-sizing: border-box;
 }
-.fullSc{
-  /* width: 100vw;
-  height: 100vh; */
-}
+
 /* SideNabar */
 
 
@@ -462,7 +543,7 @@ body{
 /* chattingpage */
 .chattingpage {
   float: left;
-  background-color: var(--white);
+  background-color: var(--bg-mychat-page);
   width: 73%;
   height: 100vh;
   box-sizing: border-box;
@@ -825,7 +906,7 @@ body{
 .model-search{
   display: none;
   position: absolute;
-  width: 86%;
+  width: 94%;
   z-index: 999;
   background-color: var(--white);
   box-shadow: 0 0 10px var(--boxshadow-01);
@@ -895,12 +976,37 @@ body{
 }
 
 .ip-addGr{
-  padding: 5px;
-  margin-bottom: 5px;
+  width: 500px !important;
+  padding: 5px 10px;
+  margin-bottom: 10px;
   color: var(--black) !important;
   font-size: 15px;
+  border: none;
+  border-bottom: 1px solid var(--bd-01);
 }
 
+
+
+.ip-addGr.search{
+  border-radius: 20px;
+  border: 1px solid var(--bd-01);
+  margin-bottom: 5px;
+}
+.ip-addGr:focus{
+  border: none;
+  outline: none;
+  border-bottom: 1px solid var(--login-line);
+}
+.ip-addGr.search:focus{
+  outline: none;
+  border: 1px solid var(--login-line);
+}
+.line-form{
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 100%;
+  border-top: 1px solid var(--bd-01);
+}
 .btn-addGr{
   outline: none;
   border: none;
@@ -919,7 +1025,8 @@ body{
 }
 
 .title-Add{
-  font-weight: bold;
+  font-weight: 500;
+  margin-bottom: 5px;
 }
 
 .nullUser{
@@ -973,49 +1080,36 @@ body{
 .model-usersearch .item:hover{
   background-color: var(--bg-item-hover-01);
 }
-
 .noChat{
-  position: absolute;
-  top : 10%;
-  left: 50%;
-  font-size : 50px;
+  width: 100%;
+  height: 100%;
+  background-color: var(--bd-lg);
+  justify-content: center;
+  display: flex;
+  align-items: center;
+}
+
+.noChat-title{
+  padding-top: 100px;
+  font-size : 45px;
   color: var(--bd-01);
+
 }
 button:disabled{
   background-color: #495057;
   pointer-events: none;
 }
-.changePass {
-  display: flex;
-  align-items: center;
-  background-color: var(--bg-user-hover);
-  width: 100%;
-  border-radius: 5px;
-}
-.updatePassBtn{
-  color:white;
-  background-color:#4267B2; 
-  border:1px solid #999;
-  padding:10px;
-  margin-left: 90px;
-}
-.clearPassBtn{
-  color:white;
-  background-color:#4267B2; 
-  border:1px solid #999;
-  padding:10px;
-  margin-left: 5px;
+.makeStyles-dialogWrapper-1 {
+  padding: 0 !important;
 }
 
-div.modal-content{
-  line-height: 0.6;
+.MuiDialogTitle-root {
+  padding: 7px 20px !important;
 }
 
-.modal-content .updatePassBtn:hover{
-  opacity:.8;
-  cursor:pointer;
+.MuiTypography-h6{
+  line-height: 2 !important;
 }
-.modal-content .clearPassBtn:hover{
-  opacity:.8;
-  cursor:pointer;
+.MuiDialogContent-dividers{
+  padding: 16px !important;
 }

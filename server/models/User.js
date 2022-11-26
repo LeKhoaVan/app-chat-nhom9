@@ -7,7 +7,6 @@ const UserSchema = new mongoose.Schema(
       require: true,
       min: 3,
       max: 20,
-      unique: true,
     },
     email: {
       type: String,
@@ -33,7 +32,19 @@ const UserSchema = new mongoose.Schema(
     },
     status:{
       type: Number,
-    }
+    },
+    isActive:{
+      type: Boolean,
+    },
+    friends: {
+      type: Array,
+    },
+    sendFrs: {
+      type: Array,
+    },
+    receiveFrs: {
+      type: Array,
+    },
   },
   { timestamps: true }
 );
