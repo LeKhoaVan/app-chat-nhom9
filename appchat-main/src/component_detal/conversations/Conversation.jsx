@@ -71,7 +71,7 @@ export default function Conversation({ conversation, currentUser, timeM, myMes,r
     };
   
     getUserName();
-  },[newMes, conv]);
+  },[newMes]);
 
   
     return (
