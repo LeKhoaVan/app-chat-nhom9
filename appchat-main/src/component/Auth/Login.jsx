@@ -97,6 +97,16 @@ export default function Login() {
                 setAlert({ type: 'danger', message: loginData.message })
                 setTimeout(() => setAlert(null), 5000)
             }
+            if (loginData.otpCheck) {
+                setAlertRe({ type: 'danger', message: "Đợi xác thực tài khoản" })
+                setTimeout(() => setAlertRe(null), 10000)
+                setPopupOTP({
+                    title: 'Nhập mã xác thực',
+                    gmail: email,
+                    isLoading: true
+                  });
+            }
+
         } catch (error) {
             console.log(error)
         }
@@ -142,7 +152,7 @@ export default function Login() {
                     setAlertRe({ type: 'danger', message: registerData.message })
                     setTimeout(() => setAlertRe(null), 5000)
                 }else{
-                    setAlertRe({ type: 'danger', message: "Xác thực tài khoản" })
+                    setAlertRe({ type: 'danger', message: "Đợi xác thực tài khoản" })
                     setTimeout(() => setAlertRe(null), 10000)
 
                     setPopupOTP({

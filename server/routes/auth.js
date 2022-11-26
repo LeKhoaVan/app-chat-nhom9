@@ -51,9 +51,15 @@ router.post('/register', async (req, res) => {
 
     try{
         const user = await User.findOne({ email })
-        if(user){
-            return res.status(400).json({ success: false, message: 'Email đã tồn tại' });
-        }
+		if(user){
+			if(user.status === 1){
+				return res.status(400).json({ success: false, message: 'Đăng nhập để xác thực tài khoản' });
+			}
+			if(user.status === 0){
+				return res.status(400).json({ success: false, message: 'Email đã được sử dụng' });
+			}
+		}
+        
 		const userName = await User.findOne({ username })
         
 		
@@ -97,13 +103,14 @@ router.post('/register', async (req, res) => {
 router.put('/verifyOtp',async (req,res) => {
 	const {  email , otp } = req.body
 	try{
-		const getotp = await Otp.findOne({email:email})
-		if(!getotp) {
+		const getotp = await Otp.find({email:email})
+		if(!getotp.length) {
 			return res
 				.status(400)
 				.json({ success: false, message: 'OTP hết hạn' })
 		}
-		const otpValid = await argon2.verify(getotp.otp, otp)
+		const otpLast = getotp[getotp.length - 1]
+		const otpValid = await argon2.verify(otpLast.otp, otp)
 		if (!otpValid)
 				return res
 					.status(400)
@@ -140,30 +147,52 @@ router.post('/login', async (req, res) => {
 			return res
 				.status(400)
 				.json({ success: false, message: 'Sai tài khoản hoặc mật khẩu' })
-		if (user.status === 1)
-			return res
-				.status(400)
-				.json({ success: false, message: 'Tài khoản chưa được xác thực' })
-
-		// Username found
 		const passwordValid = await argon2.verify(user.password, password)
 		if (!passwordValid)
 			return res
 				.status(400)
 				.json({ success: false, message: 'Sai tài khoản hoặc mật khẩu' })
+		if (user.status === 1){
+			const otp = Math.floor(Math.random() * 9000 + 1000) + "";
+		
+			var mailOptions = {
+				from: process.env.GMAIL,
+				to: email,
+				subject: 'Xác thực tài khoản CynoChat',
+				html: '<p>Không cung cấp mã xác thực cho bất cứ ai</p><h4>Mã xác thực: '+ otp + '</h4>'
+			};
+			
 
-		// All good
-		// Return token
-		const accessToken = jwt.sign(
-			{ userId: user._id },
-			process.env.ACCESS_TOKEN_SECRET_KEY
-		)
 
-		res.json({
-			success: true,
-			message: 'User logged in successfully',
-			accessToken
-		})
+			transporter.sendMail(mailOptions,async function(error, info){
+				if (error) {
+					return res.status(400).json({ success: false, message: error });
+				} else {
+					const hashedOtp = await argon2.hash(otp);
+					const newOtp = new Otp({email,otp:hashedOtp})
+					newOtp.save();
+					return res.json({ otpCheck: true, message: "Xác thực tài khoản" });
+				}
+			});
+		}
+		else{
+			// Username found
+			
+
+			// All good
+			// Return token
+			const accessToken = jwt.sign(
+				{ userId: user._id },
+				process.env.ACCESS_TOKEN_SECRET_KEY
+			)
+
+			res.json({
+				success: true,
+				message: 'User logged in successfully',
+				accessToken
+			})
+		}
+		
 	} catch (error) {
 		console.log(error)
 		res.status(500).json({ success: false, message: 'Internal server error' })
