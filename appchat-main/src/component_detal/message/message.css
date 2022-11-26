@@ -141,3 +141,24 @@
 .sendbutton:hover{
   background-color: var(--bg-hover-06);
 }
+
+.avtEditNhom{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.btnEditNhom {
+  display:flex;
+  justify-content:flex-end;
+
+  outline: none;
+	font-size: 14px;
+	font-weight: bold;
+	padding: 10px 20px;
+	border: 1px solid var(--black);
+	border-radius: 5px;
+	cursor: pointer;
+	margin: 5px 5px 5px auto;
+ 
+}
