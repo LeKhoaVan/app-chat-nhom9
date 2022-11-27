@@ -1191,7 +1191,7 @@ function ShowInfo(username , email,birthday, gender,avt){
               }}>
 
                 <Conversation conversation={c} currentUser={_id} timeM={arrivalMessage} myMes={senderMessage}
-                  recall={recallStatus} active={conActive == index ? true : false} />
+                  recall={recallStatus} active={conActive == index ? true : false} conv = {conversations}/>
 
 
               </div>
