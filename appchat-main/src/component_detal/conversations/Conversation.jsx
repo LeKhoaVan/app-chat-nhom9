@@ -8,7 +8,7 @@ import 'moment/locale/vi';
 
 
 
-export default function Conversation({ conversation, currentUser, timeM, myMes,recall , active, conv}) {
+export default function Conversation({ conversation, currentUser, timeM, myMes,recall , active}) {
   const [user, setUser] = useState([]);
   const [newMes, setNewMes] = useState([]);
   const [userName, setUserName] = useState([]);
@@ -26,7 +26,7 @@ export default function Conversation({ conversation, currentUser, timeM, myMes,r
       }
     };
     getUser();
-  }, [currentUser, conversation, conv]);
+  }, [currentUser, conversation]);
 
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function Conversation({ conversation, currentUser, timeM, myMes,r
       }
     };
     getNewMes();
-  }, [conversation, conv]);
+  }, [conversation]);
 
   useEffect(() => {
     const getUserName = async () => {
