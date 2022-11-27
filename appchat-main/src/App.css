@@ -1123,3 +1123,15 @@ button:disabled{
 .makeStyles-dialogTitle-4{
   padding: 0 !important;
 }
+
+@media (min-width: 768px) and (max-width: 992px){
+  .nav__tabs{
+    width: 55px;
+  }
+  .mychat-cont{
+    width: 315px;
+  }
+  .chattingpage{
+    width: calc(100% - 315px - 55px) !important;
+  }
+}
