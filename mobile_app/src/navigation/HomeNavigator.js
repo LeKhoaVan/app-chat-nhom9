@@ -115,14 +115,23 @@ export default function HomeScreen({ navigation }) {
             <Tab.Screen
                 name="Messages"
                 component={MessagesScreen}
+                options={{
+                    title:"Tin nhắn"
+                }}
             />
             <Tab.Screen
                 name="Contacts"
                 component={ContactsScreen}
+                options={{
+                    title:"Liên hệ"
+                }}
             />
             <Tab.Screen
                 name="Me"
                 component={MeScreen}
+                options={{
+                    title:"Cá nhân"
+                }}
             />
         </Tab.Navigator>
     );
