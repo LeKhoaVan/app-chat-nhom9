@@ -12,6 +12,8 @@ import ProtectedRoute from './routing/ProtectedRoute'
 
 function App() {
   return (
+   
+
     <AuthContextProvider>
       <BrowserRouter>
         <Routes>
@@ -37,6 +39,9 @@ function App() {
         </Routes>
       </BrowserRouter>
     </AuthContextProvider>
+ 
+     
+   
   );
 }
 
