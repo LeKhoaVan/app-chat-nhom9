@@ -198,6 +198,14 @@ export default function RegisterScreen({ navigation }) {
 
 
     const register_onpress = async () => {
+        let cYear = new Date().getFullYear();
+        let bYear = new Date(birthday).getFullYear();
+        if(cYear-bYear<16)
+        {
+            setAlert("Chỉ cho phép người dùng trên 16 tuổi")
+            setTimeout(() => setAlert(""), 5000)
+        }
+        else
         if (password === cfpassword) {
             try {
                 setAlert("Xác thực tài khoản")

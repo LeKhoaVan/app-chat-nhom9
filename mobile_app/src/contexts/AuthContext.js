@@ -34,8 +34,9 @@ export const AuthContextProvider = ({ children }) => {
 			if (response.data.success){
 				setUserToken(response.data.accessToken);
 				AsyncStorage.setItem('userToken',response.data.accessToken);
+				await loadUser()
 			}
-			await loadUser()
+			
 			return response.data
 		}catch(error){
 			if (error.response.data) 
